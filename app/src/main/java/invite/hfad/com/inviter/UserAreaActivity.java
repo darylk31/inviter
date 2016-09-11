@@ -14,7 +14,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 public class UserAreaActivity extends Activity {
-
+//cunt.
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
