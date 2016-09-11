@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="My Account">
+        <Preference
+            android:key="pref_key_username"
+            android:title = "Username"
+            android:summary = "Username_database"/>
+        <Preference
+            android:key="pref_key_email"
+            android:title = "Email"
+            android:summary = "Email_database"
+            />
+        <Preference
+            android:key="pref_key_phonenumber"
+            android:title = "Phone Number"
+            android:summary = "phonenumber_database"
+            />
+        <EditTextPreference
+            android:key="pref_key_name"
+            android:title = "Name"
+            android:summary = "name_database"
+            android:dialogTitle = "Enter your name"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
