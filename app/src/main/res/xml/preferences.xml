@@ -33,8 +33,6 @@
             android:title = "Notifications"
             android:summary = ""
             />
-
-
     </PreferenceCategory>
 
     //About settings
