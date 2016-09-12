@@ -7,7 +7,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="invite.hfad.com.inviter.LoginActivity">
+    tools:context="invite.hfad.com.inviter.LoginActivity"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:layout_width="wrap_content"
@@ -72,7 +74,7 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         android:id="@+id/bSettings"
-        android:onClick="openSetting"
+        android:onClick="onSettingButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

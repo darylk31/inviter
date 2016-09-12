@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen
+<preference-headers
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="FOO">
+    <header
+        android:fragment="invite.hfad.com.inviter.MyPreferenceFragment"
+        android:title="Goto: Preference fragment"
+        android:summary="An example of some preferences." />
 
-        <CheckBoxPreference
-            android:key="checkBoxPref"
-            android:title="check it out"
-            android:summary="click this little box"/>
-
-    </PreferenceCategory>
-
-</PreferenceScreen>
+</preference-headers>
