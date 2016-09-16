@@ -27,3 +27,5 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 }
 
 //Testing test
+
+//Merging to main
