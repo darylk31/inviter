@@ -14,7 +14,6 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 
 public class UserAreaActivity extends Activity {
-//testing
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,12 +62,8 @@ public class UserAreaActivity extends Activity {
         }
 
         if (position == 1) {
-            MakeEventFragment makeeventfragment = new MakeEventFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, makeeventfragment);
-            ft.addToBackStack(null);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit();
+            Intent intent = new Intent(this, MakeEventActivity.class);
+            startActivity(intent);
         }
 
         if (position == 2) {
@@ -81,8 +76,6 @@ public class UserAreaActivity extends Activity {
         }
 
     }
-
-    public void test(){}
 }
 
 

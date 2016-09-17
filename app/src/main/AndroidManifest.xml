@@ -13,15 +13,16 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".UserAreaActivity" />
-        <activity android:name=".ForgotPasswordActivity"/>
-        <activity android:name="invite.hfad.com.inviter.SettingActivity"
-            android:label="Preferences">
-        </activity>
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="Preferences"></activity>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -30,7 +31,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
+        <activity android:name=".MakeEventActivity"></activity>
     </application>
 
 </manifest>
