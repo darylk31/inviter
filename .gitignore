@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #built application files
 *.apk
 *.ap_
@@ -34,3 +35,12 @@ build/
 
 #NDK
 obj/
+=======
+build/
+.gradle
+.idea
+*.iml
+local.properties
+.DS_Store
+captures/
+>>>>>>> origin/master
