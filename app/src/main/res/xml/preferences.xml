@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    //Invite Friends
     //Account Settings
     <PreferenceCategory
         android:title="My Account">
@@ -26,6 +28,7 @@
 
     </PreferenceCategory>
 
+    //Settings
     <PreferenceCategory
         android:title="Settings">
         <Preference
@@ -34,6 +37,8 @@
             android:summary = ""
             />
     </PreferenceCategory>
+
+    //Support
 
     //About settings
     <PreferenceCategory
