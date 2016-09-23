@@ -1,6 +1,8 @@
 package invite.hfad.com.inviter;
 
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,11 +18,9 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
     }
 
-    //Sign Up button
-    public void onSignUpButton(View view){
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        Toast toast = Toast.makeText(this,"Success",Toast.LENGTH_LONG);
-        toast.show();
+
+    public void onNextButton(View view){
+        Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
         startActivity(intent);
     }
 }
