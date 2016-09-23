@@ -6,9 +6,8 @@ import java.util.List;
 /**
  * Created by Daryl on 9/14/2016.
  */
-//TESTING
+
 public class Event {
-    private String month;
     private String day;
     private String time;
     private String event_name;
@@ -16,8 +15,7 @@ public class Event {
     private int eventId;
     private List invitedId;
 
-    private Event (String month, String day, String time, String event_name, String description) {
-        this.month = month;
+    public Event (String day, String time, String event_name, String description) {
         this.day = day;
         this.time = time;
         this.event_name = event_name;
@@ -25,7 +23,7 @@ public class Event {
         this.invitedId = new LinkedList();
     }
 
-    public String getMonth(){return month;}
+    public String getDay() {return day;}
 
     public String getTime(){return time;}
 
