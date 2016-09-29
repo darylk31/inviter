@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter;
 
+import android.app.ActionBar;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class EventMakerActivity extends AppCompatActivity {
     DatePicker pickerDate;
     TimePicker pickerTime;
     TextView info;
+    RelativeLayout layout2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,40 @@ public class EventMakerActivity extends AppCompatActivity {
 
             }});
 
+           layout2 = (RelativeLayout)findViewById(R.id.event_maker_layout_2);
+           layout2.setVisibility(View.INVISIBLE);
+
     }
 
+    public void onAdditionalOptions(){
+        //layout2 = (RelativeLayout)findViewById(R.id.event_maker_layout_2);
+        //expand(layout2);
+    }
+
+    public static void expand(final View v){
+        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t){
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds(){
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
 }
 
