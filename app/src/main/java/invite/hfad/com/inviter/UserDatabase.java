@@ -29,7 +29,6 @@ public class UserDatabase {
     }
 
     public LinkedList<Event> getEvents(){
-
         return this.events;
     }
 }

@@ -28,8 +28,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     public HomeAdapter(LinkedList<Event> events) {
-        this.event_names = getEventNames(events);
-        this.event_days = getDates(events);
+        LinkedList<Event> sortedEvents = sortEvents(events);
+        this.event_names = getEventNames(sortedEvents);
+        this.event_days = getDates(sortedEvents);
+
+
     }
 
 
@@ -54,6 +57,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         return event_names.length;
     }
 
+
     public String[] getEventNames(List<Event> events){
         String[] names = new String[events.size()];
         for(int i =0; i<events.size(); i++){
@@ -70,4 +74,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         return dates;
     }
 
+    public LinkedList<Event> sortEvents(LinkedList<Event> events) {
+        return events;
+    }
 }
