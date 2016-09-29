@@ -6,6 +6,9 @@ import android.widget.TextView;
 import android.view.ViewGroup;
 import android.support.v7.widget.CardView;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by Daryl on 9/21/2016.
  */
@@ -24,10 +27,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    public HomeAdapter(String[] event_names, String[] event_days) {
-        this.event_names = event_names;
-        this.event_days = event_days;
-
+    public HomeAdapter(LinkedList<Event> events) {
+        this.event_names = getEventNames(events);
+        this.event_days = getDates(events);
     }
 
 
@@ -51,4 +53,21 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     public int getItemCount() {
         return event_names.length;
     }
+
+    public String[] getEventNames(List<Event> events){
+        String[] names = new String[events.size()];
+        for(int i =0; i<events.size(); i++){
+        names[i] = events.get(i).getEvent_name();
+        }
+        return names;
+    }
+
+    public String[] getDates(List<Event> events){
+        String[] dates = new String[events.size()];
+        for(int i =0; i<events.size(); i++){
+            dates[i] = events.get(i).getDay();
+        }
+        return dates;
+    }
+
 }
