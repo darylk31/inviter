@@ -7,7 +7,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="invite.hfad.com.inviter.EventMakerActivity">
+    tools:context="invite.hfad.com.inviter.EventMakerActivity"
+    android:id="@+id/event_maker_layout_1"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
 
     <EditText
@@ -52,30 +55,75 @@
         android:layout_alignParentBottom="true"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
         android:id="@+id/editText6"
-        android:layout_below="@+id/pickertime"
+        android:layout_above="@+id/imageButton"
+        android:layout_below="@+id/pickerdate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/info"
-        android:layout_alignEnd="@+id/info"
-        android:minLines="4"
-        android:maxLines ="4"
-        android:scrollHorizontally="false" />
+        android:scrollHorizontally="false"
+        android:hint="description"
+        android:gravity="bottom"/>
 
-    <ImageButton9
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
-        android:src="@drawable/checkmark"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toEndOf="@+id/pickertime"
-        android:scaleType="fitCenter"
-        android:layout_below="@+id/editText6" />
+        android:text="ADDITIONAL OPTIONS"
+        android:layout_alignBottom="@+id/info"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onAdditionalOptions"
+        android:layout_gravity="bottom"
+        />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/event_maker_layout_2">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Title" />
+
+
+        <DatePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false" />
+
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:minLines="4"
+            android:maxLines ="4"
+            android:scrollHorizontally="false"
+            android:hint="description" />
+    </RelativeLayout>
 
 </RelativeLayout>
