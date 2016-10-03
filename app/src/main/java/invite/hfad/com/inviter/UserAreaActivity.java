@@ -3,12 +3,8 @@ package invite.hfad.com.inviter;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-
-
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import android.support.design.widget.TabLayout;
 
 public class UserAreaActivity extends Activity {
 
@@ -17,35 +13,38 @@ public class UserAreaActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
 
+        TabLayout tabLayout = (TabLayout) (findViewById(R.id.tabs));
+
+        TabLayout.Tab tab1 = tabLayout.newTab().setText("Home").setIcon(R.drawable.ic_home_black_24dp);
+        TabLayout.Tab tab2 = tabLayout.newTab().setText("Make Event").setIcon(R.drawable.ic_launch_black_24dp);
+        TabLayout.Tab tab3 = tabLayout.newTab().setText("Inbox").setIcon(R.drawable.ic_inbox_black_24dp);
+
+        tabLayout.addTab(tab1);
+        tabLayout.addTab(tab2);
+        tabLayout.addTab(tab3);
+
         switch_frag(0);
 
-        AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
 
-
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Home", R.drawable.ic_home_black_24dp);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Make Event", R.drawable.ic_launch_black_24dp);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Inbox", R.drawable.ic_inbox_black_24dp);
-
-        bottomNavigation.addItem(item1);
-        bottomNavigation.addItem(item2);
-        bottomNavigation.addItem(item3);
-
-        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#FEFEFE"));
-
-        bottomNavigation.setAccentColor(Color.parseColor("#F63D2B"));
-        bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-
-        bottomNavigation.setColored(true);
-        bottomNavigation.setCurrentItem(0);
-
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                switch_frag(position);
+            }
 
             @Override
-            public void onTabSelected(int position, boolean selected) {
-                switch_frag(position);
-            };}
-        );
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
+
 
 
     public void switch_frag(int position){
@@ -74,5 +73,4 @@ public class UserAreaActivity extends Activity {
 
     }
 }
-
 
