@@ -32,8 +32,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".MakeEventActivity" />
-        <activity android:name=".EventMakerActivity"/>
-        <activity android:name=".RegisterActivity2"></activity>
+        <activity android:name=".EventMakerActivity" />
+        <activity android:name=".RegisterActivity2" />
+        <activity android:name=".EventPage"></activity>
     </application>
 
 </manifest>

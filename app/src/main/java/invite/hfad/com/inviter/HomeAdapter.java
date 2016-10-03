@@ -1,7 +1,9 @@
 package invite.hfad.com.inviter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.support.v7.widget.CardView;
@@ -16,6 +18,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     private String[] event_names;
     private String[] event_days;
+    private Integer[] event_ids;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -29,10 +32,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     public HomeAdapter(LinkedList<Event> events) {
         LinkedList<Event> sortedEvents = sortEvents(events);
-        this.event_names = getEventNames(sortedEvents);
-        this.event_days = getDates(sortedEvents);
-
-
+        showEvents(sortedEvents);
     }
 
 
@@ -44,13 +44,21 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        CardView cardView = holder.cardView;
+        final CardView cardView = holder.cardView;
         TextView event_name_text = (TextView)cardView.findViewById(R.id.event_name);
         event_name_text.setText(event_names[position]);
         TextView event_day_text = (TextView)cardView.findViewById(R.id.event_day);
         event_day_text.setText(event_days[position]);
-
-    }
+        final int id = event_ids[position];
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), EventPage.class);
+                intent.putExtra("event_id", id);
+                v.getContext().startActivity(intent);
+            }
+        });
+        };
 
     @Override
     public int getItemCount() {
@@ -58,23 +66,23 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
 
-    public String[] getEventNames(List<Event> events){
+    public void showEvents(List<Event> events) {
         String[] names = new String[events.size()];
-        for(int i =0; i<events.size(); i++){
-        names[i] = events.get(i).getEvent_name();
+        String[] dates = new String[events.size()];
+        Integer[] ids = new Integer[events.size()];
+        for (int i = 0; i < events.size(); i++) {
+            names[i] = events.get(i).getEvent_name();
+            dates[i] = events.get(i).getDay();
+            ids[i] = events.get(i).getEventId();
         }
-        return names;
+        this.event_names = names;
+        this.event_days = dates;
+        this.event_ids = ids;
     }
 
-    public String[] getDates(List<Event> events){
-        String[] dates = new String[events.size()];
-        for(int i =0; i<events.size(); i++){
-            dates[i] = events.get(i).getDay();
-        }
-        return dates;
-    }
 
     public LinkedList<Event> sortEvents(LinkedList<Event> events) {
+        //...
         return events;
     }
 }
