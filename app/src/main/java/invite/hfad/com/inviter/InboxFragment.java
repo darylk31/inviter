@@ -3,29 +3,31 @@ package invite.hfad.com.inviter;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class InboxFragment extends Fragment {
-
-
-    public InboxFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inbox, container, false);
-    }
+        RecyclerView inboxRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_inbox, container, false);
 
-    public void testing(){}
+        UserDatabase db = new UserDatabase();
+        LinkedList<Event> invites;
+        invites = db.getInvites();
+
+        InboxAdapter adapter = new InboxAdapter(invites);
+        inboxRecycler.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        inboxRecycler.setLayoutManager(layoutManager);
+        return inboxRecycler;
+
+    }
 
 }

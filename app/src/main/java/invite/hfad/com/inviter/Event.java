@@ -14,6 +14,7 @@ public class Event {
     private String description;
     private int eventId;
     private List invitedId;
+    private String creator;
 
     public Event (String day, String time, String event_name, String description) {
         this.day = day;
@@ -44,4 +45,8 @@ public class Event {
     public void remove_invitedId(int userId){
         invitedId.remove(userId);
     }
+
+    public void update_creator(String userName) {this.creator = userName;}
+
+    public String get_creator() {return this.creator;}
 }

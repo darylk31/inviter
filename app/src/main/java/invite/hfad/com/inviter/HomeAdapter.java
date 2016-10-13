@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.support.v7.widget.CardView;
@@ -50,6 +51,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView event_day_text = (TextView)cardView.findViewById(R.id.event_day);
         event_day_text.setText(event_days[position]);
         final int id = event_ids[position];
+        //...only if unread messages
+        ImageView notification = (ImageView)cardView.findViewById(R.id.notification);
+        notification.setImageResource(R.drawable.chat_24dp);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +86,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
 
     public LinkedList<Event> sortEvents(LinkedList<Event> events) {
-        //...
+        //...sort in date order
         return events;
     }
 }
