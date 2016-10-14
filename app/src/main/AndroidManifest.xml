@@ -3,6 +3,7 @@
     package="invite.hfad.com.inviter">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +36,8 @@
         <activity android:name=".EventMakerActivity" />
         <activity android:name=".RegisterActivity2" />
         <activity android:name=".EventPage" />
-        <activity android:name=".InboxAdapter"></activity>
+        <activity android:name=".InboxAdapter" />
+        <activity android:name=".ContactsActivity"></activity>
     </application>
 
 </manifest>

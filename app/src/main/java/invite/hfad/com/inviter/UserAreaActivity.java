@@ -61,10 +61,12 @@ public class UserAreaActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                Intent intent = new Intent(this, SettingActivity.class);
-                startActivity(intent);
+                Intent intent_settings = new Intent(this, SettingActivity.class);
+                startActivity(intent_settings);
                 return true;
             case R.id.contacts:
+                Intent intent_contacts = new Intent(this, ContactsActivity.class);
+                startActivity(intent_contacts);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
