@@ -11,6 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.telephony.SmsManager;
 
 
 public class ContactsFragment extends ListFragment
@@ -38,7 +39,8 @@ public class ContactsFragment extends ListFragment
     // columns requested from the database
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
+            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
     };
 
 
@@ -58,7 +60,7 @@ public class ContactsFragment extends ListFragment
                 PROJECTION,
                 null,
                 null,
-                null);
+                ContactsContract.Contacts.SORT_KEY_PRIMARY);
     }
 
     @Override
@@ -70,4 +72,5 @@ public class ContactsFragment extends ListFragment
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
+
 }
