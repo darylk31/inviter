@@ -1,6 +1,8 @@
 package invite.hfad.com.inviter;
 
 import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,10 +79,13 @@ public class EventMakerActivity extends AppCompatActivity {
 
             }});
 
+
+        //SCREEN STRECH
            layout2 = (RelativeLayout)findViewById(R.id.event_maker_layout_2);
            layout2.setVisibility(View.INVISIBLE);
 
     }
+
 
     public void onAdditionalOptions(){
         //layout2 = (RelativeLayout)findViewById(R.id.event_maker_layout_2);
@@ -112,5 +117,7 @@ public class EventMakerActivity extends AppCompatActivity {
         a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
+
+
 }
 
