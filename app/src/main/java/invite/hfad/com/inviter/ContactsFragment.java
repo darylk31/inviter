@@ -59,6 +59,7 @@ public class ContactsFragment extends ListFragment
     private static final String[] FROM = { ContactsContract.Contacts.DISPLAY_NAME_PRIMARY };
     private static final int[] TO = { android.R.id.text1 };
 
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
