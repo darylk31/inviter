@@ -95,16 +95,14 @@ public class MakeEventActivity extends Activity {
     }
 
     //make discard warning for back button
-    public void onInvite(){
-        /*
+    public void onInvite(View view){
         final EditText etTitle = (EditText)findViewById(R.id.etTitle);
         final EditText etDescription = (EditText)findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
-        */
-        Intent intent_contacts = new Intent(this, ContactsActivity.class);
-        startActivity(intent_contacts);
-        /*
+
+        Intent i = new Intent(MakeEventActivity.this, ContactsActivity.class);
+
         i.putExtra("<yearData>", yearData);
         i.putExtra("<monthData>", monthData);
         i.putExtra("<dayData>",dayData);
@@ -112,7 +110,8 @@ public class MakeEventActivity extends Activity {
         i.putExtra("<minuteData>",minuteData);
         i.putExtra("<titleData>",titleData);
         i.putExtra("<descriptionData>",descriptionData);
-        */
+        startActivity(i);
+
 
     }
 
