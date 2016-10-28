@@ -36,6 +36,7 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 switch_frag(position);
+
             }
 
             @Override
@@ -45,7 +46,9 @@ public class UserAreaActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                int position = tab.getPosition();
+                if(position == 1)
+                    switch_frag(position);
             }
         });
     }
@@ -87,6 +90,7 @@ public class UserAreaActivity extends AppCompatActivity {
         if (position == 1) {
             Intent intent = new Intent(this, MakeEventActivity.class);
             startActivity(intent);
+
         }
 
         if (position == 2) {

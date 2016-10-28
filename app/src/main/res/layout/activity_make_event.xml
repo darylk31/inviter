@@ -34,7 +34,11 @@
         android:layout_alignParentStart="true"
         android:hint="Time"
         android:focusable="false"
-        android:onClick="onTimeClick"/>
+        android:onClick="onTimeClick"
+        style="@style/TimeDateEditTheme"
+        android:background="@drawable/event_edit_text_bg"
+        android:gravity="center_horizontal"
+       />
 
     <EditText
         android:layout_width="wrap_content"
@@ -48,7 +52,9 @@
         android:layout_toRightOf="@+id/etTime"
         android:layout_toEndOf="@+id/etTime"
         android:hint="Date"
-        android:focusable="false"/>
+        android:focusable="false"
+        style="@style/TimeDateEditTheme"
+        android:background="@drawable/event_edit_text_bg" />
 
     <EditText
         android:layout_width="wrap_content"

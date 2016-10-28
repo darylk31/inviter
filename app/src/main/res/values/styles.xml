@@ -21,4 +21,12 @@
 
     </style>
 
+    <style name="MyTimePickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
+
+    </style>
+
+    <style name="TimeDateEditTheme" parent="android:Theme.Holo.Light">
+
+    </style>
+
 </resources>

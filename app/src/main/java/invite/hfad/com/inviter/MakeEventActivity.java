@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +20,13 @@ import java.util.Locale;
 
 public class MakeEventActivity extends Activity {
 
+    String title;
+    String month;
+    String dayOfMonth;
+    String year;
+    String hour;
+    String minute;
+    String notes;
 
     private String yearData;
     private String monthData;
@@ -49,10 +57,22 @@ public class MakeEventActivity extends Activity {
                 mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+<<<<<<< Updated upstream
                         etDate.setText(year + " " + monthOfYear + " " + dayOfMonth);
                         yearData = Integer.toString(year);
                         monthData = Integer.toString(monthOfYear);
                         dayData = Integer.toString(dayOfMonth);
+=======
+                        String dateString = String.format("%d-%d-%d", year,monthOfYear +1,dayOfMonth);
+                        try {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                            String output = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH).format(date);
+                            etDate.setText(output);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+>>>>>>> Stashed changes
                     }
                 }, mYear,mMonth,mDay);
                 mDatePicker.setTitle("Date");
@@ -68,12 +88,21 @@ public class MakeEventActivity extends Activity {
                 int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int mMinute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MakeEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this,R.style.MyTimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
+<<<<<<< Updated upstream
                     public void onTimeSet(TimePicker view, int hour, int minute) {
                         etTime.setText(hour + " : " + minute);
                         hourData = Integer.toString(hour);
                         minuteData = Integer.toString(minute);
+=======
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        int hour = hourOfDay % 12;
+                        if(hour == 0)
+                            hour = 12;
+                        String timeText = String.format("%02d:%02d %s",hour,minute,hourOfDay < 12 ? "AM" : "PM");
+                        etTime.setText(timeText);
+>>>>>>> Stashed changes
                     }
                 }, mHour, mMinute, true);
                 mTimePicker.setTitle("Time");
