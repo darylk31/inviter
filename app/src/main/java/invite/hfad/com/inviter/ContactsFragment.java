@@ -40,7 +40,6 @@ public class ContactsFragment extends ListFragment
     private static final String[] PROJECTION = {
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-            ContactsContract.CommonDataKinds.Phone.NUMBER
     };
 
 
