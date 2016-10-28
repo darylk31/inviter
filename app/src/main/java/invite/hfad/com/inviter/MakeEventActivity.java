@@ -20,14 +20,6 @@ import java.util.Locale;
 
 public class MakeEventActivity extends Activity {
 
-    String title;
-    String month;
-    String dayOfMonth;
-    String year;
-    String hour;
-    String minute;
-    String notes;
-
     private String yearData;
     private String monthData;
     private String dayData;
@@ -47,22 +39,19 @@ public class MakeEventActivity extends Activity {
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+                //Gets instance of calender with the current date
                 Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = mcurrentDate.get(Calendar.YEAR);
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog mDatePicker;
 
                 mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-<<<<<<< Updated upstream
-                        etDate.setText(year + " " + monthOfYear + " " + dayOfMonth);
                         yearData = Integer.toString(year);
                         monthData = Integer.toString(monthOfYear);
                         dayData = Integer.toString(dayOfMonth);
-=======
                         String dateString = String.format("%d-%d-%d", year,monthOfYear +1,dayOfMonth);
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
@@ -72,7 +61,6 @@ public class MakeEventActivity extends Activity {
                             e.printStackTrace();
                         }
 
->>>>>>> Stashed changes
                     }
                 }, mYear,mMonth,mDay);
                 mDatePicker.setTitle("Date");
@@ -90,19 +78,14 @@ public class MakeEventActivity extends Activity {
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(MakeEventActivity.this,R.style.MyTimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
-<<<<<<< Updated upstream
-                    public void onTimeSet(TimePicker view, int hour, int minute) {
-                        etTime.setText(hour + " : " + minute);
-                        hourData = Integer.toString(hour);
-                        minuteData = Integer.toString(minute);
-=======
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        hourData = Integer.toString(hourOfDay);
+                        minuteData = Integer.toString(minute);
                         int hour = hourOfDay % 12;
                         if(hour == 0)
                             hour = 12;
                         String timeText = String.format("%02d:%02d %s",hour,minute,hourOfDay < 12 ? "AM" : "PM");
                         etTime.setText(timeText);
->>>>>>> Stashed changes
                     }
                 }, mHour, mMinute, true);
                 mTimePicker.setTitle("Time");
@@ -113,12 +96,15 @@ public class MakeEventActivity extends Activity {
 
     //make discard warning for back button
     public void onInvite(){
+        /*
         final EditText etTitle = (EditText)findViewById(R.id.etTitle);
         final EditText etDescription = (EditText)findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
-
-        Intent i = new Intent(this,Contacts.class);
+        */
+        Intent intent_contacts = new Intent(this, ContactsActivity.class);
+        startActivity(intent_contacts);
+        /*
         i.putExtra("<yearData>", yearData);
         i.putExtra("<monthData>", monthData);
         i.putExtra("<dayData>",dayData);
@@ -126,7 +112,7 @@ public class MakeEventActivity extends Activity {
         i.putExtra("<minuteData>",minuteData);
         i.putExtra("<titleData>",titleData);
         i.putExtra("<descriptionData>",descriptionData);
-        startActivity(i);
+        */
 
     }
 

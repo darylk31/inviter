@@ -12,12 +12,22 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.telephony.SmsManager;
+import android.widget.Toast;
 
 
 public class ContactsFragment extends ListFragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private CursorAdapter mAdapter;
+
+
+    private String yearData;
+    private String monthData;
+    private String dayData;
+    private String titleData;
+    private String descriptionData;
+    private String hourData;
+    private String minuteData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +37,9 @@ public class ContactsFragment extends ListFragment
         Cursor cursor = null;
         int flags = 0; // no auto-requery! Loader requeries.
         mAdapter = new SimpleCursorAdapter(context, layout, cursor, FROM, TO, flags);
+
+        //Retrieve Event Details
+        //yearData = getArguments().getString("yearData");
     }
 
     @Override
@@ -70,6 +83,12 @@ public class ContactsFragment extends ListFragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    public void TEST(){
+        Toast.makeText(getActivity(), yearData, Toast.LENGTH_SHORT).show();
+
+
     }
 
 }
