@@ -97,7 +97,6 @@ public class MakeEventActivity extends Activity {
         i.putExtra("<minuteData>",minuteData);
         i.putExtra("<titleData>",titleData);
         i.putExtra("<descriptionData>",descriptionData);
-
         startActivity(i);
 
     }
