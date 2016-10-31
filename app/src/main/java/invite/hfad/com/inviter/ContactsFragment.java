@@ -1,95 +1,74 @@
 package invite.hfad.com.inviter;
-
-import android.content.Context;
+import android.content.ContentResolver;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.telephony.SmsManager;
-import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import java.util.ArrayList;
 
 
-public class ContactsFragment extends ListFragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private CursorAdapter mAdapter;
+public class ContactsFragment extends Fragment {
 
+    private View myFragmentView;
 
-    private String yearData;
-    private String monthData;
-    private String dayData;
-    private String titleData;
-    private String descriptionData;
-    private String hourData;
-    private String minuteData;
+    public class PhoneContact {
+        public String contact_name = "";
+        public String contact_number = "";
+        public int contact_id = 0;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Context context = getActivity();
-        int layout = R.layout.contacts_list_item;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
+        myFragmentView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        getPhoneContact();
+        return myFragmentView;
+    }
+
+    public void getPhoneContact() {
+        ArrayList<PhoneContact> phoneContacts = new ArrayList<PhoneContact>();
         Cursor cursor = null;
-        int flags = 0;
-        mAdapter = new SimpleCursorAdapter(context, layout, cursor, FROM, TO, flags);
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        try{
+            cursor = contentResolver.query(
+                    ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        } catch (Exception e){
+            Log.e("Error on contact list", e.getMessage());
+        }
 
-        //Retrieve Event Details
-        //yearData = getArguments().getString("yearData");
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()){
+                PhoneContact phoneContact = new PhoneContact();
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                phoneContact.contact_name = name;
+
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+                if (hasPhoneNumber > 0) {
+
+                    Cursor phoneCursor = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                            , null
+                            , ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?"
+                            , new String[]{id}
+                            , null);
+
+                    while (phoneCursor.moveToNext()){
+                        String number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        phoneContact.contact_number = number;
+                    }
+                    phoneCursor.close();
+                }
+                phoneContacts.add(phoneContact);
+            }
+            PhoneContactsAdapter adapter = new PhoneContactsAdapter(this.getContext(), phoneContacts);
+            ListView listView = (ListView) myFragmentView.findViewById(R.id.listview_phoneContacts);
+            listView.setAdapter(adapter);
+        }
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setListAdapter(mAdapter);
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    // columns requested from the database
-    private static final String[] PROJECTION = {
-            ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-    };
-
-
-    private static final String[] FROM = { ContactsContract.Contacts.DISPLAY_NAME_PRIMARY };
-    private static final int[] TO = { android.R.id.text1 };
-
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        // load from the "Contacts table"
-        Uri contentUri = ContactsContract.Contacts.CONTENT_URI;
-
-        // no sub-selection, no sort order, simply every row
-        // projection says we want just the _id and the name column
-        return new CursorLoader(getActivity(),
-                contentUri,
-                PROJECTION,
-                null,
-                null,
-                ContactsContract.Contacts.SORT_KEY_PRIMARY);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
-    }
-
-    public void TEST(){
-        Toast.makeText(getActivity(), yearData, Toast.LENGTH_SHORT).show();
-
-
-    }
-
 }

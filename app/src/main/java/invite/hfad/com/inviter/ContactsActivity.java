@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public class ContactsActivity extends AppCompatActivity{
 
+
     private String yearData;
     private String monthData;
     private String dayData;
@@ -15,12 +16,13 @@ public class ContactsActivity extends AppCompatActivity{
     private String hourData;
     private String minuteData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        /**
+/*
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             yearData = extras.getString("yearData");
@@ -30,7 +32,9 @@ public class ContactsActivity extends AppCompatActivity{
             minuteData = extras.getString("minuteData");
             titleData= extras.getString("titleData");
             descriptionData = extras.getString("descriptionData");
-        }*/
+        }
+        */
+
 
         ContactsFragment contactsFragment = new ContactsFragment();
 
