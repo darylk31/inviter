@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="50dp">
+    android:layout_height="55dp">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         android:id="@+id/tvContactNumber"
         android:layout_below="@+id/tvContactName"
         android:layout_alignLeft="@+id/tvContactName"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:layout_alignStart="@+id/tvContactName"
         android:textColor="#1c919b">
 
@@ -30,12 +30,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="17dp"
         android:text="Invite!"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="10dp"
-        android:textColor="#e49c29" />
+        android:textColor="#e49c29"
+        android:elegantTextHeight="false" />
 
 </RelativeLayout>
