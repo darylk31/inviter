@@ -33,9 +33,9 @@ public class ContactsFragment extends ListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getActivity();
-        int layout = android.R.layout.simple_list_item_1;
+        int layout = R.layout.contacts_list_item;
         Cursor cursor = null;
-        int flags = 0; // no auto-requery! Loader requeries.
+        int flags = 0;
         mAdapter = new SimpleCursorAdapter(context, layout, cursor, FROM, TO, flags);
 
         //Retrieve Event Details
