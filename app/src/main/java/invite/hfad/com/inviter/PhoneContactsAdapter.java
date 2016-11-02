@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class PhoneContactsAdapter extends BaseAdapter {
     Context mContext;
-    List<ContactsFragment.PhoneContact> phoneContacts;
+    List<PhoneContactsFragment.PhoneContact> phoneContacts;
 
-    public PhoneContactsAdapter (Context mContext, List<ContactsFragment.PhoneContact> mContact){
+    public PhoneContactsAdapter (Context mContext, List<PhoneContactsFragment.PhoneContact> mContact){
         this.mContext = mContext;
         this.phoneContacts = mContact;
     }

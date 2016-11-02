@@ -36,12 +36,12 @@ public class ContactsActivity extends AppCompatActivity{
         */
 
 
-        ContactsFragment contactsFragment = new ContactsFragment();
+        PhoneContactsFragment phoneContactsFragment = new PhoneContactsFragment();
 
-        //contactsFragment.setArguments(extras);
+        //phoneContactsFragment.setArguments(extras);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.contacts_container,contactsFragment);
+        ft.replace(R.id.contacts_container, phoneContactsFragment);
         ft.addToBackStack(null);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();

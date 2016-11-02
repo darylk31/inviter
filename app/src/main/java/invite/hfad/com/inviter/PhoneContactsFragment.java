@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import java.util.ArrayList;
 
 
 
-public class ContactsFragment extends Fragment {
+public class PhoneContactsFragment extends Fragment {
 
     private View myFragmentView;
 
@@ -25,7 +26,7 @@ public class ContactsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState){
-        myFragmentView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        myFragmentView = inflater.inflate(R.layout.fragment_phonecontacts, container, false);
         getPhoneContact();
         return myFragmentView;
     }
