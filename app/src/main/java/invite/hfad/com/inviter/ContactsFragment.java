@@ -85,10 +85,6 @@ public class ContactsFragment extends ListFragment
         mAdapter.swapCursor(null);
     }
 
-    public void TEST(){
-        Toast.makeText(getActivity(), yearData, Toast.LENGTH_SHORT).show();
 
-
-    }
 
 }
