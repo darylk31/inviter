@@ -40,7 +40,7 @@ public class MakeEventActivity extends Activity {
         final EditText etDate = (EditText)findViewById(R.id.etDate);
         final EditText etTime = (EditText)findViewById(R.id.etTime);
         layout1 = (RelativeLayout) findViewById(R.id.layout1);
-        layout1.setVisibility(View.GONE);
+        //layout1.setVisibility(View.GONE);
 
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
