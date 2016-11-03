@@ -70,6 +70,7 @@ public class UserAreaActivity extends AppCompatActivity {
             case R.id.contacts:
                 Intent intent_contacts = new Intent(this, ContactsActivity.class);
                 startActivity(intent_contacts);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
