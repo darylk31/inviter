@@ -45,9 +45,11 @@ public class PhoneContactsFragment extends Fragment {
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()){
                 PhoneContact phoneContact = new PhoneContact();
+
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 phoneContact.contact_name = name;
+
 
                 int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
                 if (hasPhoneNumber > 0) {
@@ -65,6 +67,7 @@ public class PhoneContactsFragment extends Fragment {
                     }
                     phoneCursor.close();
                 }
+
                 phoneContacts.add(phoneContact);
             }
             PhoneContactsAdapter adapter = new PhoneContactsAdapter(this.getContext(), phoneContacts);

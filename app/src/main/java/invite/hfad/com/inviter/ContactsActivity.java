@@ -1,11 +1,15 @@
 package invite.hfad.com.inviter;
 
 
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ContactsActivity extends AppCompatActivity{
@@ -18,11 +22,16 @@ public class ContactsActivity extends AppCompatActivity{
     private String hourData;
     private String minuteData;
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
+        /*
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
@@ -35,17 +44,55 @@ public class ContactsActivity extends AppCompatActivity{
             descriptionData = extras.getString("descriptionData");
         }
 
+        contactsFragment.setArguments(extras);
+        */
 
-        ContactsFragment contactsFragment = new ContactsFragment();
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-        //SEND DATA TO FRAGMENT
-        //contactsFragment.setArguments(extras);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.contacts_container,contactsFragment);
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.commit();
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        PhoneContactsFragment p1 = new PhoneContactsFragment();
+        PhoneContactsFragment p2 = new PhoneContactsFragment();
+
+        adapter.addFragment(p1, "TEST");
+        adapter.addFragment(p2, "TEST");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
 }
