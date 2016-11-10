@@ -5,7 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="invite.hfad.com.inviter.MakeEventActivity"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
     <ScrollView
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -24,7 +26,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/layout1"
                 android:orientation="vertical"
-                android:gravity="bottom">
+                >
 
                 <EditText
                     android:layout_width="match_parent"
@@ -34,9 +36,11 @@
                     android:textSize="25sp" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
                 <EditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -45,12 +49,11 @@
                     android:id="@+id/etTime"
                     android:hint="Time"
                     android:focusable="false"
-                    android:onClick="onTimeClick"
                     style="@style/TimeDateEditTheme"
                     android:background="@drawable/event_edit_text_bg"
                     android:gravity="center"
                     android:layout_gravity="left"
-                    android:layout_weight="1.74"
+                    android:layout_weight="1"
                     />
 
                 <EditText
@@ -64,7 +67,9 @@
                     style="@style/TimeDateEditTheme"
                     android:gravity="center"
                     android:background="@drawable/event_edit_text_bg"
-                    android:layout_weight="4"/>
+                    android:layout_weight="3"
+                    android:layout_marginLeft="15dp"
+                    />
                 </LinearLayout>
 
                 <EditText
