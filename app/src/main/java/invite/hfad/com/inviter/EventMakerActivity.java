@@ -3,6 +3,7 @@ package invite.hfad.com.inviter;
 import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -117,7 +118,5 @@ public class EventMakerActivity extends AppCompatActivity {
         a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
-
-
 }
 

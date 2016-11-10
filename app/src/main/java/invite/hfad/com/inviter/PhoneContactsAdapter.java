@@ -1,49 +1,56 @@
 package invite.hfad.com.inviter;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import java.util.List;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.support.v7.widget.CardView;
+import java.util.ArrayList;
 
 /**
  * Created by Daryl on 10/30/2016.
  */
-public class PhoneContactsAdapter extends BaseAdapter {
-    Context mContext;
-    List<PhoneContactsFragment.PhoneContact> phoneContacts;
+public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdapter.ViewHolder>{
+    private String[] contacts_names;
+    private String[] contact_numbers;
 
-    public PhoneContactsAdapter (Context mContext, List<PhoneContactsFragment.PhoneContact> mContact){
-        this.mContext = mContext;
-        this.phoneContacts = mContact;
-    }
-    @Override
-    public int getCount() {
-        return phoneContacts.size();
-    }
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public Object getItem(int position) {
-        return phoneContacts.get(position);
+        private CardView cardView;
+
+        public ViewHolder(CardView v) {
+            super(v);
+            cardView = v;
+        }
     }
 
+    public PhoneContactsAdapter(ArrayList<PhoneContactsFragment.PhoneContact> phoneContacts) {
+        for (int i = 0; i < phoneContacts.size(); i++) {
+            contacts_names[i] = phoneContacts.get(i).getContact_name();
+            contact_numbers[i] = phoneContacts.get(i).getContact_number();
+        }
+    }
+
+
+
     @Override
-    public long getItemId(int position) {
-        return position;
+    public PhoneContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.contacts_list_item, parent, false);
+        return new ViewHolder(cv);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = View.inflate(mContext, R.layout.contacts_list_item, null);
-        TextView contactname = (TextView)view.findViewById(R.id.tvContactName);
-        TextView contactnumber = (TextView)view.findViewById(R.id.tvContactNumber);
+    public void onBindViewHolder(PhoneContactsAdapter.ViewHolder holder, int position) {
+        final CardView cardView = holder.cardView;
+        TextView name = (TextView) cardView.findViewById(R.id.tvPContactName);
+        name.setText(contacts_names[position]);
+        TextView number = (TextView) cardView.findViewById(R.id.tvPContactNumber);
+        number.setText(contact_numbers[position]);
+    }
 
-        contactname.setText(phoneContacts.get(position).contact_name);
-        contactnumber.setText(phoneContacts.get(position).contact_number);
-
-        view.setTag(phoneContacts.get(position).contact_name);
-        return view;
+    @Override
+    public int getItemCount() {
+        return contacts_names.length;
     }
 }
