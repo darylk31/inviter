@@ -12,7 +12,9 @@ import android.view.animation.Transformation;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +31,6 @@ public class MakeEventActivity extends Activity {
     private String descriptionData;
     private String hourData;
     private String minuteData;
-    RelativeLayout layout1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,6 @@ public class MakeEventActivity extends Activity {
 
         final EditText etDate = (EditText)findViewById(R.id.etDate);
         final EditText etTime = (EditText)findViewById(R.id.etTime);
-        layout1 = (RelativeLayout) findViewById(R.id.layout1);
-        //layout1.setVisibility(View.GONE);
 
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +127,20 @@ public class MakeEventActivity extends Activity {
 
     }
 
+    public void onResizeScreen(View v){
+        ImageButton ibAdditional = (ImageButton) findViewById(R.id.ibAdditionalSetting);
+        LinearLayout layout2 = (LinearLayout) findViewById(R.id.layout2);
+        TextView tv1 = (TextView) findViewById(R.id.tvTest);
+
+        ibAdditional.setVisibility(View.GONE);
+        layout2.setVisibility(View.VISIBLE);
+        tv1.setVisibility(View.VISIBLE);
+
+    }
+
+
+    /**
+
     public static void onResizeScreen(final View v) {
         v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         final int targetHeight = v.getMeasuredHeight();
@@ -155,4 +168,5 @@ public class MakeEventActivity extends Activity {
         a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
+     */
 }

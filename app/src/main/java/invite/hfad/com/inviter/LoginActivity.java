@@ -37,8 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onEventMaker(View view){
-        Intent intent = new Intent(LoginActivity.this,EventMakerActivity.class);
-        startActivity(intent);
+
     }
 
     //Exiting on back button

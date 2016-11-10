@@ -1,82 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="invite.hfad.com.inviter.MakeEventActivity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout1">
+    tools:context="invite.hfad.com.inviter.MakeEventActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etTitle"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="Event Name"
-        android:textSize="25dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout1"
+                android:orientation="vertical"
+                android:gravity="bottom">
 
-    <EditText
-        android:layout_width="250px"
-        android:layout_height="wrap_content"
-        android:inputType="time"
-        android:ems="10"
-        android:id="@+id/etTime"
-        android:layout_below="@+id/etTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="Time"
-        android:focusable="false"
-        android:onClick="onTimeClick"
-        style="@style/TimeDateEditTheme"
-        android:background="@drawable/event_edit_text_bg"
-        android:gravity="center"
-       />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etTitle"
+                    android:hint="Event Name"
+                    android:textSize="25sp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/etDate"
-        android:layout_below="@+id/etTitle"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/etTime"
-        android:hint="Date"
-        android:focusable="false"
-        style="@style/TimeDateEditTheme"
-        android:gravity="center"
-        android:background="@drawable/event_edit_text_bg"
-    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="time"
+                    android:ems="10"
+                    android:id="@+id/etTime"
+                    android:hint="Time"
+                    android:focusable="false"
+                    android:onClick="onTimeClick"
+                    style="@style/TimeDateEditTheme"
+                    android:background="@drawable/event_edit_text_bg"
+                    android:gravity="center"
+                    android:layout_gravity="left"
+                    android:layout_weight="1.74"
+                    />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/etDescription"
-        android:hint="Description"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/etTime"
-        android:layout_alignRight="@+id/etDate"
-        android:layout_alignEnd="@+id/etDate"
-        android:layout_above="@+id/bInvite"
-        android:gravity="bottom"/>
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:ems="10"
+                    android:id="@+id/etDate"
+                    android:hint="Date"
+                    android:focusable="false"
+                    style="@style/TimeDateEditTheme"
+                    android:gravity="center"
+                    android:background="@drawable/event_edit_text_bg"
+                    android:layout_weight="4"/>
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:id="@+id/etDescription"
+                    android:hint="Description"
+                    android:gravity="bottom"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ibAdditionalSetting"
+                    android:src="@drawable/chat_24dp"
+                    android:layout_below="@+id/etDescription"
+                    android:onClick="onResizeScreen"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout2"
+                android:visibility="gone"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:text = "ofjmasld;kfjasdl;fkjasd;fljkasd;lfjasdkl;fjsadl;kfjasdl;fjsadl;kfjasl;kfjds"
+                    android:visibility="gone"
+                    android:id="@+id/tvTest" />
 
 
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_add_circle_24dp"
+        android:src="@drawable/chat_24dp"
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,31 +114,4 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/bAdditionalSetting"
-        android:src="@drawable/ic_add_circle_24dp"
-        android:layout_alignBottom="@+id/bInvite"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="onResizeScreen"/>
 </RelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/layout2">
-
-       <TextView
-           android:layout_width="100dp"
-           android:layout_height="200dp"
-           android:text = "ofjmasld;kfjasdl;fkjasd;fljkasd;lfjasdkl;fjsadl;kfjasdl;fjsadl;kfjasl;kfjds"/>
-
-
-        </RelativeLayout>
-
-</LinearLayout>

@@ -34,29 +34,8 @@ dependencies {
     compile 'com.android.support:support-v4:23.+'
 }
 dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
     compile 'com.aurelhubert:ahbottomnavigation:0.1.3'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
