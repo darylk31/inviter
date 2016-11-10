@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -98,6 +100,13 @@ public class MakeEventActivity extends Activity {
                 }
             });
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        LinearLayout l1 = (LinearLayout) findViewById(R.id.layout1);
+        l1.getLayoutParams().height = height;
 
     }
 
