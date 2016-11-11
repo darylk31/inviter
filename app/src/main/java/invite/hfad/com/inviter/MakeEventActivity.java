@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,14 +101,19 @@ public class MakeEventActivity extends Activity {
                 }
             });
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        LinearLayout l1 = (LinearLayout) findViewById(R.id.layout1);
-        l1.getLayoutParams().height = height;
+        setScreenSize();
 
+
+    }
+
+    public void setScreenSize(){
+        //Set Screen Size on create
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int height = metrics.heightPixels;
+        LinearLayout l1 = (LinearLayout) findViewById(R.id.layout1);
+        int actionbar = getStatusBarHeight();
+        l1.getLayoutParams().height = height - actionbar;
     }
 
     //make discard warning for back button
@@ -141,7 +147,7 @@ public class MakeEventActivity extends Activity {
         LinearLayout layout2 = (LinearLayout) findViewById(R.id.layout2);
         TextView tv1 = (TextView) findViewById(R.id.tvTest);
 
-        ibAdditional.setVisibility(View.GONE);
+        ibAdditional.setVisibility(View.INVISIBLE);
         layout2.setVisibility(View.VISIBLE);
         tv1.setVisibility(View.VISIBLE);
 
@@ -178,4 +184,13 @@ public class MakeEventActivity extends Activity {
         v.startAnimation(a);
     }
      */
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }
