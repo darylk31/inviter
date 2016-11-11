@@ -98,7 +98,20 @@
                 android:id="@+id/layout2"
                 android:visibility="gone"
                 android:layout_gravity="bottom"
-                android:gravity="bottom">
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="location"
+                    android:id="@+id/etLocation"/>
+
+                <CheckBox android:id="@+id/cbAllDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="All-day"
+                    android:onClick="onAllDayClick"/>
 
                 <TextView
                     android:layout_width="match_parent"

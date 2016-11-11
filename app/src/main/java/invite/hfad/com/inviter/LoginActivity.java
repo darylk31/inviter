@@ -31,15 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onSettingButton(View view){
-        Intent intent = new Intent(LoginActivity.this, SettingActivity.class);
-        startActivity(intent);
-    }
-
-    public void onEventMaker(View view){
-
-    }
-
     //Exiting on back button
     private Boolean exit = false;
     @Override
