@@ -5,9 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="invite.hfad.com.inviter.MakeEventActivity"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp">
+    android:layout_width="match_parent">
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -18,6 +16,8 @@
             android:layout_height="wrap_content"
             android:fillViewport="true"
             android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             xmlns:app="http://schemas.android.com/apk/res-auto">
 
             <LinearLayout
@@ -85,9 +85,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ibAdditionalSetting"
-                    android:src="@drawable/chat_24dp"
+                    android:src="@drawable/ic_control_point_black_24p"
                     android:layout_below="@+id/etDescription"
-                    android:onClick="onResizeScreen"/>
+                    android:onClick="onResizeScreen"
+                    android:background="@null"/>
             </LinearLayout>
 
             <LinearLayout
@@ -111,7 +112,7 @@
         </LinearLayout>
     </ScrollView>
     <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/chat_24dp"
+        android:src="@drawable/ic_send_black_24dp"
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
