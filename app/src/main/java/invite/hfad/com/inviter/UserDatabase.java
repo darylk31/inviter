@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -46,6 +47,11 @@ public class UserDatabase {
 
     public LinkedList<Event> getEvents(){
         return this.events;
+    }
+
+    public Event getEvent(int eventid) {
+        //...
+        return events.getFirst();
     }
 
     public LinkedList<Event> getInvites() {return this.invites; }

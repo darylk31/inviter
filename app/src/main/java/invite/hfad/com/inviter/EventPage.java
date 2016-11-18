@@ -1,10 +1,9 @@
 package invite.hfad.com.inviter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-
-
+import android.view.LayoutInflater;
+import android.widget.TextView;
 
 
 public class EventPage extends Activity {
@@ -15,8 +14,17 @@ public class EventPage extends Activity {
         setContentView(R.layout.activity_event_page);
 
         int id = getIntent().getIntExtra("event_id", 0);
-        //find event with event_id and display
-        //...
+        UserDatabase ub = new UserDatabase();
+        Event event = ub.getEvent(id);
+        TextView event_name = (TextView) findViewById(R.id.tv_eventpagename);
+        event_name.setText(event.getEvent_name());
+        TextView event_date = (TextView) findViewById(R.id.tv_eventpagedate);
+        event_date.setText(event.getDay());
+        TextView event_time = (TextView) findViewById(R.id.tv_eventpagetime);
+        event_time.setText(event.getTime());
+
+        TextView testing = (TextView) findViewById(R.id.testing_chatroom);
+        testing.setText("Chatroom Here");
         }
     }
 

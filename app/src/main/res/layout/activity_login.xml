@@ -70,16 +70,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="15dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings"
-        android:id="@+id/bSettings"
-        android:onClick="onSettingButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -88,15 +78,5 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Expand"
-        android:id="@+id/bExpand"
-        android:onClick="onEventMaker"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/bLogin"
-        android:layout_alignEnd="@+id/bLogin" />
 
 </RelativeLayout>
