@@ -17,16 +17,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
 
-    </style>
-
-    <style name="MyTimePickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Holo.Light">
 
     </style>
 
     <style name="TimeDateEditTheme" parent="android:Theme.Holo.Light">
 
     </style>
+
+    <style name="test" parent="android:Theme.Holo.Light">
+        <item name="android:fontFamily">"sans-serif-light"</item>
+    </style>
+
 
 </resources>

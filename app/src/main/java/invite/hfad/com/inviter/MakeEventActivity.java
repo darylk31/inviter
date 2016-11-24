@@ -1,29 +1,26 @@
 package invite.hfad.com.inviter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ScrollView;
 import android.widget.TimePicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import android.view.View;
 
 public class MakeEventActivity extends Activity {
 
@@ -34,6 +31,7 @@ public class MakeEventActivity extends Activity {
     private String descriptionData;
     private String hourData;
     private String minuteData;
+    private boolean allDayData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +41,25 @@ public class MakeEventActivity extends Activity {
 
         final EditText etDate = (EditText)findViewById(R.id.etDate);
         final EditText etTime = (EditText)findViewById(R.id.etTime);
-
+        final boolean[] clicked = {false};
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+
                 //Gets instance of calender with the current date
-                Calendar mcurrentDate = Calendar.getInstance();
-                int mYear = mcurrentDate.get(Calendar.YEAR);
-                int mMonth = mcurrentDate.get(Calendar.MONTH);
-                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                    Calendar mcurrentDate = Calendar.getInstance();
+                    int mYear = mcurrentDate.get(Calendar.YEAR);
+                    int mMonth = mcurrentDate.get(Calendar.MONTH);
+                    int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+                if(clicked[0]){
+                    mYear = Integer.parseInt(yearData);
+                    mMonth = Integer.parseInt(monthData);
+                    mDay = Integer.parseInt(dayData);
+                }
                 DatePickerDialog mDatePicker;
 
-                mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
+                mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.test, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         yearData = Integer.toString(year);
@@ -63,8 +68,9 @@ public class MakeEventActivity extends Activity {
                         String dateString = String.format("%d-%d-%d", year,monthOfYear +1,dayOfMonth);
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                            String output = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.ENGLISH).format(date);
+                            String output = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
                             etDate.setText(output);
+                            clicked[0] = true;
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -84,7 +90,7 @@ public class MakeEventActivity extends Activity {
                 int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int mMinute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MakeEventActivity.this,R.style.MyTimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this,R.style.test, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourData = Integer.toString(hourOfDay);
@@ -101,9 +107,8 @@ public class MakeEventActivity extends Activity {
                 }
             });
 
+
         setScreenSize();
-
-
     }
 
     public void setScreenSize(){
@@ -115,6 +120,8 @@ public class MakeEventActivity extends Activity {
         int actionbar = getStatusBarHeight();
         l1.getLayoutParams().height = height - actionbar;
     }
+
+
 
     //make discard warning for back button
     public void onInvite(View view){
@@ -145,46 +152,36 @@ public class MakeEventActivity extends Activity {
     public void onResizeScreen(View v){
         ImageButton ibAdditional = (ImageButton) findViewById(R.id.ibAdditionalSetting);
         LinearLayout layout2 = (LinearLayout) findViewById(R.id.layout2);
-        TextView tv1 = (TextView) findViewById(R.id.tvTest);
 
-        ibAdditional.setVisibility(View.INVISIBLE);
+        ibAdditional.setVisibility(View.GONE);
         layout2.setVisibility(View.VISIBLE);
-        tv1.setVisibility(View.VISIBLE);
-
+        final ScrollView scrollview = ((ScrollView) findViewById(R.id.EventScrollLayout));
+        scrollview.postDelayed(new Runnable() {
+            @Override
+                public void run() {
+                scrollview.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        },500);
+        setNewScreenSize();
     }
+
+    public void setNewScreenSize(){
+        //Set Screen Size on create
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int height = metrics.heightPixels;
+        LinearLayout l1 = (LinearLayout) findViewById(R.id.layout1);
+        int actionbar = getStatusBarHeight();
+        double scale = (height - actionbar) * 0.9;
+        l1.getLayoutParams().height = (int) scale;
+    }
+
 
 
     /**
-
-    public static void onResizeScreen(final View v) {
-        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final int targetHeight = v.getMeasuredHeight();
-
-        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
-        v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
-        Animation a = new Animation()
-        {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1
-                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targetHeight * interpolatedTime);
-                v.requestLayout();
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
-    }
+     * Get the action bar height
+     * @return - height in dp of the action bar
      */
-
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -192,5 +189,30 @@ public class MakeEventActivity extends Activity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    /**
+     * Get bool value of all day event or not.
+     * @return - true if event is all day
+     */
+    public void onAllDayClick(View v){
+        CheckBox checkbox = (CheckBox)findViewById(R.id.cbAllDay);
+        allDayData = checkbox.isChecked();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.Additional_Time_Layout);
+        if(allDayData) {
+            layout.setVisibility(View.GONE);
+        } else{
+            layout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void onReminderClick(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MakeEventActivity.this);
+        builder.setMessage("haha")
+                .setTitle("lol");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
     }
 }

@@ -5,11 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="invite.hfad.com.inviter.MakeEventActivity"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    style="@style/test">
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:fillViewport="true"
+        android:id="@+id/EventScrollLayout"
         >
         <LinearLayout
             android:layout_width="fill_parent"
@@ -18,6 +20,7 @@
             android:orientation="vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:animateLayoutChanges="true"
             xmlns:app="http://schemas.android.com/apk/res-auto">
 
             <LinearLayout
@@ -32,63 +35,104 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/etTitle"
-                    android:hint="Event Name"
-                    android:textSize="25sp" />
+                    android:hint="@string/Event_Title"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:textSize="35sp"
+                    />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:weightSum="4">
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="time"
-                    android:ems="10"
-                    android:id="@+id/etTime"
-                    android:hint="Time"
-                    android:focusable="false"
-                    style="@style/TimeDateEditTheme"
-                    android:background="@drawable/event_edit_text_bg"
-                    android:gravity="center"
-                    android:layout_gravity="left"
-                    android:layout_weight="1"
-                    />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="2.4"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/event_edit_text_bg"
+                        >
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:ems="10"
-                    android:id="@+id/etDate"
-                    android:hint="Date"
-                    android:focusable="false"
-                    style="@style/TimeDateEditTheme"
-                    android:gravity="center"
-                    android:background="@drawable/event_edit_text_bg"
-                    android:layout_weight="3"
-                    android:layout_marginLeft="15dp"
-                    />
-                </LinearLayout>
+                        <ImageView
+                            android:id="@+id/ivClock_Event"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:src="@drawable/ic_alarm_black_24dp"/>
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="time"
+                            android:ems="10"
+                            android:id="@+id/etTime"
+                            android:hint="@string/Event_Time"
+                            android:focusable="false"
+                            style="@style/TimeDateEditTheme"
+                            android:paddingLeft="6dp"
+                            android:background="@android:color/transparent"
+                            android:layout_toRightOf="@+id/ivClock_Event"
+                            android:layout_centerVertical="true"
+                            />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_weight="1.6"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/event_edit_text_bg">
+
+                        <ImageView
+                            android:id="@+id/ivDate_Event"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:src="@drawable/ic_date_range_black_24dp"/>
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:ems="10"
+                        android:id="@+id/etDate"
+                        android:layout_centerVertical="true"
+                        android:hint="@string/Event_Date"
+                        android:focusable="false"
+                        style="@style/TimeDateEditTheme"
+                        android:paddingLeft="6dp"
+                        android:background="@android:color/transparent"
+                        android:layout_toRightOf="@+id/ivDate_Event"
+                        />
+                    </RelativeLayout>
+                    </LinearLayout>
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:ems="10"
                     android:id="@+id/etDescription"
-                    android:hint="Description"
+                    android:hint="@string/Event_Description"
                     android:gravity="bottom"
-                    android:layout_weight="1"/>
+                    android:layout_marginBottom="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/event_edit_text_bg"
+                    />
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ibAdditionalSetting"
-                    android:src="@drawable/ic_control_point_black_24p"
+                    android:src="@drawable/ic_control_point_black_24dp"
                     android:layout_below="@+id/etDescription"
                     android:onClick="onResizeScreen"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+
+                    />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -99,28 +143,142 @@
                 android:visibility="gone"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="80dp">
 
-                <EditText
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@android:color/darker_gray" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/activity_vertical_margin">
+
+                    <ImageView
+                        android:layout_width="@dimen/image_to_text_distance"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:id="@+id/ivLocation"
+                        android:gravity="center"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_place_black_24dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:hint="location"
+                        android:id="@+id/etLocation"
+                        android:layout_toRightOf="@+id/ivLocation"
+                        android:background="@android:color/transparent"
+                        android:layout_gravity="center"
+                        />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="location"
-                    android:id="@+id/etLocation"/>
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:animateLayoutChanges="true">
 
-                <CheckBox android:id="@+id/cbAllDay"
+                    <ImageView
+                        android:layout_width="@dimen/image_to_text_distance"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:id="@+id/ivClock_Additional"
+                        android:gravity="center"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_alarm_black_36"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+                    <TextView
+                        android:id="@+id/tvAllDayEvent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:text="All-Day Event"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:layout_toRightOf="@+id/ivClock_Additional"
+                        />
+
+                    <CheckBox android:id="@+id/cbAllDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:button="@null"
+                        android:onClick="onAllDayClick"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center"
+                        android:background="?android:attr/listChoiceIndicatorMultiple"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/ivClock_Additional"
+                        android:layout_below="@id/tvAllDayEvent"
+                        android:id="@+id/Additional_Time_Layout"
+                        >
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:hint="End Time"
+                        android:id="@+id/etEndTime"
+                        android:background="@android:color/transparent"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="All-day"
-                    android:onClick="onAllDayClick"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:text = "ofjmasld;kfjasdl;fkjasd;fljkasd;lfjasdkl;fjsadl;kfjasdl;fjsadl;kfjasl;kfjds"
-                    android:visibility="gone"
-                    android:id="@+id/tvTest" />
+                    android:layout_marginTop="@dimen/activity_vertical_margin">
 
 
+                    <ImageView
+                        android:layout_width="@dimen/image_to_text_distance"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:id="@+id/ivReminder"
+                        android:gravity="center_vertical"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_priority_high_black_24dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    <Button
+                        android:id="@+id/bReminder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:background="@android:color/transparent"
+                        android:text="Reminder"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@id/ivReminder"
+                        android:onClick="onReminderClick"
+                        android:gravity="left|center"/>
+                    <TextView
+                        android:id="@+id/tvReminder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WILL EDIT \nWITH FUTURE \nREMINDER \nTIMES \nlol"
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:layout_toRightOf="@+id/ivReminder"
+                        android:layout_below="@id/bReminder"
+                        />
+
+                    </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

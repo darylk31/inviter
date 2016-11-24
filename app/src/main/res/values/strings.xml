@@ -7,4 +7,8 @@
     <string name="title_activity_user">UserActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="Event_Time">Time</string>
+    <string name="Event_Title">Event Title</string>
+    <string name="Event_Date">Date</string>
+    <string name="Event_Description">note</string>
 </resources>
