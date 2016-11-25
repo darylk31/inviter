@@ -11,4 +11,12 @@
     <string name="Event_Title">Event Title</string>
     <string name="Event_Date">Date</string>
     <string name="Event_Description">note</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string-array name="Reminder_Options">
+        <item>30minutes</item>
+        <item>1 hour</item>
+        <item>1 Day</item>
+        <item>Custom</item>
+    </string-array>
 </resources>
