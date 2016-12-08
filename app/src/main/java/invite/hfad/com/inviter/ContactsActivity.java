@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter;
 
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class ContactsActivity extends AppCompatActivity{
     private String descriptionData;
     private String hourData;
     private String minuteData;
+    private boolean fromMakeEvent = false;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -31,7 +35,6 @@ public class ContactsActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        /*
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
@@ -42,16 +45,18 @@ public class ContactsActivity extends AppCompatActivity{
             minuteData = extras.getString("minuteData");
             titleData= extras.getString("titleData");
             descriptionData = extras.getString("descriptionData");
+            fromMakeEvent = extras.getBoolean("<fromEvent>");
         }
 
-        contactsFragment.setArguments(extras);
-        */
+
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        setSendVisibility(fromMakeEvent);
 
     }
 
@@ -93,6 +98,14 @@ public class ContactsActivity extends AppCompatActivity{
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    public void setSendVisibility(boolean fromMakeEvent){
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.bSendContact);
+        if(fromMakeEvent)
+            button.setVisibility(View.VISIBLE);
+        else
+            button.setVisibility(View.GONE);
     }
 
 }
