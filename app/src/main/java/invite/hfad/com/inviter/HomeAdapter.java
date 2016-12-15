@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Daryl on 9/21/2016.
@@ -75,8 +76,18 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView event_month_text = (TextView) cardView.findViewById(R.id.event_month);
         TextView event_day_text = (TextView) cardView.findViewById(R.id.event_day);
         event_name_text.setText(event_names[position]);
-        event_day_text.setText(event_days[position]);
-        event_month_text.setText(event_days[position]);
+        String event_day = event_days[position];
+        String output_day = "";
+        String output_month = "";
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+            output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+            output_month = new SimpleDateFormat("MMM",Locale.ENGLISH).format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        event_day_text.setText(output_day);
+        event_month_text.setText(output_month);
         /*
         //...only if unread messages
         ImageView notification = (ImageView)cardView.findViewById(R.id.notification);
