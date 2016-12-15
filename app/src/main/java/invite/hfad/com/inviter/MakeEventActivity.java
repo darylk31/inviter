@@ -130,8 +130,8 @@ public class MakeEventActivity extends Activity {
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
 
+        /*
         Intent i = new Intent(this, ContactsActivity.class);
-
         i.putExtra("KEY","thebuilder");
         i.putExtra("<yearData>", yearData);
         i.putExtra("<monthData>", monthData);
@@ -140,6 +140,13 @@ public class MakeEventActivity extends Activity {
         i.putExtra("<minuteData>",minuteData);
         i.putExtra("<titleData>",titleData);
         i.putExtra("<descriptionData>",descriptionData);
+        startActivity(i);
+        */
+
+
+
+
+        Intent i = new Intent(this, UserAreaActivity.class);
         startActivity(i);
 
 

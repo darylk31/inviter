@@ -83,7 +83,6 @@ public class UserAreaActivity extends AppCompatActivity {
             HomeFragment homefragment = new HomeFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, homefragment);
-            ft.addToBackStack(null);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
@@ -98,7 +97,6 @@ public class UserAreaActivity extends AppCompatActivity {
             InboxFragment inboxfragment = new InboxFragment();
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, inboxfragment);
-            ft.addToBackStack(null);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }

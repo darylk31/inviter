@@ -17,8 +17,8 @@ public class InboxFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         RecyclerView inboxRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_inbox, container, false);
-
-        UserDatabase db = new UserDatabase();
+        /*
+        UserDatabaseHelper db = new UserDatabaseHelper();
         LinkedList<Event> invites;
         invites = db.getInvites();
 
@@ -26,7 +26,9 @@ public class InboxFragment extends Fragment {
         inboxRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         inboxRecycler.setLayoutManager(layoutManager);
+        */
         return inboxRecycler;
+
 
     }
 

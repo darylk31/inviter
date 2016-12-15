@@ -58,11 +58,11 @@ public class ContactsActivity extends AppCompatActivity{
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        PhoneContactsFragment p1 = new PhoneContactsFragment();
+        FriendsFragment p1 = new FriendsFragment();
         PhoneContactsFragment p2 = new PhoneContactsFragment();
 
-        adapter.addFragment(p1, "TEST");
-        adapter.addFragment(p2, "TEST");
+        adapter.addFragment(p1, "FRIENDS");
+        adapter.addFragment(p2, "CONTACTS");
         viewPager.setAdapter(adapter);
     }
 

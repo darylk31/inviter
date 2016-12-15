@@ -12,16 +12,35 @@ import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private EditText etEmail;
+    private EditText etPhoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         setTitle("Registration");
+        this.etEmail = (EditText)findViewById(R.id.etEmail);
+        this.etPhoneNumber = (EditText)findViewById(R.id.etPhoneNumber);
     }
 
 
     public void onNextButton(View view){
-        Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
-        startActivity(intent);
+        if (validEmail(etEmail) && validNumber(etPhoneNumber)) {
+            Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
+            intent.putExtra("Email", etEmail.getText().toString().trim());
+            intent.putExtra("PhoneNumber", etPhoneNumber.getText().toString().trim());
+            startActivity(intent);
+        }
+    }
+
+    private boolean validEmail(EditText e){
+        //...BACKEND: check if email is in database already
+        return true;
+    }
+
+    private boolean validNumber(EditText number){
+        //...BACKEND: check if number is in database already
+        return true;
     }
 }

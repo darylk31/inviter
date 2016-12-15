@@ -23,17 +23,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerHorizontal="true"/>
 
-            <TextView
-                android:id="@+id/event_day"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:textSize="25sp"
-                android:textColor="#de9c17" />
 
             <TextView
                 android:id="@+id/event_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 android:textSize="25sp"
@@ -41,6 +34,29 @@
                 android:layout_toRightOf="@+id/event_day"
                 android:layout_toEndOf="@+id/event_day"
                 android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:id="@+id/event_month"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:textSize="27sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/event_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="30sp"
+                android:layout_below="@+id/event_month"
+                android:layout_alignRight="@+id/event_month"
+                android:layout_alignEnd="@+id/event_month" />
+
         </RelativeLayout>
 
     </LinearLayout>

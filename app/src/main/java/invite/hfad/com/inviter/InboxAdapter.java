@@ -69,6 +69,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), EventPage.class);
                 intent.putExtra("event_id", id);
+                intent.putExtra("invite", true);
                 v.getContext().startActivity(intent);
             }
         });

@@ -1,13 +1,23 @@
 package invite.hfad.com.inviter;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.support.v7.widget.CardView;
+import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,9 +26,12 @@ import java.util.List;
  */
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
+
     private String[] event_names;
     private String[] event_days;
-    private Integer[] event_ids;
+    private String[] event_ids;
+    private Cursor cursor;
+    private SQLiteDatabase event_db;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,9 +43,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    public HomeAdapter(LinkedList<Event> events) {
-        LinkedList<Event> sortedEvents = sortEvents(events);
-        showEvents(sortedEvents);
+    public HomeAdapter(Context context){
+        try {
+            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
+            SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+            Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS" + " ORDER BY date(" + "DAY" + ") ASC", null);
+            this.event_db = event_db;
+            this.cursor = cursor;
+
+        } catch (SQLiteException e){
+            e.printStackTrace();
+            Toast toast = Toast.makeText(context, "Error: Database unavailable", Toast.LENGTH_SHORT);
+            toast.show();}
+
+        storeEvents();
+        cursor.close();
+        event_db.close();
     }
 
 
@@ -43,50 +69,52 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final CardView cardView = holder.cardView;
-        TextView event_name_text = (TextView)cardView.findViewById(R.id.event_name);
+        TextView event_name_text = (TextView) cardView.findViewById(R.id.event_name);
+        TextView event_month_text = (TextView) cardView.findViewById(R.id.event_month);
+        TextView event_day_text = (TextView) cardView.findViewById(R.id.event_day);
         event_name_text.setText(event_names[position]);
-        TextView event_day_text = (TextView)cardView.findViewById(R.id.event_day);
         event_day_text.setText(event_days[position]);
-        final int id = event_ids[position];
-        /*...only if unread messages
+        event_month_text.setText(event_days[position]);
+        /*
+        //...only if unread messages
         ImageView notification = (ImageView)cardView.findViewById(R.id.notification);
         notification.setImageResource(R.drawable.chat_24dp);
         */
+
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), EventPage.class);
-                intent.putExtra("event_id", id);
+                intent.putExtra("event_id", event_ids[position]);
                 v.getContext().startActivity(intent);
             }
         });
-        };
-
-    @Override
-    public int getItemCount() {
-        return event_names.length;
     }
 
 
-    public void showEvents(List<Event> events) {
-        String[] names = new String[events.size()];
-        String[] dates = new String[events.size()];
-        Integer[] ids = new Integer[events.size()];
-        for (int i = 0; i < events.size(); i++) {
-            names[i] = events.get(i).getEvent_name();
-            dates[i] = events.get(i).getDay();
-            ids[i] = events.get(i).getEventId();
+
+
+
+    @Override
+    public int getItemCount() {
+        return cursor.getCount();
+    }
+
+
+    public void storeEvents() {
+        String[] names = new String[getItemCount()];
+        String[] dates = new String[getItemCount()];
+        String[] ids = new String[getItemCount()];
+        for (int i = 0; i < getItemCount(); i++) {
+            cursor.moveToPosition(i);
+            names[i] = cursor.getString(2);
+            dates[i] = cursor.getString(1);
+            ids[i] =  cursor.getString(0);
         }
         this.event_names = names;
         this.event_days = dates;
         this.event_ids = ids;
-    }
-
-
-    public LinkedList<Event> sortEvents(LinkedList<Event> events) {
-        //...sort in date order
-        return events;
     }
 }
