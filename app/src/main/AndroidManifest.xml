@@ -31,6 +31,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA-PL5MZ24-ch2-UlF-KMrHtg7T4hKlT94"/>
 
         <activity android:name=".MakeEventActivity" />
         <activity android:name=".EventMakerActivity" />

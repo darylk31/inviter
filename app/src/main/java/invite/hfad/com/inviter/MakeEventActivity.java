@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,10 +29,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import static android.R.attr.checked;
+import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
 
 public class MakeEventActivity extends Activity {
 
@@ -45,14 +57,23 @@ public class MakeEventActivity extends Activity {
     private String endHourData;
     private String endMinuteData;
     private String reminderUpdate;
+    private String repeatUpdate;
     private String endYearData;
     private String endMonthData;
     private String endDayData;
     boolean[] checkedReminder = new boolean[]{
-            false, // 30minutes
-            false, // 1hour
-            false, // 1 day
-            false, //custom
+            false, // 30 Minutes
+            false, // 1 Hour
+            false, // 1 Day
+            false, // Custom
+    };
+    boolean[] checkedRepeat = new boolean[]{
+            false, // Daily
+            false, // Weekly
+            false, // Monthly
+            false, // Weekdays
+            false, // Weekends
+            false, // lol
     };
 
     private String dateData;
@@ -60,10 +81,8 @@ public class MakeEventActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_event);
-
         onStartTimeDateClick();
         setScreenSize();
         onEndTimeClick();
@@ -72,7 +91,7 @@ public class MakeEventActivity extends Activity {
 
     }
 
-    public void setScreenSize(){
+    public void setScreenSize() {
         //Set Screen Size on create
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -83,53 +102,48 @@ public class MakeEventActivity extends Activity {
     }
 
     //make discard warning for back button
-    public void onInvite(View view){
-        final EditText etTitle = (EditText)findViewById(R.id.etTitle);
-        final EditText etDescription = (EditText)findViewById(R.id.etDescription);
+    public void onInvite(View view) {
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
-
         Intent i = new Intent(this, ContactsActivity.class);
-
-        i.putExtra("KEY","thebuilder");
-        i.putExtra("titleData",titleData);
-        i.putExtra("descriptionData",descriptionData);
-        i.putExtra("fromEvent",true);
-        i.putExtra("dateData",dateData);
-        i.putExtra("timeData",timeData);
+        i.putExtra("KEY", "thebuilder");
+        i.putExtra("titleData", titleData);
+        i.putExtra("descriptionData", descriptionData);
+        i.putExtra("fromEvent", true);
+        i.putExtra("dateData", dateData);
+        i.putExtra("timeData", timeData);
         startActivity(i);
 
 
     }
 
-    public void onStartTimeDateClick(){
-        final EditText etDate = (EditText)findViewById(R.id.etDate);
-        final EditText etTime = (EditText)findViewById(R.id.etTime);
+    public void onStartTimeDateClick() {
+        final EditText etDate = (EditText) findViewById(R.id.etDate);
+        final EditText etTime = (EditText) findViewById(R.id.etTime);
         final boolean[] clicked = {false};
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-
+            public void onClick(View v) {
                 //Gets instance of calender with the current date
-
                 Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = mcurrentDate.get(Calendar.YEAR);
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-                if(clicked[0]){
+                if (clicked[0]) {
                     mYear = Integer.parseInt(yearData);
                     mMonth = Integer.parseInt(monthData);
                     mDay = Integer.parseInt(dayData);
                 }
                 DatePickerDialog mDatePicker;
-
-                mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.test, new DatePickerDialog.OnDateSetListener() {
+                mDatePicker = new DatePickerDialog(MakeEventActivity.this, R.style.test, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         yearData = Integer.toString(year);
                         monthData = Integer.toString(monthOfYear);
                         dayData = Integer.toString(dayOfMonth);
-                        String dateString = String.format("%d-%d-%d", year,monthOfYear +1,dayOfMonth);
+                        String dateString = String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
                             String output = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
@@ -141,13 +155,12 @@ public class MakeEventActivity extends Activity {
                         }
 
                     }
-                }, mYear,mMonth,mDay);
+                }, mYear, mMonth, mDay);
                 mDatePicker.setTitle("Date");
                 mDatePicker.show();
             }
 
         });
-
         etTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,16 +168,16 @@ public class MakeEventActivity extends Activity {
                 int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int mMinute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MakeEventActivity.this,R.style.test, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this, R.style.test, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourData = Integer.toString(hourOfDay);
                         minuteData = Integer.toString(minute);
-                        timeData = String.format("%02d:%02d",hourOfDay,minute);
+                        timeData = String.format("%02d:%02d", hourOfDay, minute);
                         int hour = hourOfDay % 12;
-                        if(hour == 0)
+                        if (hour == 0)
                             hour = 12;
-                        String timeText = String.format("%02d:%02d %s",hour,minute,hourOfDay < 12 ? "AM" : "PM");
+                        String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
                         etTime.setText(timeText);
                     }
                 }, mHour, mMinute, true);
@@ -176,23 +189,22 @@ public class MakeEventActivity extends Activity {
 
     }
 
-    public void onResizeScreen(View v){
+    public void onResizeScreen(View v) {
         ImageButton ibAdditional = (ImageButton) findViewById(R.id.ibAdditionalSetting);
         LinearLayout layout2 = (LinearLayout) findViewById(R.id.layout2);
-
         ibAdditional.setVisibility(View.GONE);
         layout2.setVisibility(View.VISIBLE);
         final ScrollView scrollview = ((ScrollView) findViewById(R.id.EventScrollLayout));
         scrollview.postDelayed(new Runnable() {
             @Override
-                public void run() {
+            public void run() {
                 scrollview.fullScroll(ScrollView.FOCUS_DOWN);
             }
-        },500);
+        }, 500);
         setNewScreenSize();
     }
 
-    public void setNewScreenSize(){
+    public void setNewScreenSize() {
         //Set Screen Size on create
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -204,9 +216,9 @@ public class MakeEventActivity extends Activity {
     }
 
 
-
     /**
      * Get the action bar height
+     *
      * @return - height in dp of the action bar
      */
     public int getStatusBarHeight() {
@@ -220,30 +232,31 @@ public class MakeEventActivity extends Activity {
 
     /**
      * Get bool value of all day event or not.
+     *
      * @return - true if event is all day
      */
-    public void onAllDayClick(View v){
-        CheckBox checkbox = (CheckBox)findViewById(R.id.cbAllDay);
+    public void onAllDayClick(View v) {
+        CheckBox checkbox = (CheckBox) findViewById(R.id.cbAllDay);
         allDayData = checkbox.isChecked();
         LinearLayout layout = (LinearLayout) findViewById(R.id.Additional_Time_Layout);
-        if(allDayData) {
+        if (allDayData) {
             layout.setVisibility(View.GONE);
             endHourData = "";
             endMinuteData = "";
-        } else{
+        } else {
             layout.setVisibility(View.VISIBLE);
         }
     }
 
-    public void onEndTimeClick(){
-        final EditText etEndTime = (EditText)findViewById(R.id.etEndTime);
-        etEndTime.setOnClickListener(new View.OnClickListener(){
+    public void onEndTimeClick() {
+        final EditText etEndTime = (EditText) findViewById(R.id.etEndTime);
+        etEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 int endHour = 0;
                 int endMinute = 0;
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MakeEventActivity.this, new TimePickerDialog.OnTimeSetListener(){
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timepicker, int selectedHour, int selectedMinute) {
                         endHourData = Integer.toString(selectedHour);
@@ -254,47 +267,42 @@ public class MakeEventActivity extends Activity {
                         String timeText = String.format("%02d:%02d %s", hour, selectedMinute, selectedHour < 12 ? "AM" : "PM");
                         etEndTime.setText(timeText);
                     }
-                },endHour,endMinute,true);
+                }, endHour, endMinute, true);
                 mTimePicker.setTitle("End Time");
                 mTimePicker.show();
             }
         });
     }
 
-    public void onEndDateClick(){
+    public void onEndDateClick() {
         final EditText etEndDate = (EditText) findViewById(R.id.etEndDate);
-
         etEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 final boolean[] clicked = {false};
                 //Gets instance of calender with the current date
-
                 Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = mcurrentDate.get(Calendar.YEAR);
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-
-                if(yearData != null && monthData != null && dayData != null) {
+                if (yearData != null && monthData != null && dayData != null) {
                     mYear = Integer.parseInt(yearData);
                     mMonth = Integer.parseInt(monthData);
                     mDay = Integer.parseInt(dayData);
                 }
-
-                if(endYearData != null && endDayData != null && endDayData != null){
+                if (endYearData != null && endDayData != null && endDayData != null) {
                     mYear = Integer.parseInt(endYearData);
                     mMonth = Integer.parseInt(endMonthData);
                     mDay = Integer.parseInt(endDayData);
                 }
                 DatePickerDialog mDatePicker;
-
-                mDatePicker = new DatePickerDialog(MakeEventActivity.this,R.style.test, new DatePickerDialog.OnDateSetListener() {
+                mDatePicker = new DatePickerDialog(MakeEventActivity.this, R.style.test, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         endYearData = Integer.toString(year);
                         endMonthData = Integer.toString(monthOfYear);
                         endDayData = Integer.toString(dayOfMonth);
-                        String dateString = String.format("%d-%d-%d", year,monthOfYear +1,dayOfMonth);
+                        String dateString = String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
                             String output = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
@@ -305,7 +313,7 @@ public class MakeEventActivity extends Activity {
                         }
 
                     }
-                }, mYear,mMonth,mDay);
+                }, mYear, mMonth, mDay);
                 mDatePicker.setTitle("Date");
                 mDatePicker.show();
             }
@@ -314,66 +322,121 @@ public class MakeEventActivity extends Activity {
 
     }
 
-    public void onReminderClick(View v){
+    public void onReminderClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(MakeEventActivity.this);
-
-
-
         builder
                 //Set multiple choice options.
-                .setMultiChoiceItems(R.array.Reminder_Options,checkedReminder,
-                new DialogInterface.OnMultiChoiceClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked){
-
-                        List<String> Lines = Arrays.asList(getResources().getStringArray(R.array.Reminder_Options));
-
-                        reminderUpdate = "";
-                        checkedReminder[which] = isChecked;
-
-
-
-
-                        for(int i = 0 ; i < checkedReminder.length; i++){
-                            boolean checked = checkedReminder[i];
-
-                            if(checked){
-                                reminderUpdate += Lines.get(i);
-
-                                reminderUpdate += "\n";
+                .setMultiChoiceItems(R.array.Reminder_Options, checkedReminder,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                List<String> Lines = Arrays.asList(getResources().getStringArray(R.array.Reminder_Options));
+                                reminderUpdate = "";
+                                checkedReminder[which] = isChecked;
+                                for (int i = 0; i < checkedReminder.length; i++) {
+                                    boolean checked = checkedReminder[i];
+                                    if (checked) {
+                                        reminderUpdate += Lines.get(i);
+                                        reminderUpdate += "\n";
+                                    }
+                                }
                             }
-                        }
-
-
-
-
-
-                    }
-                })
+                        })
                 //Set action button
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener(){
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id){
-                    //User Clicked OK, so save the mSelectedItems results.
+                    public void onClick(DialogInterface dialog, int id) {
+                        //User Clicked OK, so save the mSelectedItems results.
                         TextView tv = (TextView) findViewById(R.id.tvReminder);
                         tv.setText(reminderUpdate);
 
 
-
-
                     }
-            })
-            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
-            @Override
-                public void onClick(DialogInterface dialog, int id){
-                //User clicked cancel, so do not save
-
-            }
-        })
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //User clicked cancel, so do not save
+                    }
+                })
                 .setTitle("lol");
         AlertDialog dialog = builder.create();
         dialog.show();
 
 
     }
+
+    public void onRepeatClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MakeEventActivity.this);
+        builder
+                //Set multiple choice options.
+                .setMultiChoiceItems(R.array.Repeat_Options, checkedRepeat,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                List<String> Lines = Arrays.asList(getResources().getStringArray(R.array.Repeat_Options));
+                                repeatUpdate = "";
+                                checkedRepeat[which] = isChecked;
+                                for (int i = 0; i < checkedRepeat.length; i++) {
+                                    boolean checked = checkedRepeat[i];
+                                    if (checked) {
+                                        repeatUpdate += Lines.get(i);
+                                        repeatUpdate += "\n";
+                                    }
+                                }
+
+
+                            }
+                        })
+                //Set action button
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //User Clicked OK, so save the mSelectedItems results.
+                        TextView tv = (TextView) findViewById(R.id.tvRepeat);
+                        tv.setText(repeatUpdate);
+
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        //User clicked cancel, so do not save
+                    }
+                })
+                .setTitle("lol");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+    }
+
+    public void googleLocationFragment() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+/*
+* The following code example shows setting an AutocompleteFilter on a PlaceAutocompleteFragment to
+* set a filter returning only results with a precise address.
+*/
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+        autocompleteFragment.setFilter(typeFilter);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                //Log.i(TAG, "Place: " + place.getName());//get place details here
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                //Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+    }
+
+
 }

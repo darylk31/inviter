@@ -164,14 +164,14 @@
                         android:layout_alignParentLeft="true"
                         android:src="@drawable/ic_place_black_24dp"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"/>
-                    <EditText
+                    <fragment
+                        android:id="@+id/place_autocomplete_fragment"
+                        android:layout_toRightOf="@+id/ivLocation"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/edit_text_height"
-                        android:hint="location"
-                        android:id="@+id/etLocation"
-                        android:layout_toRightOf="@+id/ivLocation"
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                         android:background="@android:color/transparent"
-                        android:layout_gravity="center"
+                        android:gravity="left"
                         />
 
                 </RelativeLayout>
@@ -294,6 +294,50 @@
                         />
 
                     </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin">
+
+
+                    <ImageView
+                        android:layout_width="@dimen/image_to_text_distance"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:id="@+id/ivRepeat"
+                        android:gravity="center_vertical"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/repeat"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    <Button
+                        android:id="@+id/bRepeat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/edit_text_height"
+                        android:background="@android:color/transparent"
+                        android:text="Repeat"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@id/ivRepeat"
+                        android:onClick="onRepeatClick"
+                        android:gravity="left|center"/>
+                    <TextView
+                        android:id="@+id/tvRepeat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:layout_toRightOf="@+id/ivRepeat"
+                        android:layout_below="@id/bRepeat"
+                        />
+
+                </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

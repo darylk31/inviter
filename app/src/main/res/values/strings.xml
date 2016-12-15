@@ -11,12 +11,20 @@
     <string name="Event_Title">Event Title</string>
     <string name="Event_Date">Date</string>
     <string name="Event_Description">note</string>
-    <string name="ok">Ok</string>
+    <string name="ok">Set</string>
     <string name="cancel">Cancel</string>
     <string-array name="Reminder_Options">
-        <item>30 minutes</item>
-        <item>1 hour</item>
+        <item>30 Minutes</item>
+        <item>1 Hour</item>
         <item>1 Day</item>
         <item>Custom</item>
+    </string-array>
+    <string-array name="Repeat_Options">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Weekdays</item>
+        <item>Weekends</item>
+        <item>Lol theres no way i can do this but open a calender for user to press</item>
     </string-array>
 </resources>
