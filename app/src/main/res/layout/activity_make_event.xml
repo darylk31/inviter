@@ -223,6 +223,7 @@
                         android:layout_toRightOf="@+id/ivClock_Additional"
                         android:layout_below="@id/tvAllDayEvent"
                         android:id="@+id/Additional_Time_Layout"
+                        android:orientation="vertical"
                         >
                     <EditText
                         android:layout_width="match_parent"
@@ -232,7 +233,21 @@
                         android:background="@android:color/transparent"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:focusableInTouchMode="false"
                         />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/edit_text_height"
+                            android:hint="End Date"
+                            android:id="@+id/etEndDate"
+                            android:background="@android:color/transparent"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/activity_vertical_margin"
+                            android:focusableInTouchMode="false"
+                            />
+
+
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -271,7 +286,7 @@
                         android:id="@+id/tvReminder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="WILL EDIT \nWITH FUTURE \nREMINDER \nTIMES \nlol"
+                        android:text=""
                         android:layout_gravity="center"
                         android:gravity="left"
                         android:layout_toRightOf="@+id/ivReminder"
