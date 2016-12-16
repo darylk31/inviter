@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="invite.hfad.com.inviter.EventPage">
+
+    <item
+        android:id="@+id/edit_eventpage"
+        android:orderInCategory="1"
+        android:title="Edit..."
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/invite_eventpage"
+        android:orderInCategory="2"
+        android:title="Invite friends"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/delete_eventpage"
+        android:orderInCategory="3"
+        android:title="Delete"
+        app:showAsAction="never" />
+</menu>

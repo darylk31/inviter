@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -70,7 +71,6 @@ public class UserAreaActivity extends AppCompatActivity {
             case R.id.contacts:
                 Intent intent_contacts = new Intent(this, ContactsActivity.class);
                 startActivity(intent_contacts);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

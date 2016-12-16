@@ -26,12 +26,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "TIME TEXT, "
                 + "TEST TEXT, "
                 + "ALLDAY INTEGER);");
-
-        insert_event(db, "2014-01-16", "GREAT", "Description", "12:00", true);
-        insert_event(db, "2016-01-17", "FUN", "Description", "12:00", true);
-        insert_event(db, "2016-08-01", "SICK", "Description", "12:00", true);
-        insert_event(db, "2016-03-19", "WOW", "Description", "12:00", true);
-
     }
 
     @Override
@@ -56,12 +50,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                     + "TEST TEXT, "
                     + "ALLDAY INTEGER);");
         }
-
-        insert_event(db, "2016-01-16", "GREAT", "Description", "12:00", true);
-        insert_event(db, "2016-01-17", "FUN", "Description", "12:00", true);
-        insert_event(db, "2016-01-18", "SICK", "Description", "12:00", true);
-        insert_event(db, "2016-01-19", "WOW", "Description", "12:00", true);
-
     }
 
 
@@ -84,5 +72,10 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
             eventValues.put("ALLDAY", 0);
             db.insert("EVENTS", null, eventValues);
         }
+    }
+
+    public static void delete_event(SQLiteDatabase db,
+                                    String id){
+        db.delete("EVENTS", "_id=" + id, null);
     }
 }

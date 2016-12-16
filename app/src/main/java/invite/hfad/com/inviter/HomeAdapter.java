@@ -75,34 +75,34 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView event_name_text = (TextView) cardView.findViewById(R.id.event_name);
         TextView event_month_text = (TextView) cardView.findViewById(R.id.event_month);
         TextView event_day_text = (TextView) cardView.findViewById(R.id.event_day);
-        event_name_text.setText(event_names[position]);
-        String event_day = event_days[position];
-        String output_day = "";
-        String output_month = "";
-        try {
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
-            output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-            output_month = new SimpleDateFormat("MMM",Locale.ENGLISH).format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        event_day_text.setText(output_day);
-        event_month_text.setText(output_month);
+            event_name_text.setText(event_names[position]);
+            String event_day = event_days[position];
+            String output_day = "";
+            String output_month = "";
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            event_day_text.setText(output_day);
+            event_month_text.setText(output_month);
         /*
         //...only if unread messages
         ImageView notification = (ImageView)cardView.findViewById(R.id.notification);
         notification.setImageResource(R.drawable.chat_24dp);
         */
 
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), EventPage.class);
-                intent.putExtra("event_id", event_ids[position]);
-                v.getContext().startActivity(intent);
-            }
-        });
-    }
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), EventPage.class);
+                    intent.putExtra("event_id", event_ids[position]);
+                    v.getContext().startActivity(intent);
+                }
+            });
+        }
 
 
 
@@ -115,17 +115,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
 
     public void storeEvents() {
-        String[] names = new String[getItemCount()];
-        String[] dates = new String[getItemCount()];
-        String[] ids = new String[getItemCount()];
-        for (int i = 0; i < getItemCount(); i++) {
-            cursor.moveToPosition(i);
-            names[i] = cursor.getString(2);
-            dates[i] = cursor.getString(1);
-            ids[i] =  cursor.getString(0);
+            String[] names = new String[getItemCount()];
+            String[] dates = new String[getItemCount()];
+            String[] ids = new String[getItemCount()];
+            for (int i = 0; i < getItemCount(); i++) {
+                cursor.moveToPosition(i);
+                names[i] = cursor.getString(2);
+                dates[i] = cursor.getString(1);
+                ids[i] = cursor.getString(0);
+            }
+            this.event_names = names;
+            this.event_days = dates;
+            this.event_ids = ids;
         }
-        this.event_names = names;
-        this.event_days = dates;
-        this.event_ids = ids;
-    }
 }
