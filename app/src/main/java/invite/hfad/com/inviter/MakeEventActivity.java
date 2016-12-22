@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -83,12 +82,12 @@ public class MakeEventActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_event);
-        onStartTimeDateClick();
+        //onStartTimeDateClick();
         setScreenSize();
+        onStartTimeClick();
+        onStartDateDialog();
         onEndTimeClick();
         onEndDateClick();
-
-
     }
 
     public void setScreenSize() {
@@ -107,6 +106,10 @@ public class MakeEventActivity extends Activity {
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
+
+        //Toast test
+        Toast.makeText(MakeEventActivity.this,dateData,Toast.LENGTH_LONG).show();
+
         Intent i = new Intent(this, ContactsActivity.class);
         i.putExtra("KEY", "thebuilder");
         i.putExtra("titleData", titleData);
@@ -115,10 +118,20 @@ public class MakeEventActivity extends Activity {
         i.putExtra("dateData", dateData);
         i.putExtra("timeData", timeData);
         startActivity(i);
+    }
+
+    //Testing datasending
+    public void onSendDataTest(View view){
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
+        titleData = etTitle.getText().toString();
+        descriptionData = etDescription.getText().toString();
 
 
     }
 
+
+    //OLD FUNCTION
     public void onStartTimeDateClick() {
         final EditText etDate = (EditText) findViewById(R.id.etDate);
         final EditText etTime = (EditText) findViewById(R.id.etTime);
@@ -173,11 +186,12 @@ public class MakeEventActivity extends Activity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourData = Integer.toString(hourOfDay);
                         minuteData = Integer.toString(minute);
-                        timeData = String.format("%02d:%02d", hourOfDay, minute);
+                        //timeData = String.format("%02d:%02d", hourOfDay, minute);
                         int hour = hourOfDay % 12;
                         if (hour == 0)
                             hour = 12;
                         String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
+                        timeData = timeText;
                         etTime.setText(timeText);
                     }
                 }, mHour, mMinute, true);
@@ -185,9 +199,72 @@ public class MakeEventActivity extends Activity {
                 mTimePicker.show();
             }
         });
-
-
     }
+
+    public void onStartTimeClick(){
+        final TextView tvTime = (TextView) findViewById(R.id.tvStartTime);
+        tvTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int mMinute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        hourData = Integer.toString(hourOfDay);
+                        minuteData = Integer.toString(minute);
+                        //timeData = String.format("%02d:%02d", hourOfDay, minute);
+                        int hour = hourOfDay % 12;
+                        if (hour == 0)
+                            hour = 12;
+                        String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
+                        timeData = timeText;
+                        tvTime.setText(timeText);
+                    }
+                }, mHour, mMinute, false);
+                mTimePicker.setTitle("Time");
+                mTimePicker.show();
+            }
+        });
+    }
+
+    public void onStartDateDialog() {
+        final DatePicker datePicker = (DatePicker) findViewById(R.id.dpDatePicker);
+        final TextView tvDate = (TextView) findViewById(R.id.tvDateDisplay);
+        final int day = datePicker.getDayOfMonth();
+        final int month = datePicker.getMonth() + 1;
+        final int year = datePicker.getYear();
+        String dateString = String.format("%d-%d-%d", year, month, day);
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
+            String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
+            tvDate.setText(output);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
+                new DatePicker.OnDateChangedListener() {
+
+            @Override
+            public void onDateChanged(DatePicker datePicker, int year, int month, int day){
+
+
+                String dateString = String.format("%d-%d-%d", year, month, day);
+                try {
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                    dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
+                    String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
+                    tvDate.setText(output);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 
     public void onResizeScreen(View v) {
         ImageButton ibAdditional = (ImageButton) findViewById(R.id.ibAdditionalSetting);
