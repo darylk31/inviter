@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -102,6 +103,24 @@ public class MakeEventActivity extends Activity {
 
     //make discard warning for back button
     public void onInvite(View view) {
+
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
+        titleData = etTitle.getText().toString();
+        descriptionData = etDescription.getText().toString();
+
+        UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        helper.insert_event(db,dateData,titleData,descriptionData,timeData,allDayData);
+        Intent i = new Intent(MakeEventActivity.this,UserAreaActivity.class);
+
+        //Toast test
+        Toast.makeText(MakeEventActivity.this,"Successfully added Event",Toast.LENGTH_LONG).show();
+
+        startActivity(i);
+
+
+        /*
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
@@ -118,17 +137,9 @@ public class MakeEventActivity extends Activity {
         i.putExtra("dateData", dateData);
         i.putExtra("timeData", timeData);
         startActivity(i);
+        */
     }
 
-    //Testing datasending
-    public void onSendDataTest(View view){
-        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
-        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        titleData = etTitle.getText().toString();
-        descriptionData = etDescription.getText().toString();
-
-
-    }
 
 
     //OLD FUNCTION
@@ -245,14 +256,13 @@ public class MakeEventActivity extends Activity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        datePicker.init(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(),
+        datePicker.init(year, month, day,
                 new DatePicker.OnDateChangedListener() {
 
             @Override
             public void onDateChanged(DatePicker datePicker, int year, int month, int day){
 
-
-                String dateString = String.format("%d-%d-%d", year, month, day);
+                String dateString = String.format("%d-%d-%d", year, month + 1, day);
                 try {
                     Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
                     dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
