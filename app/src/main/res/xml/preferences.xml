@@ -36,6 +36,11 @@
             android:title = "Notifications"
             android:summary = ""
             />
+        <Preference
+            android:key="pref_key_past_events"
+            android:title = "Show Past Events..."
+            android:summary = ""
+            />
     </PreferenceCategory>
 
     //Support

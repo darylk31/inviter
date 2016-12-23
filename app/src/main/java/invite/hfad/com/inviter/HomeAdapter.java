@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private Cursor cursor;
     private SQLiteDatabase event_db;
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardView;
@@ -48,7 +50,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         try {
             SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-            Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS" + " ORDER BY date(" + "DAY" + ") ASC", null);
+            Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
             this.event_db = event_db;
             this.cursor = cursor;
 

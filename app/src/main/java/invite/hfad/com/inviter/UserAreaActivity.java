@@ -19,11 +19,12 @@ public class UserAreaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_area);
 
 
+
         TabLayout tabLayout = (TabLayout) (findViewById(R.id.tabs));
 
-        TabLayout.Tab tab1 = tabLayout.newTab().setText("Home").setIcon(R.drawable.ic_home_black_24dp);
-        TabLayout.Tab tab2 = tabLayout.newTab().setText("Make Event").setIcon(R.drawable.ic_launch_black_24dp);
-        TabLayout.Tab tab3 = tabLayout.newTab().setText("Inbox").setIcon(R.drawable.ic_inbox_black_24dp);
+        TabLayout.Tab tab1 = tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp);
+        TabLayout.Tab tab2 = tabLayout.newTab().setIcon(R.drawable.ic_launch_black_24dp);
+        TabLayout.Tab tab3 = tabLayout.newTab().setIcon(R.drawable.ic_inbox_black_24dp);
 
         tabLayout.addTab(tab1);
         tabLayout.addTab(tab2);

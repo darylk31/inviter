@@ -120,27 +120,9 @@ public class MakeEventActivity extends Activity {
         }
     }
 
-        /*
-        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
-        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        titleData = etTitle.getText().toString();
-        descriptionData = etDescription.getText().toString();
-
-        //Toast test
-        Toast.makeText(MakeEventActivity.this,dateData,Toast.LENGTH_LONG).show();
-
-        Intent i = new Intent(this, ContactsActivity.class);
-        i.putExtra("KEY", "thebuilder");
-        i.putExtra("titleData", titleData);
-        i.putExtra("descriptionData", descriptionData);
-        i.putExtra("fromEvent", true);
-        i.putExtra("dateData", dateData);
-        i.putExtra("timeData", timeData);
-        startActivity(i);
-        }
-        */
 
 
+    /*
     //OLD FUNCTION
     public void onStartTimeDateClick() {
         final EditText etDate = (EditText) findViewById(R.id.etDate);
@@ -210,6 +192,7 @@ public class MakeEventActivity extends Activity {
             }
         });
     }
+    */
 
     public void onStartTimeClick(){
         final TextView tvTime = (TextView) findViewById(R.id.tvStartTime);
