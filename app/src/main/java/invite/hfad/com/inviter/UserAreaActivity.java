@@ -19,6 +19,7 @@ public class UserAreaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_area);
 
 
+
         TabLayout tabLayout = (TabLayout) (findViewById(R.id.tabs));
 
         TabLayout.Tab tab1 = tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp);
