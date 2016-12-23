@@ -12,6 +12,7 @@ public class CustomDatePicker extends DatePicker
             defStyle)
     {
         super(context, attrs, defStyle);
+        super.setMinimumWidth(1500);
     }
 
     public CustomDatePicker(Context context, AttributeSet attrs)
@@ -38,4 +39,6 @@ gotten a touch down */
 
         return false;
     }
+
+
 }

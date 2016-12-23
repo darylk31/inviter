@@ -76,7 +76,8 @@
                         android:layout_height="match_parent"
                         android:headerBackground="@color/colorPrimaryDark"
                         android:yearListItemTextAppearance="@color/colorPrimary"
-                        android:spinnersShown="false">
+                        android:spinnersShown="false"
+                        >
 
                     </invite.hfad.com.inviter.CustomDatePicker>
                     </LinearLayout>
