@@ -100,21 +100,24 @@ public class MakeEventActivity extends Activity {
     }
 
     //TODO:make discard warning for back button
+    //TODO:connect with contacts page
     public void onInvite(View view) {
-
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString();
         descriptionData = etDescription.getText().toString();
+        if (titleData == null || titleData.isEmpty()) {
+            Toast.makeText(MakeEventActivity.this,"Event name is required!",Toast.LENGTH_LONG).show();
+        }
+        else {
+            UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
+            SQLiteDatabase db = helper.getWritableDatabase();
+            helper.insert_event(db, dateData, titleData, descriptionData, timeData, allDayData);
+            Intent i = new Intent(MakeEventActivity.this, UserAreaActivity.class);
 
-        UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
-        SQLiteDatabase db = helper.getWritableDatabase();
-        helper.insert_event(db,dateData,titleData,descriptionData,timeData,allDayData);
-        Intent i = new Intent(MakeEventActivity.this,UserAreaActivity.class);
-
-        Toast.makeText(MakeEventActivity.this,"Successfully added Event",Toast.LENGTH_LONG).show();
-        startActivity(i);
-
+            Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
+            startActivity(i);
+        }
     }
 
 
