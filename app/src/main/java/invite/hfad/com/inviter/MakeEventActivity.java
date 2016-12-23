@@ -103,22 +103,22 @@ public class MakeEventActivity extends Activity {
 
     //make discard warning for back button
     public void onInvite(View view) {
-
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        titleData = etTitle.getText().toString();
-        descriptionData = etDescription.getText().toString();
-
+        titleData = etTitle.getText().toString().trim();
+        descriptionData = etDescription.getText().toString().trim();
         UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
-        helper.insert_event(db,dateData,titleData,descriptionData,timeData,allDayData);
-        Intent i = new Intent(MakeEventActivity.this,UserAreaActivity.class);
-
-        //Toast test
-        Toast.makeText(MakeEventActivity.this,"Successfully added Event",Toast.LENGTH_LONG).show();
-
-        startActivity(i);
-
+        if (titleData.equals("")) {
+            etTitle.setError("Require Title");
+        } else {
+            helper.insert_event(db, dateData, titleData, descriptionData, timeData, allDayData);
+            Intent i = new Intent(MakeEventActivity.this, UserAreaActivity.class);
+            //Toast test
+            Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
+            startActivity(i);
+        }
+    }
 
         /*
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
@@ -137,9 +137,8 @@ public class MakeEventActivity extends Activity {
         i.putExtra("dateData", dateData);
         i.putExtra("timeData", timeData);
         startActivity(i);
+        }
         */
-    }
-
 
 
     //OLD FUNCTION

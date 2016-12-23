@@ -18,10 +18,6 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Holo.Light">
-
-    </style>
-
     <style name="TimeDateEditTheme" parent="android:Theme.Holo.Light">
 
     </style>
@@ -30,12 +26,7 @@
         <item name="android:fontFamily">"sans-serif-light"</item>
     </style>
 
-    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
 
-    </style>
 
 
 
