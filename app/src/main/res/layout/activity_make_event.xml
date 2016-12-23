@@ -70,7 +70,7 @@
                     </RelativeLayout>
 
 
-                    <DatePicker
+                    <invite.hfad.com.inviter.CustomDatePicker
                         android:id="@+id/dpDatePicker"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -78,7 +78,7 @@
                         android:yearListItemTextAppearance="@color/colorPrimary"
                         android:spinnersShown="false">
 
-                    </DatePicker>
+                    </invite.hfad.com.inviter.CustomDatePicker>
                     </LinearLayout>
 
                 <EditText
