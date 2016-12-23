@@ -41,6 +41,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import static android.R.attr.checked;
+import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
 
 public class MakeEventActivity extends Activity {
 
@@ -99,28 +101,115 @@ public class MakeEventActivity extends Activity {
         l1.getLayoutParams().height = height - actionbar;
     }
 
-    //TODO:make discard warning for back button
-    //TODO:connect with contacts page
+    //make discard warning for back button
     public void onInvite(View view) {
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        titleData = etTitle.getText().toString();
-        descriptionData = etDescription.getText().toString();
-        if (titleData == null || titleData.isEmpty()) {
-            Toast.makeText(MakeEventActivity.this,"Event name is required!",Toast.LENGTH_LONG).show();
-        }
-        else {
-            UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
-            SQLiteDatabase db = helper.getWritableDatabase();
+        titleData = etTitle.getText().toString().trim();
+        descriptionData = etDescription.getText().toString().trim();
+        UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+        if (titleData.equals("")) {
+            etTitle.setError("Require Title");
+        } else {
             helper.insert_event(db, dateData, titleData, descriptionData, timeData, allDayData);
             Intent i = new Intent(MakeEventActivity.this, UserAreaActivity.class);
-
+            //Toast test
             Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
             startActivity(i);
         }
     }
 
+        /*
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
+        titleData = etTitle.getText().toString();
+        descriptionData = etDescription.getText().toString();
 
+        //Toast test
+        Toast.makeText(MakeEventActivity.this,dateData,Toast.LENGTH_LONG).show();
+
+        Intent i = new Intent(this, ContactsActivity.class);
+        i.putExtra("KEY", "thebuilder");
+        i.putExtra("titleData", titleData);
+        i.putExtra("descriptionData", descriptionData);
+        i.putExtra("fromEvent", true);
+        i.putExtra("dateData", dateData);
+        i.putExtra("timeData", timeData);
+        startActivity(i);
+        }
+        */
+
+
+    //OLD FUNCTION
+    public void onStartTimeDateClick() {
+        final EditText etDate = (EditText) findViewById(R.id.etDate);
+        final EditText etTime = (EditText) findViewById(R.id.etTime);
+        final boolean[] clicked = {false};
+        etDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Gets instance of calender with the current date
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = mcurrentDate.get(Calendar.YEAR);
+                int mMonth = mcurrentDate.get(Calendar.MONTH);
+                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+                if (clicked[0]) {
+                    mYear = Integer.parseInt(yearData);
+                    mMonth = Integer.parseInt(monthData);
+                    mDay = Integer.parseInt(dayData);
+                }
+                DatePickerDialog mDatePicker;
+                mDatePicker = new DatePickerDialog(MakeEventActivity.this, R.style.test, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        yearData = Integer.toString(year);
+                        monthData = Integer.toString(monthOfYear);
+                        dayData = Integer.toString(dayOfMonth);
+                        String dateString = String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
+                        try {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                            String output = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
+                            dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
+                            etDate.setText(output);
+                            clicked[0] = true;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Date");
+                mDatePicker.show();
+            }
+
+        });
+        etTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int mMinute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MakeEventActivity.this, R.style.test, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        hourData = Integer.toString(hourOfDay);
+                        minuteData = Integer.toString(minute);
+                        //timeData = String.format("%02d:%02d", hourOfDay, minute);
+                        int hour = hourOfDay % 12;
+                        if (hour == 0)
+                            hour = 12;
+                        String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
+                        timeData = timeText;
+                        etTime.setText(timeText);
+                    }
+                }, mHour, mMinute, true);
+                mTimePicker.setTitle("Time");
+                mTimePicker.show();
+            }
+        });
+    }
 
     public void onStartTimeClick(){
         final TextView tvTime = (TextView) findViewById(R.id.tvStartTime);
@@ -153,6 +242,7 @@ public class MakeEventActivity extends Activity {
 
     public void onStartDateDialog() {
         final DatePicker datePicker = (DatePicker) findViewById(R.id.dpDatePicker);
+
         final TextView tvDate = (TextView) findViewById(R.id.tvDateDisplay);
         final int day = datePicker.getDayOfMonth();
         final int month = datePicker.getMonth() + 1;

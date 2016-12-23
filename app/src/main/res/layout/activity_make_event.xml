@@ -59,7 +59,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
                             android:text="Date Here"
-                            android:textColor="@color/colorPrimary" />
+                            />
                         <TextView
                             android:id="@+id/tvStartTime"
                             android:layout_width="wrap_content"
@@ -74,10 +74,9 @@
                         android:id="@+id/dpDatePicker"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:calendarViewShown="false"
                         android:headerBackground="@color/colorPrimaryDark"
                         android:yearListItemTextAppearance="@color/colorPrimary"
-                        android:datePickerMode="spinner">
+                        android:spinnersShown="false">
 
                     </DatePicker>
                     </LinearLayout>
