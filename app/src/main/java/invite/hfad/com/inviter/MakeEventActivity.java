@@ -242,6 +242,7 @@ public class MakeEventActivity extends Activity {
 
     public void onStartDateDialog() {
         final DatePicker datePicker = (DatePicker) findViewById(R.id.dpDatePicker);
+
         final TextView tvDate = (TextView) findViewById(R.id.tvDateDisplay);
         final int day = datePicker.getDayOfMonth();
         final int month = datePicker.getMonth() + 1;

@@ -26,6 +26,9 @@
         <item name="android:fontFamily">"sans-serif-light"</item>
     </style>
 
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorDull</item>
+    </style>
 
 
 
