@@ -12,7 +12,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_Name = "User_DB";
     private static final int DB_Version = 1;
 
-    UserDatabaseHelper(Context context) {
+    public UserDatabaseHelper(Context context) {
         super(context, DB_Name, null, DB_Version);
     }
 

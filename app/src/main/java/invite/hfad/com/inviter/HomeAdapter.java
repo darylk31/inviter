@@ -46,23 +46,31 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    public HomeAdapter(Context context){
-        try {
-            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
-            SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-            Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
-            this.event_db = event_db;
-            this.cursor = cursor;
+    public HomeAdapter(Context context, Boolean newEvents){
+            try {
+                SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
+                SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                if (newEvents) {
+                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
+                    this.event_db = event_db;
+                    this.cursor = cursor;
+                }
+                else {
+                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY < date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
+                    this.event_db = event_db;
+                    this.cursor = cursor;
+                }
 
-        } catch (SQLiteException e){
-            e.printStackTrace();
-            Toast toast = Toast.makeText(context, "Error: Database unavailable", Toast.LENGTH_SHORT);
-            toast.show();}
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(context, "Error: Database unavailable", Toast.LENGTH_SHORT);
+                toast.show();
+            }
 
-        storeEvents();
-        cursor.close();
-        event_db.close();
-    }
+            storeEvents();
+            cursor.close();
+            event_db.close();
+        }
 
 
     @Override

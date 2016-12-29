@@ -113,7 +113,7 @@ public class MakeEventActivity extends Activity {
             etTitle.setError("Require Title");
         } else {
             helper.insert_event(db, dateData, titleData, descriptionData, timeData, allDayData);
-            Intent i = new Intent(MakeEventActivity.this, UserAreaActivity.class);
+            Intent i = new Intent(MakeEventActivity.this, HomeActivity.class);
             //Toast test
             Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
             startActivity(i);

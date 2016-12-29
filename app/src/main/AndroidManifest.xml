@@ -19,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".UserAreaActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity
             android:name=".SettingActivity"
@@ -33,13 +32,15 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA-PL5MZ24-ch2-UlF-KMrHtg7T4hKlT94"/>
+            android:value="AIzaSyA-PL5MZ24-ch2-UlF-KMrHtg7T4hKlT94" />
 
         <activity android:name=".MakeEventActivity" />
         <activity android:name=".RegisterActivity2" />
         <activity android:name=".EventPage" />
         <activity android:name=".InboxAdapter" />
         <activity android:name=".ContactsActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".InboxActivity"></activity>
     </application>
 
 </manifest>

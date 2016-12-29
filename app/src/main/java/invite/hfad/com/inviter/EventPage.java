@@ -77,7 +77,7 @@ public class EventPage extends Activity {
                     case R.id.delete_eventpage:
                         //Alert dialog to confirm
                         deleteEvent();
-                        Intent delete_intent = new Intent (EventPage.this, UserAreaActivity.class);
+                        Intent delete_intent = new Intent (EventPage.this, HomeActivity.class);
                         startActivity(delete_intent);
                         break;
                 }
