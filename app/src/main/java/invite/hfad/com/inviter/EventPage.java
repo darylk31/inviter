@@ -7,6 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +25,8 @@ import java.util.Locale;
 
 public class EventPage extends Activity {
     String id;
+    String event_string;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,8 @@ public class EventPage extends Activity {
             Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE _id=" + id, null);
             cursor.moveToLast();
             TextView event_name = (TextView) findViewById(R.id.tv_eventpagename);
-            event_name.setText(cursor.getString(2));
+            this.event_string = cursor.getString(2);
+            event_name.setText(event_string);
             TextView event_date = (TextView) findViewById(R.id.tv_eventpagedate);
             String event_day = cursor.getString(1);
             try {
@@ -59,7 +66,7 @@ public class EventPage extends Activity {
             Toast toast = Toast.makeText(this.getApplicationContext(), "Error: Event unavailable", Toast.LENGTH_SHORT);
             toast.show();}
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.event_toolbar);
+        this.toolbar = (Toolbar) findViewById(R.id.event_toolbar);
         toolbar.inflateMenu(R.menu.menu_eventpage);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -84,6 +91,21 @@ public class EventPage extends Activity {
                 return true;
             }
     });
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+        appBarLayout.setExpanded(false);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int collapsed_num = appBarLayout.getTotalScrollRange();
+                if (verticalOffset == -collapsed_num ) {
+                    collapsingToolbarLayout.setTitleEnabled(true);
+                    collapsingToolbarLayout.setTitle(event_string);
+                }
+                else {
+                    collapsingToolbarLayout.setTitleEnabled(false);}
+            }}
+        );
     }
 
     public void deleteEvent(){

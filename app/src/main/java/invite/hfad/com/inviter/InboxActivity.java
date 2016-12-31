@@ -76,4 +76,10 @@ public class InboxActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(InboxActivity.this, HomeActivity.class);
+        startActivity(intent);
+    }
+
 }
