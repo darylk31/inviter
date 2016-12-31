@@ -508,5 +508,32 @@ public class MakeEventActivity extends Activity {
         });
     }
 
-
+    @Override
+    public void onBackPressed(){
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        if(etTitle.getText().toString().equals("")) {
+            Intent intent = new Intent(MakeEventActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MakeEventActivity.this);
+            builder.setTitle("Discard");
+            builder.setMessage("All event information will be discarded, are you sure?");
+            builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(MakeEventActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+            });
+            builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 }
