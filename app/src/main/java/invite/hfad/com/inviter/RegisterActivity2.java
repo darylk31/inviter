@@ -1,12 +1,10 @@
 package invite.hfad.com.inviter;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /*
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,6 +48,8 @@ public class RegisterActivity2 extends AppCompatActivity {
         if (etConfirm == etPassword) {
             this.password = etPassword.getText().toString();
         }
+
+
 
         //...BACKEND: register user in database
         /*
