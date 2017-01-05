@@ -9,7 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="invite.hfad.com.inviter.LoginActivity"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="@drawable/snow_pagoda_cyangradient"
+>
 
     <EditText
         android:layout_width="wrap_content"
@@ -17,58 +19,83 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/etUsername"
-        android:hint="Username"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/login_username"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
-    <EditText
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/etPassword"
-        android:hint="Password"
+        android:layout_marginBottom="10dp"
         android:layout_below="@+id/etUsername"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/rlPassword">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/etPassword"
+            android:hint="@string/login_password"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/login_forget_text"
+            android:id="@+id/tvForgotPassword"
+            android:onClick="onForgotPasswordText"
+            android:gravity="center_horizontal"
+            android:layout_alignBaseline="@+id/etPassword"
+            android:layout_alignBottom="@+id/etPassword"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp" />
+
+    </RelativeLayout>
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login_text"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
         android:id="@+id/bLogin"
         android:onClick="onLogin"
-        android:layout_below="@+id/etPassword"
-        android:layout_alignRight="@+id/etPassword"
-        android:layout_alignEnd="@+id/etPassword"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/rlPassword"
+        android:layout_alignRight="@+id/rlPassword"
+        android:layout_alignEnd="@+id/rlPassword"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@drawable/button_design_1"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register Here!"
+        android:text="@string/login_register_text"
         android:id="@+id/tvRegister"
         android:onClick="onRegister"
         android:layout_below="@+id/bLogin"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Forgot?"
-        android:id="@+id/tvForgotPassword"
-        android:onClick="onForgotPasswordText"
-        android:layout_alignBottom="@+id/etPassword"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -78,5 +105,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp" />
+
+
 
 </RelativeLayout>

@@ -13,6 +13,11 @@
     <string name="Event_Description">note</string>
     <string name="ok">Set</string>
     <string name="cancel">Cancel</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_text">Login</string>
+    <string name="login_register_text">Register Here!</string>
+    <string name="login_forget_text">Forgot?</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>
