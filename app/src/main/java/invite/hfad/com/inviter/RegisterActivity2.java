@@ -33,7 +33,7 @@ public class RegisterActivity2 extends AppCompatActivity {
         setTitle("Registration");
         this.email = (String) getIntent().getExtras().get("Email");
         this.phoneNumber = (String) getIntent().getExtras().get("PhoneNumber");
-
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
         //firebaseAuth = FirebaseAuth.getInstance();
     }
 

@@ -22,25 +22,44 @@ public class RegisterActivity extends AppCompatActivity {
         setTitle("Registration");
         this.etEmail = (EditText)findViewById(R.id.etEmail);
         this.etPhoneNumber = (EditText)findViewById(R.id.etPhoneNumber);
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
     }
 
 
     public void onNextButton(View view){
-        if (validEmail(etEmail) && validNumber(etPhoneNumber)) {
-            Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
+        Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
+        if (validEmail(etEmail) || validNumber(etPhoneNumber)) {
             intent.putExtra("Email", etEmail.getText().toString().trim());
             intent.putExtra("PhoneNumber", etPhoneNumber.getText().toString().trim());
             startActivity(intent);
+        } else{
+            etEmail.setError("Require Email");
+            etPhoneNumber.setError("Require Phone");
         }
+
     }
 
     private boolean validEmail(EditText e){
+        //Check if blank
+        String emailData = e.getText().toString().trim();
+        if(emailData.equals("")){
+            e.setError("Require Email");
+            return false;
+        }
         //...BACKEND: check if email is in database already
         return true;
     }
 
-    private boolean validNumber(EditText number){
+    private boolean validNumber(EditText n){
+
+        //Check if blank
+        String phoneData = n.getText().toString().trim();
+        if(phoneData.equals("")){
+            n.setError("Require PhoneNumber");
+            return false;
+        }
         //...BACKEND: check if number is in database already
         return true;
+
     }
 }
