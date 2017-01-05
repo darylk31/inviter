@@ -48,3 +48,7 @@ dependencies {
 dependencies {
     compile 'com.google.android.gms:play-services-places:9.4.0'
 }
+dependencies {
+    compile 'com.google.firebase:firebase-core:9.2.1'
+}
+apply plugin: 'com.google.gms.google-services'

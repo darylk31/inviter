@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,8 +57,6 @@ public class EventPage extends Activity {
             }
             TextView event_time = (TextView) findViewById(R.id.tv_eventpagetime);
             event_time.setText(cursor.getString(4));
-            TextView testing = (TextView) findViewById(R.id.testing_chatroom);
-            testing.setText("Future Update");
 
             cursor.close();
             event_db.close();
@@ -93,11 +92,14 @@ public class EventPage extends Activity {
     });
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         appBarLayout.setExpanded(false);
+
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
                 int collapsed_num = appBarLayout.getTotalScrollRange();
+
                 if (verticalOffset == -collapsed_num ) {
                     collapsingToolbarLayout.setTitleEnabled(true);
                     collapsingToolbarLayout.setTitle(event_string);
@@ -106,6 +108,7 @@ public class EventPage extends Activity {
                     collapsingToolbarLayout.setTitleEnabled(false);}
             }}
         );
+
     }
 
     public void deleteEvent(){

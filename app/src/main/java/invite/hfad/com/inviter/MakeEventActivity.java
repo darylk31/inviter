@@ -95,7 +95,7 @@ public class MakeEventActivity extends Activity {
         l1.getLayoutParams().height = height - actionbar;
     }
 
-    //make discard warning for back button
+
     public void onInvite(View view) {
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
