@@ -27,16 +27,11 @@ import java.util.List;
 import java.util.Locale;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-
-import static android.R.attr.checked;
-import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
 
 public class MakeEventActivity extends Activity {
 

@@ -8,12 +8,33 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+
+
 public class LoginActivity extends AppCompatActivity {
+
+    private static final int SIGN_IN_REQUEST_CODE = 111;
+    private String loggedInUserName = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+/*
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivityForResult(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .build(), SIGN_IN_REQUEST_CODE);
+        }
+        else {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            loggedInUserName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            intent.putExtra("Username", loggedInUserName);
+            startActivity(intent);
+        }
+        */
     }
 
     protected void onLogin(View v){

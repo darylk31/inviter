@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "174986745769",
-    "firebase_url": "https://calvite-f4742.firebaseio.com",
-    "project_id": "calvite-f4742",
-    "storage_bucket": "calvite-f4742.appspot.com"
+    "project_number": "322997312747",
+    "firebase_url": "https://inviter-3a0d9.firebaseio.com",
+    "project_id": "inviter-3a0d9",
+    "storage_bucket": "inviter-3a0d9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:174986745769:android:3251364202b8a2b9",
+        "mobilesdk_app_id": "1:322997312747:android:3251364202b8a2b9",
         "android_client_info": {
           "package_name": "invite.hfad.com.inviter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "174986745769-m70pifhjera1ah6rqvqhvjj04n08hpve.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "invite.hfad.com.inviter",
-            "certificate_hash": "655E7D4B82430CB152E85216A1EC353B75D53345"
-          }
-        },
-        {
-          "client_id": "174986745769-bjl0hg6i2dhqdbbnia3k5di7u7ku0tb5.apps.googleusercontent.com",
+          "client_id": "322997312747-ef8ecdqohf9kpg661gr5gr9ghqepul4h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA5pOGTXvJdP3y6MR8PdK4DlkHFUXaa06o"
+          "current_key": "AIzaSyBph-vEayCkvs5mcKyb_qSeXaU7QVQpkfg"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "174986745769-bjl0hg6i2dhqdbbnia3k5di7u7ku0tb5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
