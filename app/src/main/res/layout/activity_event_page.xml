@@ -89,13 +89,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/bSendMessage">
+            android:layout_toLeftOf="@+id/bSendMessage"
+            android:focusableInTouchMode="true"
+            android:clickable="true">
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/etMessage"
-                android:hint="Message"/>
+                android:hint="Message"
+                android:focusableInTouchMode="true"
+                android:clickable="true"/>
         </android.support.design.widget.TextInputLayout>
 
         <ListView

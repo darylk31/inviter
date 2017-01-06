@@ -7,12 +7,32 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     style="@style/test">
+
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_send_black_24dp"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onInvite"
+        android:id="@+id/bInvite"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:padding="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:fillViewport="true"
         android:id="@+id/EventScrollLayout"
-        >
+        android:layout_above="@+id/bInvite"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="264dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginBottom="351dp">
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -315,18 +335,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_send_black_24dp"
-        app:backgroundTint="@color/colorPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onInvite"
-        android:id="@+id/bInvite"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
-        android:padding="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>
