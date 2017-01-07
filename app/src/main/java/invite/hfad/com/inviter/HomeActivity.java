@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -12,27 +13,111 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity {
+
+    ViewPager viewPager;
+    TabLayout upperTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+    }
+/*
 
         TabLayout tabLayout = (TabLayout) (findViewById(R.id.tabs));
-
         TabLayout.Tab tab1 = tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp);
         TabLayout.Tab tab2 = tabLayout.newTab().setIcon(R.drawable.ic_launch_black_24dp);
         TabLayout.Tab tab3 = tabLayout.newTab().setIcon(R.drawable.ic_inbox_black_24dp);
-
         tabLayout.addTab(tab1);
         tabLayout.addTab(tab2);
         tabLayout.addTab(tab3);
-
         tab1.select();
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int tab_num = tab.getPosition();
+                if (tab_num == 1) {
+                    Intent intent = new Intent(HomeActivity.this, MakeEventActivity.class);
+                    startActivity(intent);
+                }
+                if (tab_num == 2) {
+                    Intent intent = new Intent(HomeActivity.this, InboxActivity.class);
+                    startActivity(intent);
+                }
 
 
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        TabLayout uppertabLayout = (TabLayout) findViewById(R.id.uppertabs);
+        uppertabLayout.setupWithViewPager(viewPager);
+
+        getSupportActionBar().setTitle("Include");
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
+
+        CalendarFragment p0 = new CalendarFragment();
+        HomeFragment p1 = new HomeFragment();
+        HomeOldFragment p2 = new HomeOldFragment();
+
+
+        adapter.addFragment(p0, "Calendar");
+        adapter.addFragment(p1, "Events");
+        adapter.addFragment(p2, "History");
+        viewPager.setAdapter(adapter);
+    }
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+
+       /*
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         ViewPager myViewPager = (ViewPager) findViewById(R.id.pager);
         myViewPager.setAdapter(myPagerAdapter);
@@ -64,9 +149,11 @@ public class HomeActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        */
     }
 
 
+/*
     public class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm){
@@ -90,8 +177,10 @@ public class HomeActivity extends AppCompatActivity {
             return 2;
         }
     }
+    */
 
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -115,4 +204,4 @@ public class HomeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-}
+    */

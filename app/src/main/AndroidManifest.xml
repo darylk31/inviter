@@ -11,17 +11,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="invite.hfad.com.inviter.LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:theme="@style/LoginActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="invite.hfad.com.inviter.RegisterActivity" />
-        <activity android:name="invite.hfad.com.inviter.ForgotPasswordActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
         <activity
-            android:name="invite.hfad.com.inviter.SettingActivity"
+            android:name=".SettingActivity"
             android:label="Preferences" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -34,13 +36,20 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA-PL5MZ24-ch2-UlF-KMrHtg7T4hKlT94" />
 
-        <activity android:name="invite.hfad.com.inviter.MakeEventActivity" />
-        <activity android:name="invite.hfad.com.inviter.RegisterActivity2" />
-        <activity android:name="invite.hfad.com.inviter.EventPage" />
-        <activity android:name="invite.hfad.com.inviter.InboxAdapter" />
-        <activity android:name="invite.hfad.com.inviter.ContactsActivity" />
-        <activity android:name="invite.hfad.com.inviter.HomeActivity" />
-        <activity android:name="invite.hfad.com.inviter.InboxActivity"></activity>
+        <activity android:name=".MakeEventActivity" />
+        <activity android:name=".RegisterActivity2" />
+        <activity android:name=".EventPage" />
+        <activity android:name=".InboxAdapter" />
+        <activity android:name=".ContactsActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".InboxActivity" />
+        <activity android:name=".UserAreaActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

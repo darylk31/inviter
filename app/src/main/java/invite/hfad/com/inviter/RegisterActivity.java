@@ -56,7 +56,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this, "Register failed, please try again.", Toast.LENGTH_LONG).show();
                             }
                             else {
-                                Toast.makeText(RegisterActivity.this, "Register failed, please try again.", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
                                 intent.putExtra("Email", email);
                                 intent.putExtra("Password", password);
@@ -83,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void showProgress(){
             progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Register");
-            progressDialog.setMessage("Attempting to register account...");
+            progressDialog.setMessage("Checking if email is available to register...");
             progressDialog.show();
     }
 }
