@@ -13,11 +13,13 @@ public class CustomDatePicker extends DatePicker
     {
         super(context, attrs, defStyle);
         super.setMinimumWidth(1500);
+
     }
 
     public CustomDatePicker(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+
     }
 
     public CustomDatePicker(Context context)

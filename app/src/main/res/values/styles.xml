@@ -16,9 +16,10 @@
     </style>
 
     <style name="LoginActivityTheme" parent ="AppTheme.NoActionBar">
-
+        <item name="editTextBackground">@drawable/button_design_1</item>
         <item name="android:editTextBackground">@drawable/button_design_1</item>
         <item name="android:buttonStyle">@drawable/button_design_1</item>
+        <item name="buttonStyle">@drawable/button_design_1</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
