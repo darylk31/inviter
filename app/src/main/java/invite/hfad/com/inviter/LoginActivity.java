@@ -1,45 +1,62 @@
 package invite.hfad.com.inviter;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final int SIGN_IN_REQUEST_CODE = 111;
-    private String loggedInUserName = "";
+    String email;
+    String password;
+    FirebaseAuth auth;
+    ProgressDialog progressDialog;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-/*
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivityForResult(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .build(), SIGN_IN_REQUEST_CODE);
-        }
-        else {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            loggedInUserName = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            intent.putExtra("Username", loggedInUserName);
-            startActivity(intent);
-        }
-        */
+        auth = FirebaseAuth.getInstance();
     }
 
     protected void onLogin(View v){
-        Intent intent = new Intent(this, UserAreaActivity.class);
-        startActivity(intent);
+        showProcessDialog();
+
+        EditText etEmail = (EditText) findViewById(R.id.etUsername);
+        EditText etPassword = (EditText) findViewById(R.id.etPassword);
+        email = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+
+        auth.signInWithEmailAndPassword(email, password).
+                addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                    startActivity(intent);
+                    progressDialog.dismiss();
+                }
+            }
+        });
     }
 
     protected void onRegister(View v){
@@ -73,5 +90,12 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void showProcessDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Login");
+        progressDialog.setMessage("Logging in...");
+        progressDialog.show();
     }
 }
