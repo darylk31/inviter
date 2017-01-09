@@ -113,6 +113,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="16dp"
             android:stackFromBottom="true"
+            android:isScrollContainer="false"
             android:transcriptMode="alwaysScroll" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

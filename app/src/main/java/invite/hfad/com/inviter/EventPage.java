@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class EventPage extends Activity {
     String id;
     String event_string;
     Toolbar toolbar;
+    AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public class EventPage extends Activity {
     });
 
 
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         appBarLayout.setExpanded(false);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -123,6 +125,10 @@ public class EventPage extends Activity {
 
         Toast toast = Toast.makeText(this.getApplicationContext(), "Deleted", Toast.LENGTH_SHORT);
         toast.show();}
+
+    public void onSendMessage(View view){}
     }
+
+
 
 
