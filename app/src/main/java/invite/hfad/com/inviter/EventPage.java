@@ -53,13 +53,14 @@ public class EventPage extends Activity {
             }
             TextView event_time = (TextView) findViewById(R.id.tv_eventpagetime);
             event_time.setText(cursor.getString(4));
-
             cursor.close();
             event_db.close();
+
         } catch (SQLiteException e){
             e.printStackTrace();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Error: Event unavailable", Toast.LENGTH_SHORT);
             toast.show();}
+
 
         this.toolbar = (Toolbar) findViewById(R.id.event_toolbar);
         toolbar.inflateMenu(R.menu.menu_eventpage);
@@ -86,6 +87,8 @@ public class EventPage extends Activity {
                 return true;
             }
     });
+
+
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         appBarLayout.setExpanded(false);
 
