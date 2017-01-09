@@ -102,7 +102,7 @@ public class MakeEventActivity extends Activity {
             etTitle.setError("Require Title");
         } else {
             helper.insert_event(db, dateData, titleData, descriptionData, timeData, allDayData);
-            Intent i = new Intent(MakeEventActivity.this, HomeActivity.class);
+            Intent i = new Intent(MakeEventActivity.this, UserAreaActivity.class);
             //Toast test
             Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
             startActivity(i);
@@ -506,7 +506,7 @@ public class MakeEventActivity extends Activity {
     public void onBackPressed(){
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         if(etTitle.getText().toString().equals("")) {
-            Intent intent = new Intent(MakeEventActivity.this, HomeActivity.class);
+            Intent intent = new Intent(MakeEventActivity.this, UserAreaActivity.class);
             startActivity(intent);
         }
         else {
@@ -516,7 +516,7 @@ public class MakeEventActivity extends Activity {
             builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(MakeEventActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(MakeEventActivity.this, UserAreaActivity.class);
                     startActivity(intent);
                 }
             });

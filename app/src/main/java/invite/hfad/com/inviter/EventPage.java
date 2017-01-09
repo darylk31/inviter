@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -89,6 +90,7 @@ public class EventPage extends Activity {
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         appBarLayout.setExpanded(false);
 
+        //Get Title Showing
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
             @Override
@@ -102,10 +104,27 @@ public class EventPage extends Activity {
                 }
                 else {
                     collapsingToolbarLayout.setTitleEnabled(false);}
+
+                //Automatically pushes if Vertical Offset > 50%
+                /*
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                int height = displaymetrics.heightPixels;
+                if(verticalOffset >= height /2 ){
+                    //Setexpandable false
+
+                }
+                */
             }}
         );
-
     }
+
+    /*
+    public void Test(){
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+        appBarLayout.setExpanded(false);
+    }
+    */
 
     public void deleteEvent(){
         try {

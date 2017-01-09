@@ -18,6 +18,7 @@
     <string name="login_text">Login</string>
     <string name="login_register_text">Register Here!</string>
     <string name="login_forget_text">Forgot?</string>
+    <string name="AppName">Include</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>
