@@ -21,10 +21,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String email;
-    String password;
-    FirebaseAuth auth;
-    ProgressDialog progressDialog;
+    private String email;
+    private String password;
+    private FirebaseAuth auth;
+    private ProgressDialog progressDialog;
 
 
 
@@ -32,15 +32,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
     }
 
     protected void onLogin(View v){
         Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
         startActivity(intent);
 
-        //Login code, DON'T DELETE.
         /*
+        //Login code, DON'T DELETE.
+
         showProcessDialog();
 
         EditText etEmail = (EditText) findViewById(R.id.etUsername);

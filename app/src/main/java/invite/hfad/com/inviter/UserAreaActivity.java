@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,38 +11,75 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserAreaActivity extends AppCompatActivity {
 
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
-
-        //Set Custom Action Bar
         setCustomActionBar();
-
-
-        //Set View Pager
         setViewPager();
 
 
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        authListener = new FirebaseAuth.AuthStateListener() {
+
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d("UserAreaActivity", "onAuthStateChanged");
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    if (user.getPhotoUrl() != null) {
+                        Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
+                        //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
+                    }
+                } else {
+                    startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+                }
+            }
+
+            ;
+
+        };
     }
 
-    private void setViewPager(){
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
 
-        tabLayout = (TabLayout)findViewById(R.id.tabs);
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
+        }
+    }
 
+    private void setViewPager() {
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_date_range_black_24dp));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_black_24dp));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_history_black_24dp));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -78,17 +116,17 @@ public class UserAreaActivity extends AppCompatActivity {
         }
     }
 
-    public void onMakeEvent(View v){
+    public void onMakeEvent(View v) {
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
     }
 
-    private void setCustomActionBar(){
+    private void setCustomActionBar() {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar);
     }
 
-    private void drawerTogglge(){
+    private void drawerToggle() {
         //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 }
