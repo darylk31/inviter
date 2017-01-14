@@ -19,6 +19,8 @@
     <string name="login_register_text">Register Here!</string>
     <string name="login_forget_text">Forgot?</string>
     <string name="AppName">Include</string>
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>

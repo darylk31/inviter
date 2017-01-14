@@ -26,16 +26,18 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authListener;
+    //private FirebaseAuth auth;
+    //private FirebaseAuth.AuthStateListener authListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
         setCustomActionBar();
         setViewPager();
+    }
 
 
+        /*
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
@@ -57,6 +59,7 @@ public class UserAreaActivity extends AppCompatActivity {
             ;
 
         };
+
     }
 
     @Override
@@ -72,6 +75,8 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
+    */
+
 
     private void setViewPager() {
 

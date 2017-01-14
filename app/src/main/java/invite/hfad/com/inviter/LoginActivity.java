@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
         startActivity(intent);
 
-        /*
+        /**
         //Login code, DON'T DELETE.
 
         showProcessDialog();
