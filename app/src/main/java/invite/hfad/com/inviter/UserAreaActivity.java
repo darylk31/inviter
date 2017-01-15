@@ -1,7 +1,11 @@
 package invite.hfad.com.inviter;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenu;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +39,9 @@ public class UserAreaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_area);
         setCustomActionBar();
         setViewPager();
-    }
+        setNavigationDisplayPicture();
+
+ }
 
 
         /*
@@ -133,5 +140,12 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private void drawerToggle() {
         //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    }
+
+    private void setNavigationDisplayPicture(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
+        ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+        Picasso.with(this).load("https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-9/14457341_10153958094445963_3322825613904558278_n.jpg?oh=49fc47777f5e5941849f092bdb12f66b&oe=58E1296D").into(profilePictureView);
+
     }
 }
