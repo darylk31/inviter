@@ -43,7 +43,8 @@
         <activity android:name=".ContactsActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".InboxActivity" />
-        <activity android:name=".UserAreaActivity">
+        <activity android:name=".UserAreaActivity"
+                  android:theme="@style/UserAreaTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

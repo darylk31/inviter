@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
     public static final int GET_FROM_GALLERY = 3;
     //private FirebaseAuth auth;
     //private FirebaseAuth.AuthStateListener authListener;
@@ -45,9 +47,14 @@ public class UserAreaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
-        setCustomActionBar();
+        //setCustomActionBar();
         setViewPager();
         setNavigationDisplayPicture();
+
+        // Initializing Toolbar and setting it as the actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Include");
+        setSupportActionBar(toolbar);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -80,8 +87,24 @@ public class UserAreaActivity extends AppCompatActivity {
             }
         });
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        //Setting the actionbarToggle to drawer layout
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
- }
+        //calling sync state is necessay or else your hamburger icon wont show up
+        actionBarDrawerToggle.syncState();
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,15 +200,6 @@ public class UserAreaActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setCustomActionBar() {
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
-    }
-
-    private void drawerToggle() {
-        //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    }
-
     private void setNavigationDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
@@ -206,6 +220,12 @@ public class UserAreaActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //Hides overflow on action bar
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return false;
     }
 
 
