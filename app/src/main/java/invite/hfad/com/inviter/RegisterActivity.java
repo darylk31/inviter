@@ -32,42 +32,39 @@ public class RegisterActivity extends AppCompatActivity {
         this.etPassword = (EditText)findViewById(R.id.etPassword);
         this.etCPassword = (EditText) findViewById(R.id.etConfirmPassword);
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
-
         auth = FirebaseAuth.getInstance();
-
-
     }
 
 
-    public void onNextButton(View view){
+    public void onNextButton(View view) {
 
-        final String password = etPassword.getText().toString().trim();
-        final String cpassword = etCPassword.getText().toString().trim();
+        final String password = etPassword.getText().toString();
+        final String cpassword = etCPassword.getText().toString();
         final String email = etEmail.getText().toString().trim();
 
         if (validEmail(email) && validPassword(password, cpassword)) {
-            showProgress();
-            auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(!task.isSuccessful()){
-                                progressDialog.dismiss();
-                                Toast.makeText(RegisterActivity.this, "Register failed, please try again.", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
-                                intent.putExtra("Email", email);
-                                intent.putExtra("Password", password);
-                                startActivity(intent);
-                            }
+        showProgress();
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "This email already has an account, please try again.", Toast.LENGTH_LONG).show();
+                        } else {
+                            Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
+                            intent.putExtra("Email", email);
+                            intent.putExtra("Password", password);
+                            startActivity(intent);
                         }
-                    });
+                    }
+                });
 
-        } else{
+        }else{
             etEmail.setError("Require Email");
             etPassword.setError("Passwords not the same or passwords less than 6 letters.");
         }
+
 
     }
 

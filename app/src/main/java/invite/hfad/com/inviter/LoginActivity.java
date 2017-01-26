@@ -9,10 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -36,12 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected void onLogin(View v){
-        Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
-        startActivity(intent);
-
-        /**
-        //Login code, DON'T DELETE.
-
         showProcessDialog();
 
         EditText etEmail = (EditText) findViewById(R.id.etUsername);
@@ -49,21 +41,22 @@ public class LoginActivity extends AppCompatActivity {
         email = etEmail.getText().toString();
         password = etPassword.getText().toString();
 
-        auth.signInWithEmailAndPassword(email, password).
-                addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+            public void onComplete(@NonNull Task<AuthResult> task){
+                if (task.isSuccessful()){
                     progressDialog.dismiss();
-                } else {
-                    Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
-                    startActivity(intent);
+                }
+                else{
                     progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        */
+
+        if (auth.getCurrentUser() != null){
+            startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
+        }
     }
 
     protected void onRegister(View v){
