@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,13 +40,13 @@ public class UserAreaActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private DrawerLayout drawerLayout;
     public static final int GET_FROM_GALLERY = 3;
-    //private FirebaseAuth auth;
-    //private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
-        setCustomActionBar();
+        //setCustomActionBar();
         setViewPager();
         setNavigationDisplayPicture();
 
@@ -74,6 +75,9 @@ public class UserAreaActivity extends AppCompatActivity {
                         intent = new Intent(UserAreaActivity.this,SettingActivity.class);
                         startActivity(intent);
                         return true;
+                    case R.id.nav_signout:
+                        auth.signOut();
+                        startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     default:
                         return true;
                 }
@@ -81,26 +85,16 @@ public class UserAreaActivity extends AppCompatActivity {
         });
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
- }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_drawer, menu);
-        return true;
-    }
-
-
-        /*
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
-
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Log.d("UserAreaActivity", "onAuthStateChanged");
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    TextView user_name = (TextView) findViewById(R.id.drawer_name);
+                    user_name.setText(user.getDisplayName());
+
                     if (user.getPhotoUrl() != null) {
                         Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
                         //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
@@ -112,6 +106,15 @@ public class UserAreaActivity extends AppCompatActivity {
             ;
         };
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_drawer, menu);
+        return true;
+    }
+
 
     @Override
     public void onStart() {
@@ -126,7 +129,6 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
-    */
 
 
     private void setViewPager() {
@@ -199,12 +201,6 @@ public class UserAreaActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
-        int id = item.getItemId();
-
-        if(id == R.id.settings){
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
