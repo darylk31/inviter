@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,11 +37,10 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private String name;
     private DrawerLayout drawerLayout;
     public static final int GET_FROM_GALLERY = 3;
-    private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authListener;
+    //private FirebaseAuth auth;
+    //private FirebaseAuth.AuthStateListener authListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +74,6 @@ public class UserAreaActivity extends AppCompatActivity {
                         intent = new Intent(UserAreaActivity.this,SettingActivity.class);
                         startActivity(intent);
                         return true;
-                    case R.id.nav_signout:
-                        auth.signOut();
                     default:
                         return true;
                 }
@@ -85,7 +81,19 @@ public class UserAreaActivity extends AppCompatActivity {
         });
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+ }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_drawer, menu);
+        return true;
+    }
+
+
+        /*
         auth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
 
             @Override
@@ -97,25 +105,12 @@ public class UserAreaActivity extends AppCompatActivity {
                         Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
                         //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
                     }
-
-                    String name = user.getDisplayName();
-                    //Toast.makeText(UserAreaActivity.this, "name", Toast.LENGTH_SHORT);
-                    TextView drawer_name = (TextView) findViewById(R.id.drawer_name);
-                    drawer_name.setText(name);
                 } else {
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                 }
             }
             ;
         };
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_drawer, menu);
-        return true;
     }
 
     @Override
@@ -131,6 +126,7 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
+    */
 
 
     private void setViewPager() {
@@ -209,12 +205,6 @@ public class UserAreaActivity extends AppCompatActivity {
         if(id == R.id.settings){
             return true;
         }
-
-        if(id == R.id.nav_signout){
-            auth.signOut();
-            startActivity(new Intent(UserAreaActivity.this,LoginActivity.class));
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
