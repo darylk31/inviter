@@ -33,7 +33,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="xXN@rUt0xG0DARKSLAYER69XxBitches"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorWhite"
@@ -44,7 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-        android:text="name"
         android:ellipsize="end"
         android:maxLines="1"
         />

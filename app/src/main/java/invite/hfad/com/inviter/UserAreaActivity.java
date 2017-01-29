@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,10 +39,9 @@ public class UserAreaActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
     public static final int GET_FROM_GALLERY = 3;
-    //private FirebaseAuth auth;
-    //private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
+    private FirebaseAuth.AuthStateListener authListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +49,6 @@ public class UserAreaActivity extends AppCompatActivity {
         //setCustomActionBar();
         setViewPager();
         setNavigationDisplayPicture();
-
-        // Initializing Toolbar and setting it as the actionbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Include");
-        setSupportActionBar(toolbar);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -81,49 +75,26 @@ public class UserAreaActivity extends AppCompatActivity {
                         intent = new Intent(UserAreaActivity.this,SettingActivity.class);
                         startActivity(intent);
                         return true;
+                    case R.id.nav_signout:
+                        auth.signOut();
+                        startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     default:
                         return true;
                 }
             }
         });
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.drawer_open,R.string.drawer_close){
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-            }
-        };
-        //Setting the actionbarToggle to drawer layout
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        //calling sync state is necessay or else your hamburger icon wont show up
-        actionBarDrawerToggle.syncState();
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_drawer, menu);
-        return true;
-    }
-
-
-        /*
         auth = FirebaseAuth.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
-
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 Log.d("UserAreaActivity", "onAuthStateChanged");
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    TextView user_name = (TextView) findViewById(R.id.drawer_name);
+                    user_name.setText(user.getDisplayName());
+
                     if (user.getPhotoUrl() != null) {
                         Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
                         //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
@@ -135,6 +106,15 @@ public class UserAreaActivity extends AppCompatActivity {
             ;
         };
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_drawer, menu);
+        return true;
+    }
+
 
     @Override
     public void onStart() {
@@ -149,7 +129,6 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
-    */
 
 
     private void setViewPager() {
@@ -200,6 +179,15 @@ public class UserAreaActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void setCustomActionBar() {
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+    }
+
+    private void drawerToggle() {
+        //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    }
+
     private void setNavigationDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
@@ -213,19 +201,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
-        int id = item.getItemId();
-
-        if(id == R.id.settings){
-            return true;
-        }
         return super.onOptionsItemSelected(item);
-    }
-
-    //Hides overflow on action bar
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return false;
     }
 
 
