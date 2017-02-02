@@ -23,8 +23,8 @@
     </style>
 
     <style name="UserAreaTheme" parent="AppTheme.NoActionBar">
-
     </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

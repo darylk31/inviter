@@ -35,11 +35,11 @@ public class LoginActivity extends AppCompatActivity {
 
     protected void onLogin(View v){
         showProcessDialog();
-
         EditText etEmail = (EditText) findViewById(R.id.etUsername);
         EditText etPassword = (EditText) findViewById(R.id.etPassword);
         email = etEmail.getText().toString();
         password = etPassword.getText().toString();
+
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null){
             startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
         }
+
     }
 
     protected void onRegister(View v){
@@ -87,9 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                     exit = false;
                 }
             }, 3 * 1000);
-
         }
-
     }
 
     private void showProcessDialog() {
