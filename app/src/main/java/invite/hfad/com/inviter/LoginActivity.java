@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,33 +32,66 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         auth = FirebaseAuth.getInstance();
+
+
     }
 
     protected void onLogin(View v){
+
         showProcessDialog();
-        EditText etEmail = (EditText) findViewById(R.id.etUsername);
-        EditText etPassword = (EditText) findViewById(R.id.etPassword);
-        email = etEmail.getText().toString();
-        password = etPassword.getText().toString();
+        if(!validateForm())
+            return;
+
 
 
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
-                if (task.isSuccessful()){
-                    progressDialog.dismiss();
-                }
-                else{
+                if(!task.isSuccessful()){
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                 }
+                if (task.isSuccessful()) {
+                    progressDialog.dismiss();
+                }
+                /**
+                else{
+                    //progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                }
+                 */
             }
-        });
 
+
+        });
         if (auth.getCurrentUser() != null){
             startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
         }
 
+    }
+
+    private boolean validateForm(){
+        boolean valid = true;
+
+        EditText etEmail = (EditText) findViewById(R.id.etUsername);
+        EditText etPassword = (EditText) findViewById(R.id.etPassword);
+        email = etEmail.getText().toString();
+        password = etPassword.getText().toString();
+
+        if(TextUtils.isEmpty(email)){
+            etEmail.setError("Required.");
+            valid = false;
+        } else {
+            etEmail.setError(null);
+        }
+
+        if(TextUtils.isEmpty(password)){
+            etPassword.setError("Required.");
+            valid = false;
+        } else{
+            etPassword.setError(null);
+        }
+        return valid;
     }
 
     protected void onRegister(View v){
