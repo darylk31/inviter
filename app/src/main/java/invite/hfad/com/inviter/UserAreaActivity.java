@@ -52,9 +52,25 @@ public class UserAreaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
-        //setCustomActionBar();
         setViewPager();
         setNavigationDisplayPicture();
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
 
 
         // Initializing Toolbar and setting it as the actionbar
@@ -90,7 +106,7 @@ public class UserAreaActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_signout:
                         auth.signOut();
-                        startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+                        return true;
                     default:
                         return true;
                 }
@@ -120,6 +136,7 @@ public class UserAreaActivity extends AppCompatActivity {
         //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
+        /**
         auth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -132,7 +149,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
                     if (user.getPhotoUrl() != null) {
                         Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
-                        //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
+  \                      //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
                     }
                 } else {
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
@@ -140,6 +157,7 @@ public class UserAreaActivity extends AppCompatActivity {
             }
             ;
         };
+         */
     }
 
 
@@ -213,15 +231,6 @@ public class UserAreaActivity extends AppCompatActivity {
     public void onMakeEvent(View v) {
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
-    }
-
-    private void setCustomActionBar() {
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.custom_action_bar);
-    }
-
-    private void drawerToggle() {
-        //mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 
     private void setNavigationDisplayPicture(){

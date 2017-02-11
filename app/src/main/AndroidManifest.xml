@@ -14,6 +14,10 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/LoginActivityTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ForgotPasswordActivity" />
@@ -40,11 +44,7 @@
         <activity android:name=".InboxActivity" />
         <activity android:name=".UserAreaActivity"
                   android:theme="@style/UserAreaTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

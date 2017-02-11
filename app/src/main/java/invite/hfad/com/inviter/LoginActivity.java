@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.w3c.dom.Text;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,10 +32,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
         auth = FirebaseAuth.getInstance();
 
 
+        if (auth.getCurrentUser() != null){
+            startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
+            finish();
+        }
+
+
+        setContentView(R.layout.activity_login);
     }
 
     protected void onLogin(View v){
@@ -43,30 +52,23 @@ public class LoginActivity extends AppCompatActivity {
             return;
 
 
-
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
                 if(!task.isSuccessful()){
-                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                }
-                if (task.isSuccessful()) {
+
                     progressDialog.dismiss();
                 }
-                /**
-                else{
-                    //progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                else {
+                    Intent intent = new Intent(LoginActivity.this,UserAreaActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
-                 */
             }
 
 
         });
-        if (auth.getCurrentUser() != null){
-            startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
-        }
 
     }
 
@@ -78,18 +80,9 @@ public class LoginActivity extends AppCompatActivity {
         email = etEmail.getText().toString();
         password = etPassword.getText().toString();
 
-        if(TextUtils.isEmpty(email)){
-            etEmail.setError("Required.");
+        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
+            Toast.makeText(LoginActivity.this, "Wrong email or password", Toast.LENGTH_SHORT).show();
             valid = false;
-        } else {
-            etEmail.setError(null);
-        }
-
-        if(TextUtils.isEmpty(password)){
-            etPassword.setError("Required.");
-            valid = false;
-        } else{
-            etPassword.setError(null);
         }
         return valid;
     }
