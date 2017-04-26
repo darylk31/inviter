@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 import android.widget.Toast;
@@ -32,14 +33,17 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MakeEventActivity extends Activity {
 
     private String yearData;
     private String monthData;
     private String dayData;
-    private String titleData;
-    private String descriptionData;
+    private String titleData = "";
+    private String descriptionData = "";
     private String hourData;
     private String minuteData;
     private boolean allDayData;
@@ -67,6 +71,7 @@ public class MakeEventActivity extends Activity {
 
     private String dateData;
     private String timeData;
+    private Date eventDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,20 @@ public class MakeEventActivity extends Activity {
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString().trim();
         descriptionData = etDescription.getText().toString().trim();
+
+        //Sends information to Firebase
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .push()
+                .setValue(new invite.hfad.com.inviter.EventObject(
+                        FirebaseAuth.getInstance().getCurrentUser().getUid(), titleData,descriptionData,eventDate));
+
+        Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
+        /**
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
+        titleData = etTitle.getText().toString().trim();
+        descriptionData = etDescription.getText().toString().trim();
         UserDatabaseHelper helper = new UserDatabaseHelper(this.getApplicationContext());
         SQLiteDatabase db = helper.getWritableDatabase();
         if (titleData.equals("")) {
@@ -107,81 +126,9 @@ public class MakeEventActivity extends Activity {
             Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
             startActivity(i);
         }
+         */
     }
 
-
-
-    /*
-    //OLD FUNCTION
-    public void onStartTimeDateClick() {
-        final EditText etDate = (EditText) findViewById(R.id.etDate);
-        final EditText etTime = (EditText) findViewById(R.id.etTime);
-        final boolean[] clicked = {false};
-        etDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Gets instance of calender with the current date
-                Calendar mcurrentDate = Calendar.getInstance();
-                int mYear = mcurrentDate.get(Calendar.YEAR);
-                int mMonth = mcurrentDate.get(Calendar.MONTH);
-                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-                if (clicked[0]) {
-                    mYear = Integer.parseInt(yearData);
-                    mMonth = Integer.parseInt(monthData);
-                    mDay = Integer.parseInt(dayData);
-                }
-                DatePickerDialog mDatePicker;
-                mDatePicker = new DatePickerDialog(MakeEventActivity.this, R.style.test, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        yearData = Integer.toString(year);
-                        monthData = Integer.toString(monthOfYear);
-                        dayData = Integer.toString(dayOfMonth);
-                        String dateString = String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth);
-                        try {
-                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                            String output = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
-                            dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
-                            etDate.setText(output);
-                            clicked[0] = true;
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, mYear, mMonth, mDay);
-                mDatePicker.setTitle("Date");
-                mDatePicker.show();
-            }
-
-        });
-        etTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int mMinute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MakeEventActivity.this, R.style.test, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        hourData = Integer.toString(hourOfDay);
-                        minuteData = Integer.toString(minute);
-                        //timeData = String.format("%02d:%02d", hourOfDay, minute);
-                        int hour = hourOfDay % 12;
-                        if (hour == 0)
-                            hour = 12;
-                        String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
-                        timeData = timeText;
-                        etTime.setText(timeText);
-                    }
-                }, mHour, mMinute, true);
-                mTimePicker.setTitle("Time");
-                mTimePicker.show();
-            }
-        });
-    }
-    */
 
     public void onStartTimeClick(){
         final TextView tvTime = (TextView) findViewById(R.id.tvStartTime);
@@ -227,6 +174,7 @@ public class MakeEventActivity extends Activity {
         String dateString = String.format("%d-%d-%d", year, month, day);
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+            eventDate = date;
             dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
             String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
             tvDate.setText(output);
@@ -242,6 +190,7 @@ public class MakeEventActivity extends Activity {
                 String dateString = String.format("%d-%d-%d", year, month + 1, day);
                 try {
                     Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                    eventDate = date;
                     dateData = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
                     String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(date);
                     tvDate.setText(output);
