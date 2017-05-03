@@ -19,7 +19,7 @@ public class User {
     private String email;
     private String password;
 
-    /*
+
     public User() {
     }
 
@@ -31,7 +31,6 @@ public class User {
         this.password = password;
 
     }
-    */
 
 
     public void setFirstname(String firstname){
