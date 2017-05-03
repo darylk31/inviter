@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
+import invite.hfad.com.inviter.Register.RegisterConfirm;
+import invite.hfad.com.inviter.Register.RegisterName;
+import invite.hfad.com.inviter.Register.RegisterUsername;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
     }
 
-    protected void onLogin(View v){
+    public void onLogin(View v){
 
         showProcessDialog();
         if(!validateForm())
@@ -81,14 +85,14 @@ public class LoginActivity extends AppCompatActivity {
         password = etPassword.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
-            Toast.makeText(LoginActivity.this, "Wrong email or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Wrong EmailAddress or password", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
     }
 
-    protected void onRegister(View v){
-        Intent intent = new Intent(this, RegisterActivity.class);
+    public void onRegister(View v){
+        Intent intent = new Intent(this, RegisterName.class);
         startActivity(intent);
     }
 

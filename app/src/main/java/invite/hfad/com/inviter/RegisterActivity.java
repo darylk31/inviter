@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             progressDialog.dismiss();
-                            Toast.makeText(RegisterActivity.this, "This email already has an account, please try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "This EmailAddress already has an account, please try again.", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(RegisterActivity.this, RegisterActivity2.class);
                             intent.putExtra("Email", email);
@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void showProgress(){
             progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Register");
-            progressDialog.setMessage("Checking if email is available to register...");
+            progressDialog.setMessage("Checking if EmailAddress is available to register...");
             progressDialog.show();
     }
 }

@@ -51,6 +51,14 @@
         </activity>
         <activity android:name=".Register.RegisterName">
         </activity>
+        <activity android:name=".Register.RegisterEmail">
+        </activity>
+        <activity android:name=".Register.RegisterUsername">
+        </activity>
+        <activity android:name=".Register.RegisterPassword">
+        </activity>
+        <activity android:name=".Register.RegisterConfirm">
+        </activity>
     </application>
 
 </manifest>
