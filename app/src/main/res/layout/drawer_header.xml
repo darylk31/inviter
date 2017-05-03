@@ -28,22 +28,20 @@
         android:layout_toRightOf="@id/profile_image"
         >
 
-    <TextView
+        <TextView
         android:id="@+id/drawer_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorWhite"
         />
 
-    <TextView
+        <TextView
         android:id="@+id/drawer_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-        android:ellipsize="end"
         android:maxLines="1"
         />
 

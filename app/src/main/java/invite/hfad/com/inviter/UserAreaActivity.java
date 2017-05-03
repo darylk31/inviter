@@ -2,6 +2,10 @@ package invite.hfad.com.inviter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenu;
@@ -12,30 +16,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static invite.hfad.com.inviter.R.id.toolbar;
 
 public class UserAreaActivity extends AppCompatActivity {
 
@@ -44,7 +45,9 @@ public class UserAreaActivity extends AppCompatActivity {
     public static final int GET_FROM_GALLERY = 3;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
-    //Defining Variables
+    private DatabaseReference mDatabase;
+    private SharedPreferences pref;
+    private String userID;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -55,10 +58,6 @@ public class UserAreaActivity extends AppCompatActivity {
         setViewPager();
         setNavigationDisplayPicture();
         auth = FirebaseAuth.getInstance();
-
-        //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -77,8 +76,6 @@ public class UserAreaActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -93,7 +90,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 Intent intent;
                 switch(item.getItemId()){
                     case R.id.nav_inbox:
-                        intent = new Intent(UserAreaActivity.this, InboxActivity.class);
+                        intent = new Intent(UserAreaActivity.this,InboxActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.nav_contacts:
@@ -106,6 +103,7 @@ public class UserAreaActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_signout:
                         auth.signOut();
+                        pref.edit().clear().commit();
                         return true;
                     default:
                         return true;
@@ -114,7 +112,6 @@ public class UserAreaActivity extends AppCompatActivity {
         });
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.openDrawer, R.string.closeDrawer){
 
             @Override
@@ -130,36 +127,28 @@ public class UserAreaActivity extends AppCompatActivity {
                 super.onDrawerOpened(drawerView);
             }
         };
-
-        //Setting the actionbarToggle to drawer layout
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
-        //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
 
-        /**
-        auth = FirebaseAuth.getInstance();
-        authListener = new FirebaseAuth.AuthStateListener() {
+        this.pref = getSharedPreferences("UserPref", 0);
+        this.userID = pref.getString("userID", null);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(userID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d("UserAreaActivity", "onAuthStateChanged");
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    TextView user_name = (TextView) findViewById(R.id.drawer_name);
-                    user_name.setText(user.getDisplayName());
-
-                    if (user.getPhotoUrl() != null) {
-                        Log.d("UserAreaActivity", "photoURL: " + user.getPhotoUrl());
-  \                      //Picasso.with(MainActivity.this).load(user.getPhotoUrl()).into(imageView);
-                    }
-                } else {
-                    startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
-                }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO: User table not created.
+                /*
+                User user = dataSnapshot.getValue(User.class);
+                UserDatabaseHelper userDBhelper = new UserDatabaseHelper(getApplicationContext());
+                SQLiteDatabase db = userDBhelper.getWritableDatabase();
+                userDBhelper.updateUser(db, user);
+                */
             }
-            ;
-        };
-         */
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
-
 
 
     @Override
@@ -183,7 +172,6 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
-
 
     private void setViewPager() {
 
@@ -229,8 +217,16 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     public void onMakeEvent(View v) {
+        UserDatabaseHelper userDBhelper = new UserDatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = userDBhelper.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT EMAIL FROM USER", null);
+        c.moveToPosition(0);
+        String test = c.getString(0);
+        Toast.makeText(UserAreaActivity.this, test, Toast.LENGTH_SHORT).show();
+        /*
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
+        */
     }
 
     private void setNavigationDisplayPicture(){
@@ -253,8 +249,5 @@ public class UserAreaActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         return false;
     }
-
-
-
 
 }

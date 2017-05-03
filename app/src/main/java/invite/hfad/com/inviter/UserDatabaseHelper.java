@@ -13,6 +13,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_Version = 1;
 
     public UserDatabaseHelper(Context context) {
+
         super(context, DB_Name, null, DB_Version);
     }
 
@@ -26,6 +27,14 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "TIME TEXT, "
                 + "TEST TEXT, "
                 + "ALLDAY INTEGER);");
+/*
+        db.execSQL("CREATE TABLE USER (" +
+                "USERNAME TEXT PRIMARY KEY, " +
+                "FIRSTNAME TEXT, " +
+                "LASTNAME TEXT, " +
+                "EMAIL TEXT, " +
+                "PASSWORD TEXT);");
+                */
     }
 
     @Override
@@ -78,4 +87,17 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                                     String id){
         db.delete("EVENTS", "_id=" + id, null);
     }
+
+    public static void updateUser(SQLiteDatabase db, User user){
+        //TODO: User does not exist
+        db.execSQL("DELETE FROM USER");
+        ContentValues userValues = new ContentValues();
+        userValues.put("USERNAME", user.getUsername());
+        userValues.put("FIRSTNAME", user.getFirstname());
+        userValues.put("LASTNAME", user.getLastname());
+        userValues.put("EMAIL", user.getEmail());
+        userValues.put("PASSWORD", user.getPassword());
+        db.insert("USER", null, userValues);
+    }
+
 }

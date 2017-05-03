@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "322997312747",
-    "firebase_url": "https://inviter-3a0d9.firebaseio.com",
-    "project_id": "inviter-3a0d9",
-    "storage_bucket": "inviter-3a0d9.appspot.com"
+    "project_number": "634924145214",
+    "firebase_url": "https://inlcude-2df4d.firebaseio.com",
+    "project_id": "inlcude-2df4d",
+    "storage_bucket": "inlcude-2df4d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:322997312747:android:3251364202b8a2b9",
+        "mobilesdk_app_id": "1:634924145214:android:3251364202b8a2b9",
         "android_client_info": {
           "package_name": "invite.hfad.com.inviter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "322997312747-ef8ecdqohf9kpg661gr5gr9ghqepul4h.apps.googleusercontent.com",
+          "client_id": "634924145214-pcdfmss4qiolk9ssbj7iqkrd49a25nft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "invite.hfad.com.inviter",
+            "certificate_hash": "369f80d7752b2e504bb1736a390d2583872ce9d0"
+          }
+        },
+        {
+          "client_id": "634924145214-fb6nvomgslandvk2gqh2gi04jqar2t67.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBph-vEayCkvs5mcKyb_qSeXaU7QVQpkfg"
+          "current_key": "AIzaSyDHWye3ZFGMUBRObspv3AynNHd8lbMDxeI"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634924145214-fb6nvomgslandvk2gqh2gi04jqar2t67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
