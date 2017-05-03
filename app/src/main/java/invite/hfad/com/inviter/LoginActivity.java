@@ -3,6 +3,7 @@ package invite.hfad.com.inviter;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -65,6 +66,11 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 else {
+                    String userId = auth.getCurrentUser().getUid();
+                    SharedPreferences.Editor editor = getSharedPreferences("UserPref", 0).edit();
+                    editor.putString("userID", userId);
+                    editor.commit();
+
                     Intent intent = new Intent(LoginActivity.this,UserAreaActivity.class);
                     startActivity(intent);
                     finish();
