@@ -18,6 +18,7 @@ public class User {
     //private String profilepicture;
     private String email;
     private String password;
+    private String displayname;
 
 
     public User() {
@@ -29,7 +30,7 @@ public class User {
         this.lastname = lastname;
         this.email = email;
         this.password = password;
-
+        this.displayname = userName;
     }
 
 
@@ -64,11 +65,6 @@ public class User {
         return firstname;
     }
 
-    /*
-    public String getProfilepicture() {
-        return profilepicture;
-    }
-    */
 
     public String getEmail() {
         return email;
@@ -78,4 +74,21 @@ public class User {
         return password;
     }
 
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
+    }
+    /*
+
+    public String getProfilepicture() {
+        return profilepicture;
+    }
+
+    public void setProfilepicture(String profilepicture) {
+        this.profilepicture = profilepicture;
+    }
+    */
 }

@@ -52,26 +52,21 @@ public class RegisterConfirm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_confirm);
-
         setTitle("Confirm");
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
         bundle = getIntent().getExtras();
-
         getDisplayInformation();
         setDisplayInformation();
-
         onlineDatabase = FirebaseDatabase.getInstance().getReference(".info/connected");
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mAuth = FirebaseAuth.getInstance();
     }
 
-    private void getDisplayInformation(){
+    private void getDisplayInformation() {
         tvFirstName = (TextView) findViewById(R.id.tvFirstNameInput);
         tvLastName = (TextView) findViewById(R.id.tvLastNameInput);
         tvEmail = (TextView) findViewById(R.id.tvEmailInput);
         tvUsername = (TextView) findViewById(R.id.tvUsernameInput);
-
         firstname = bundle.getString("firstname");
         lastname = bundle.getString("lastname");
         username = bundle.getString("username");
@@ -79,7 +74,7 @@ public class RegisterConfirm extends AppCompatActivity {
         password = bundle.getString("password");
     }
 
-    private void setDisplayInformation(){
+    private void setDisplayInformation() {
         tvFirstName.setText(firstname);
         tvLastName.setText(lastname);
         tvEmail.setText(email);
@@ -87,52 +82,76 @@ public class RegisterConfirm extends AppCompatActivity {
     }
 
 
+    /**
+     * Multiple checks before creating user.
+     * 1. Check firebase connection
+     * 2. Check username is available
+     * 3. Check email is available
+     * Pushes user data onto firebase (user,email,username)
+     * Creates a user with email and password
+     * Opens Login Activity
+     *
+     * @param v
+     */
     public void onNextButton(View v) {
         onlineDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                        mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (!(dataSnapshot.exists())) {
-                                    final String emailString = email.substring(0,email.indexOf('.'));
-                                    mDatabase.child("Email-Address").child(emailString).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if (!(dataSnapshot.exists())) {
-                                                User firebaseUser = new User(username,firstname,lastname,email,password);
-                                                Usernames firebaseUsernames = new Usernames(username,email);
-                                                EmailAddress firebaseEmailAddress = new EmailAddress(email,username);
-
-                                                mDatabase.child("Users").child(username).setValue(firebaseUser);
-                                                mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
-                                                mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
-
-                                                Toast.makeText(RegisterConfirm.this,"(:",Toast.LENGTH_SHORT);
-                                                createUser();
-
-                                            } else {
-                                                Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
-                                            }
+                    mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (!(dataSnapshot.exists())) {
+                                final String emailString = email.substring(0, email.indexOf('.'));
+                                mDatabase.child("Email-Address").child(emailString).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (!(dataSnapshot.exists())) {
+                                            User firebaseUser = new User(username, firstname, lastname, email, password);
+                                            Usernames firebaseUsernames = new Usernames(username, email);
+                                            EmailAddress firebaseEmailAddress = new EmailAddress(email, username);
+                                            mDatabase.child("Users").child(username).setValue(firebaseUser);
+                                            mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
+                                            mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
+                                            //Create user
+                                            showProgressDialog();
+                                            mAuth.getInstance();
+                                            mAuth.createUserWithEmailAndPassword(email, password)
+                                                    .addOnCompleteListener(RegisterConfirm.this, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            hideProgressDialog();
+                                                            if (!task.isSuccessful()) {
+                                                                hideProgressDialog();
+                                                                Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
+                                                                mAuth.signOut();
+                                                            } else {
+                                                                mAuth.signOut();
+                                                                startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
+                                                                finish();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
                                         }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
-                                }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
                 } else {
-                    Toast.makeText(RegisterConfirm.this,"Please check your connection.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterConfirm.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -143,29 +162,14 @@ public class RegisterConfirm extends AppCompatActivity {
         });
     }
 
-    private void createUser(){
-        showProgressDialog();
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
-                }
-                hideProgressDialog();
-            }
-        });
-    }
-
-    private void showProgressDialog(){
+    private void showProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Register");
         progressDialog.setMessage("Registering Account...");
         progressDialog.show();
     }
 
-    private void hideProgressDialog(){
+    private void hideProgressDialog() {
         progressDialog.dismiss();
     }
 

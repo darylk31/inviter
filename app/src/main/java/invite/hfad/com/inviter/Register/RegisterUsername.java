@@ -46,7 +46,6 @@ public class RegisterUsername extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    Toast.makeText(RegisterUsername.this,"WHAT THE FUCK.",Toast.LENGTH_SHORT).show();
                     mDatabase.child("Usernames").child(username.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {

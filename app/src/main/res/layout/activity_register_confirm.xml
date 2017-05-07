@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="First Name"
+            android:text="@string/first_name_text"
             android:id="@+id/tvFirstNameDisplay"
             android:layout_alignParentLeft="true"/>
         <TextView
@@ -45,7 +45,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Last Name:"
+            android:text="@string/last_name_text"
             android:id="@+id/tvLastNameDisplay"
             android:layout_alignParentLeft="true"/>
         <TextView
@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Email:"
+            android:text="@string/email_text"
             android:id="@+id/tvEmailDisplay"
             android:layout_alignParentLeft="true"/>
         <TextView
@@ -83,7 +83,7 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="@string/username_text"
             android:id="@+id/tvUsernameDisplay"
             android:layout_alignParentLeft="true"/>
         <TextView
@@ -96,11 +96,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="@string/next_text"
         android:id="@+id/bNext"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="105dp"
+        android:layout_marginBottom="@dimen/space_from_bottom"
         android:onClick="onNextButton"/>
 
 

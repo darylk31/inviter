@@ -6,4 +6,6 @@
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="image_to_text_distance">50dp</dimen>
     <dimen name="edit_text_height">32dp</dimen>
+    <dimen name="top_spacing">40dp</dimen>
+    <dimen name="space_from_bottom">110dp</dimen>
 </resources>

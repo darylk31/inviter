@@ -13,7 +13,7 @@
     <string name="Event_Description">note</string>
     <string name="ok">Set</string>
     <string name="cancel">Cancel</string>
-    <string name="login_username">Username</string>
+    <string name="username_text">Username</string>
     <string name="login_password">Password</string>
     <string name="login_text">Login</string>
     <string name="login_register_text">Register Here!</string>
@@ -23,6 +23,12 @@
     <string name="drawer_close">close drawer</string>
     <string name="openDrawer">openDrawer</string>
     <string name="closeDrawer">closeDrawer</string>
+    <string name="first_name_text">First name</string>
+    <string name="last_name_text">Last name</string>
+    <string name="next_text">Next</string>
+    <string name="email_text">Email Address</string>
+    <string name="password_text">Password</string>
+    <string name="confirm_password_text">Confirm Password</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>

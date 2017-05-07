@@ -134,4 +134,5 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
     }
+
 }
