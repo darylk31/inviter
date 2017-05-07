@@ -5,6 +5,7 @@ package invite.hfad.com.inviter;
  */
 
 public class Usernames {
+    private String uid;
     private String username;
     private String email;
 
@@ -12,7 +13,8 @@ public class Usernames {
 
     }
 
-    public Usernames(String username, String email){
+    public Usernames(String uid, String username, String email){
+        this.uid = uid;
         this.username = username;
         this.email = email;
     }
@@ -31,5 +33,13 @@ public class Usernames {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

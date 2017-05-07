@@ -8,10 +8,12 @@ public class EmailAddress {
 
     private String email;
     private String username;
+    private String uid;
 
     public EmailAddress(){}
 
-    public EmailAddress(String email, String username){
+    public EmailAddress(String uid,String email, String username){
+        this.uid = uid;
         this.email = email;
         this.username = username;
     }
@@ -31,5 +33,9 @@ public class EmailAddress {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }

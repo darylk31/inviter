@@ -110,14 +110,8 @@ public class RegisterConfirm extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (!(dataSnapshot.exists())) {
-                                            User firebaseUser = new User(username, firstname, lastname, email, password);
-                                            Usernames firebaseUsernames = new Usernames(username, email);
-                                            EmailAddress firebaseEmailAddress = new EmailAddress(email, username);
-                                            mDatabase.child("Users").child(username).setValue(firebaseUser);
-                                            mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
-                                            mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
                                             //Create user
-                                            createUser();
+                                            createUser(emailString);
                                         } else {
                                             Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
                                         }
@@ -130,7 +124,6 @@ public class RegisterConfirm extends AppCompatActivity {
                                 Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                         }
@@ -147,7 +140,8 @@ public class RegisterConfirm extends AppCompatActivity {
         });
     }
 
-    private void createUser(){
+    private void createUser(String e){
+        final String emailString = e;
         showProgressDialog();
         mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -159,6 +153,13 @@ public class RegisterConfirm extends AppCompatActivity {
                             Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
                         } else {
+                            String uid = mAuth.getCurrentUser().getUid();
+                            User firebaseUser = new User(uid,username, firstname, lastname, email, password);
+                            Usernames firebaseUsernames = new Usernames(uid,username, email);
+                            EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
+                            mDatabase.child("Users").child(uid).setValue(firebaseUser);
+                            mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
+                            mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
                             mAuth.signOut();
                             Thread thread = new Thread(){
                                 @Override

@@ -19,12 +19,14 @@ public class User {
     private String email;
     private String password;
     private String displayname;
+    private String uid;
 
 
     public User() {
     }
 
-    public User(String userName,String firstname, String lastname, String email, String password) {
+    public User(String uid, String userName,String firstname, String lastname, String email, String password) {
+        this.uid = uid;
         this.username = userName;
         this.firstname = firstname;
         this.lastname = lastname;
