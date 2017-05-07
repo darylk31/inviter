@@ -94,11 +94,13 @@ public class RegisterConfirm extends AppCompatActivity {
      * @param v
      */
     public void onNextButton(View v) {
+
         onlineDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
+
                     mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -115,24 +117,7 @@ public class RegisterConfirm extends AppCompatActivity {
                                             mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
                                             mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
                                             //Create user
-                                            showProgressDialog();
-                                            mAuth.getInstance();
-                                            mAuth.createUserWithEmailAndPassword(email, password)
-                                                    .addOnCompleteListener(RegisterConfirm.this, new OnCompleteListener<AuthResult>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                                            hideProgressDialog();
-                                                            if (!task.isSuccessful()) {
-                                                                hideProgressDialog();
-                                                                Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
-                                                                mAuth.signOut();
-                                                            } else {
-                                                                mAuth.signOut();
-                                                                startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
-                                                                finish();
-                                                            }
-                                                        }
-                                                    });
+                                            createUser();
                                         } else {
                                             Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
                                         }
@@ -160,6 +145,38 @@ public class RegisterConfirm extends AppCompatActivity {
                 System.err.println("Listener was cancelled");
             }
         });
+    }
+
+    private void createUser(){
+        showProgressDialog();
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(RegisterConfirm.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        hideProgressDialog();
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
+                            mAuth.signOut();
+                        } else {
+                            mAuth.signOut();
+                            Thread thread = new Thread(){
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(2500); // As I am using LENGTH_SHORT in Toast
+                                        startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
+                                        finish();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            Toast.makeText(RegisterConfirm.this, "Registration Complete.", Toast.LENGTH_SHORT).show();
+                            thread.start();
+                        }
+                    }
+                });
     }
 
     private void showProgressDialog() {
