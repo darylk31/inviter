@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import invite.hfad.com.inviter.Contacts.ContactsActivity;
 
 
 public class EventPage extends Activity {

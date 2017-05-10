@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.Contacts;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,13 +7,12 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import invite.hfad.com.inviter.R;
 
 /**
  * Created by Daryl on 4/7/2017.

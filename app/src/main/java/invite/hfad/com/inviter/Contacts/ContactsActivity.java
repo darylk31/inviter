@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.Contacts;
 
 
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import invite.hfad.com.inviter.R;
 
 
 public class ContactsActivity extends AppCompatActivity{
