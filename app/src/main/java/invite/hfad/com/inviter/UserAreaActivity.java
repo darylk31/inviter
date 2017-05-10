@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
@@ -51,6 +52,9 @@ public class UserAreaActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private FirebaseUser user;
+
+    private final Uri defaultPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/inlcude-2df4d.appspot.com/o/default%2Fdownload.jpg?alt=media&token=5cada801-ac07-4534-b4bf-da5ab77b4679");
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +65,7 @@ public class UserAreaActivity extends AppCompatActivity {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                user = firebaseAuth.getCurrentUser();
                 if (user == null) {
                     // user auth state is changed - user is null
                     // launch login activity
@@ -232,8 +236,11 @@ public class UserAreaActivity extends AppCompatActivity {
     private void setNavigationDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
-        Picasso.with(this).load("https://scontent-sea1-1.xx.fbcdn.net/v/t1.0-9/14457341_10153958094445963_3322825613904558278_n.jpg?oh=49fc47777f5e5941849f092bdb12f66b&oe=58E1296D").into(profilePictureView);
-
+      //  if(user.getPhotoUrl() != null){
+        //    Picasso.with(this).load(user.getPhotoUrl().toString()).into(profilePictureView);
+        //}else {
+            Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
+        //}
     }
 
     public void uploadProfilePicture(View view  ){

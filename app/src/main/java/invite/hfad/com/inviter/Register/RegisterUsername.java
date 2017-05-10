@@ -32,7 +32,6 @@ public class RegisterUsername extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
 
-        onlineDataBase = FirebaseDatabase.getInstance().getReference(".info/connected");
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -41,6 +40,8 @@ public class RegisterUsername extends AppCompatActivity {
             Toast.makeText(RegisterUsername.this,"Invalid username. \n Please enter length between 6 and 16 with only letters or numbers.",Toast.LENGTH_SHORT).show();
             return;
         }
+
+        onlineDataBase = FirebaseDatabase.getInstance().getReference(".info/connected");
         onlineDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

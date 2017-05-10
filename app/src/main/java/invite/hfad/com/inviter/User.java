@@ -1,10 +1,6 @@
 package invite.hfad.com.inviter;
 
-import android.support.v4.util.Pair;
-
-import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.util.ArrayList;
+import android.net.Uri;
 
 /**
  * Created by Jimmy on 3/24/2017.
@@ -15,12 +11,13 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
-    //private String profilepicture;
+    private Uri phototUrl;
     private String email;
     private String password;
     private String displayname;
     private String uid;
 
+    private final Uri defaultURL = Uri.parse("https://firebasestorage.googleapis.com/v0/b/inlcude-2df4d.appspot.com/o/default%2Fdownload.jpg?alt=media&token=5cada801-ac07-4534-b4bf-da5ab77b4679");
 
     public User() {
     }
@@ -33,6 +30,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.displayname = userName;
+        this.phototUrl = defaultURL;
     }
 
 
@@ -83,14 +81,13 @@ public class User {
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
     }
-    /*
 
-    public String getProfilepicture() {
-        return profilepicture;
+    public Uri getPhototUrl() {
+        return phototUrl;
     }
 
-    public void setProfilepicture(String profilepicture) {
-        this.profilepicture = profilepicture;
+    public void setPhototUrl(Uri phototUrl) {
+        this.phototUrl = phototUrl;
     }
-    */
+
 }

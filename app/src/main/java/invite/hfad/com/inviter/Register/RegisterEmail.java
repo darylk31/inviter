@@ -31,7 +31,6 @@ public class RegisterEmail extends AppCompatActivity {
         bundle = getIntent().getExtras();
         this.email = (EditText) findViewById(R.id.etEmailAddress);
 
-        onlineDatabase = FirebaseDatabase.getInstance().getReference(".info/connected");
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -40,6 +39,7 @@ public class RegisterEmail extends AppCompatActivity {
             Toast.makeText(RegisterEmail.this, "Invalid email address.", Toast.LENGTH_SHORT).show();
             return;
         }
+        onlineDatabase = FirebaseDatabase.getInstance().getReference(".info/connected");
         onlineDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
