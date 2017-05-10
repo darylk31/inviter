@@ -123,7 +123,6 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -147,6 +146,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 //TODO: Display picture changes.
 
                 //TODO: Contacts changes, Events changes,
+
 
 
             }
@@ -225,11 +225,8 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     public void onMakeEvent(View v) {
-
-        /*
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
-        */
     }
 
     private void setDisplayPicture(){

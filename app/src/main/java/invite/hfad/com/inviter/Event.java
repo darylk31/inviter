@@ -16,6 +16,8 @@ public class Event {
     private List invitedId;
     private String creator;
 
+    public Event(){};
+
     public Event (String day, String time, String event_name, String description) {
         this.day = day;
         this.time = time;
