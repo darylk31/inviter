@@ -60,7 +60,7 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
         setViewPager();
-        setNavigationDisplayPicture();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -84,7 +84,7 @@ public class UserAreaActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                if(item.isChecked()) item.setChecked(false);
+                if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
 
                 //Closing Drawer on item Click
@@ -92,17 +92,17 @@ public class UserAreaActivity extends AppCompatActivity {
 
                 //DO when menu item is clicked
                 Intent intent;
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_inbox:
-                        intent = new Intent(UserAreaActivity.this,InboxActivity.class);
+                        intent = new Intent(UserAreaActivity.this, InboxActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.nav_contacts:
-                        intent = new Intent(UserAreaActivity.this,ContactsActivity.class);
+                        intent = new Intent(UserAreaActivity.this, ContactsActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.nav_settings:
-                        intent = new Intent(UserAreaActivity.this,SettingActivity.class);
+                        intent = new Intent(UserAreaActivity.this, SettingActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.nav_signout:
@@ -116,7 +116,7 @@ public class UserAreaActivity extends AppCompatActivity {
         });
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.openDrawer, R.string.closeDrawer){
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
 
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -127,7 +127,6 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -136,23 +135,32 @@ public class UserAreaActivity extends AppCompatActivity {
 
         this.pref = getSharedPreferences("UserPref", 0);
         this.userID = pref.getString("userID", null);
+
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+        userRef.keepSynced(true);
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(userID).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Users").child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //TODO: User table not created.
-                /*
                 User user = dataSnapshot.getValue(User.class);
-                UserDatabaseHelper userDBhelper = new UserDatabaseHelper(getApplicationContext());
-                SQLiteDatabase db = userDBhelper.getWritableDatabase();
-                userDBhelper.updateUser(db, user);
-                */
+                //Display name changes.
+                TextView drawer_username = (TextView) findViewById(R.id.drawer_username);
+                drawer_username.setText(user.getDisplayname());
+                //TODO: Display picture changes.
+
+                //TODO: Contacts changes, Events changes,
+
+
+
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
+
 
 
     @Override
@@ -189,7 +197,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
-        adapter.addFragment(new HomeFragment());
+        adapter.addFragment(new HomeOldFragment());
         adapter.addFragment(new HomeOldFragment());
 
         viewPager.setAdapter(adapter);
@@ -221,19 +229,11 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     public void onMakeEvent(View v) {
-        UserDatabaseHelper userDBhelper = new UserDatabaseHelper(getApplicationContext());
-        SQLiteDatabase db = userDBhelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT EMAIL FROM USER", null);
-        c.moveToPosition(0);
-        String test = c.getString(0);
-        Toast.makeText(UserAreaActivity.this, test, Toast.LENGTH_SHORT).show();
-        /*
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
-        */
     }
 
-    private void setNavigationDisplayPicture(){
+    private void setDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
       //  if(user.getPhotoUrl() != null){
@@ -243,7 +243,7 @@ public class UserAreaActivity extends AppCompatActivity {
         //}
     }
 
-    public void uploadProfilePicture(View view  ){
+    public void uploadProfilePicture(View view){
         startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
     }
 
