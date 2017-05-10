@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/contacts_cardview"
+    android:id="@+id/searchcontact_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -20,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
-                android:id="@+id/tvPContactName"
+                android:id="@+id/tvSearchDisplayName"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="10dp"
@@ -31,22 +30,30 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Small Text"
-                android:id="@+id/tvPContactNumber"
-                android:layout_below="@+id/tvPContactName"
-                android:layout_alignLeft="@+id/tvPContactName"
-                android:layout_alignStart="@+id/tvPContactName" />
+                android:id="@+id/tvSearchUserName"
+                android:layout_below="@+id/tvSearchDisplayName"
+                android:layout_alignLeft="@+id/tvSearchDisplayName"
+                android:layout_alignStart="@+id/tvSearchDisplayName" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/tvSearchReason"
+                android:layout_below="@+id/tvSearchUserName"
+                android:layout_alignLeft="@+id/tvSearchUserName"
+                android:layout_alignStart="@+id/tvSearchUserName" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Invite!"
+                android:text="Add!"
                 android:layout_marginRight="10dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
-
     </LinearLayout>
-
 </android.support.v7.widget.CardView>

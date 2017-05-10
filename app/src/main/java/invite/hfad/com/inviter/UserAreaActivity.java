@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
@@ -38,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
+
+import invite.hfad.com.inviter.Contacts.ContactsActivity;
 
 public class UserAreaActivity extends AppCompatActivity {
 
