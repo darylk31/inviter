@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
@@ -34,6 +35,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +84,11 @@ public class UserAreaActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        //Navigation Header
+        setDisplayPicture();
+
+        //Navigation View
         navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -149,7 +157,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 TextView drawer_username = (TextView) findViewById(R.id.drawer_username);
                 drawer_username.setText(user.getDisplayname());
                 //TODO: Display picture changes.
-
+                setDisplayPicture();
                 //TODO: Contacts changes, Events changes,
 
 
@@ -236,12 +244,35 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private void setDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
-        ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+        final ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
       //  if(user.getPhotoUrl() != null){
         //    Picasso.with(this).load(user.getPhotoUrl().toString()).into(profilePictureView);
         //}else {
-            Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
-        //}
+        //    Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
+
+
+        Picasso.with(this)
+                .load(defaultPhotoUrl).fetch();
+
+        Picasso.with(this)
+                .load(defaultPhotoUrl)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(profilePictureView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        // Try again online if cache failed
+                        Picasso.with(UserAreaActivity.this)
+                                .load(Uri.parse(defaultPhotoUrl.toString()))
+                                //.placeholder(R.drawable.user_placeholder)
+                                //.error(R.drawable.user_placeholder_error)
+                                .into(profilePictureView);
+                    }
+                });
     }
 
     public void uploadProfilePicture(View view){
