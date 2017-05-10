@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter;
 
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -71,6 +72,7 @@ public class ContactsActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.search_contacts){
+            startActivity(new Intent(this, SearchContactsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

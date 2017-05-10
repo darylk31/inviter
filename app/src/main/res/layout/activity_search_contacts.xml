@@ -14,7 +14,6 @@
         android:id="@+id/searchview_contacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:hint="Type to search..."
          />
 
