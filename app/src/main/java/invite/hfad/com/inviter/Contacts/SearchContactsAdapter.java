@@ -37,6 +37,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     private DatabaseReference mDatabase;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         private CardView cardView;
         public ViewHolder(CardView v) {
             super(v);
@@ -58,7 +59,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
 
     @Override
     public SearchContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.contacts_list_item, parent, false);
+        CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.searchcontact_list_item, parent, false);
         return new ViewHolder(cv);
     }
 
@@ -77,8 +78,8 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
     private void searchDatabase(){
-        displaynames[0] = "something";
-        usernames[0] = "else";
+        displaynames[1] = "something";
+        usernames[1] = "else";
         /*
         mDatabase.child("Usernames").child(username).addValueEventListener(new ValueEventListener() {
             @Override

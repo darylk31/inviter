@@ -2,6 +2,7 @@ package invite.hfad.com.inviter.Contacts;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
@@ -34,8 +35,11 @@ public class SearchContactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_contacts);
         search = (SearchView) findViewById(R.id.searchview_contacts);
         search.onActionViewExpanded();
+
         search_recycler = (RecyclerView) findViewById(R.id.searchcontacts_recycler);
-        adapter = new SearchContactsAdapter(getApplicationContext(),"6");
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        search_recycler.setLayoutManager(mLayoutManager);
+        adapter = new SearchContactsAdapter(getApplicationContext(),"");
         search_recycler.setAdapter(adapter);
 
         getUsernames();
