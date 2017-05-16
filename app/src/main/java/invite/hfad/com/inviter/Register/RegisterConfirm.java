@@ -155,13 +155,13 @@ public class RegisterConfirm extends AppCompatActivity {
                             mAuth.signOut();
                         } else {
                             String uid = mAuth.getCurrentUser().getUid();
+                            mAuth.signOut();
                             User firebaseUser = new User(uid,username, firstname, lastname, email, password);
                             Usernames firebaseUsernames = new Usernames(uid,username, email);
                             EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
                             mDatabase.child("Users").child(uid).setValue(firebaseUser);
                             mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
                             mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
-                            mAuth.signOut();
                             Thread thread = new Thread(){
                                 @Override
                                 public void run() {

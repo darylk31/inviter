@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private final Uri defaultPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/inlcude-2df4d.appspot.com/o/default%2Fdownload.jpg?alt=media&token=5cada801-ac07-4534-b4bf-da5ab77b4679");
 
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
         setViewPager();
@@ -251,28 +253,9 @@ public class UserAreaActivity extends AppCompatActivity {
         //    Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
 
 
-        Picasso.with(this)
-                .load(defaultPhotoUrl).fetch();
-
-        Picasso.with(this)
+        Glide.with(this)
                 .load(defaultPhotoUrl)
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(profilePictureView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        // Try again online if cache failed
-                        Picasso.with(UserAreaActivity.this)
-                                .load(Uri.parse(defaultPhotoUrl.toString()))
-                                //.placeholder(R.drawable.user_placeholder)
-                                //.error(R.drawable.user_placeholder_error)
-                                .into(profilePictureView);
-                    }
-                });
+                .into(profilePictureView);
     }
 
     public void uploadProfilePicture(View view){
