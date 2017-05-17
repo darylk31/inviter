@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
     }
 
     public PhoneContactsAdapter(Context context) {
+
         String filter = ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER + " > 0 and " +
                 ContactsContract.CommonDataKinds.Phone.TYPE + "=" + ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
         try {

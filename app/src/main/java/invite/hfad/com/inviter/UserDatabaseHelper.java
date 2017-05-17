@@ -27,14 +27,12 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "TIME TEXT, "
                 + "TEST TEXT, "
                 + "ALLDAY INTEGER);");
-/*
-        db.execSQL("CREATE TABLE USER (" +
-                "USERNAME TEXT PRIMARY KEY, " +
-                "FIRSTNAME TEXT, " +
-                "LASTNAME TEXT, " +
-                "EMAIL TEXT, " +
-                "PASSWORD TEXT);");
-                */
+
+        db.execSQL("CREATE TABLE FRIENDS ("
+                + "UID TEXT PRIMARY KEY, "
+                + "USERNAME TEXT, "
+                + "DISPLAY TEXT, "
+                + "PHOTO TEXT);");
     }
 
     @Override
@@ -88,16 +86,21 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         db.delete("EVENTS", "_id=" + id, null);
     }
 
-    public static void updateUser(SQLiteDatabase db, User user){
-        //TODO: User does not exist
-        db.execSQL("DELETE FROM USER");
-        ContentValues userValues = new ContentValues();
-        userValues.put("USERNAME", user.getUsername());
-        userValues.put("FIRSTNAME", user.getFirstname());
-        userValues.put("LASTNAME", user.getLastname());
-        userValues.put("EMAIL", user.getEmail());
-        userValues.put("PASSWORD", user.getPassword());
-        db.insert("USER", null, userValues);
+    public static void insert_friend(SQLiteDatabase db,
+                                     String uid,
+                                     String username,
+                                     String display,
+                                     String photo){
+        ContentValues friendValues = new ContentValues();
+        friendValues.put("UID", uid);
+        friendValues.put("USERNAME", username);
+        friendValues.put("DISPLAY", display);
+        friendValues.put("PHOTO", photo);
+        db.insert("FRIENDS", null, friendValues);
     }
 
+    public static void delete_friend(SQLiteDatabase db,
+                                     String uid) {
+        db.delete("FRIENDS", "uid=" + uid, null);
+    }
 }
