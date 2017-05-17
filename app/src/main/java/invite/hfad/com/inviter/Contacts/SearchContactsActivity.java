@@ -49,8 +49,6 @@ public class SearchContactsActivity extends AppCompatActivity {
         //adapter = new SearchContactsAdapter(getApplicationContext(),"");
         //search_recycler.setAdapter(adapter);
 
-       // mDatabase = FirebaseDatabase.getInstance().getReference();
-
         getUsernames();
     }
 
@@ -71,32 +69,13 @@ public class SearchContactsActivity extends AppCompatActivity {
 
 
             public void callSearch(String query){
-                final String n = query;
-
-                        adapter = new SearchContactsAdapter(getApplicationContext(),n);
-                        Toast.makeText(SearchContactsActivity.this,"TEST",Toast.LENGTH_SHORT).show();
+                adapter = new SearchContactsAdapter(getApplicationContext(), query);
+                Toast.makeText(SearchContactsActivity.this, "TEST", Toast.LENGTH_SHORT).show();
                 search_recycler.setAdapter(adapter);
-
             }
         });
     }
 
-    private void getFirebaseUsernames(String username){
-        mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    usernameMatch = dataSnapshot.getValue(Usernames.class);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-    }
 
 
 

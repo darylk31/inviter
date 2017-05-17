@@ -22,7 +22,7 @@ public class User {
     private Map<String,Boolean> contacts;
     private Map<String,String> inbox;
 
-    private final String defaultURL = "https://firebasestorage.googleapis.com/v0/b/inlcude-2df4d.appspot.com/o/default%2Fdownload.jpg?alt=media&token=5cada801-ac07-4534-b4bf-da5ab77b4679";
+    private final String defaultURL = "https://firebasestorage.googleapis.com/v0/b/inviter-96012.appspot.com/o/default%2Fdownload.jpg?alt=media&token=72fb0556-f0a9-440f-8d9e-4d29311847a1";
 
     public User() {
     }
@@ -38,6 +38,7 @@ public class User {
         this.displayname = userName;
         this.phototUrl = defaultURL;
         this.contacts = new HashMap<String,Boolean>();
+        contacts.put(uid,true);
         this.inbox = new HashMap<String,String>();
     }
 

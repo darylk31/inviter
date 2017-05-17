@@ -1,17 +1,14 @@
 package invite.hfad.com.inviter.Contacts;
 
 import android.content.Context;
-import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import invite.hfad.com.inviter.R;
-import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.Usernames;
 
 /**
@@ -31,14 +27,16 @@ import invite.hfad.com.inviter.Usernames;
 
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAdapter.ViewHolder> {
 
-    private String username;
-    private Usernames firebaserUsernames;
-    private ArrayList<String> usernames;
-    private String[] displaynames;
+    private Usernames firebaseUsername;
+    private ArrayList<Usernames> usernames;
+    private ArrayList<String> displaynames;
+    private ArrayList<String> usernameDisplay;
     HashMap<String,Boolean> contacts;
+    HashMap<String,Boolean> addContacts;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
+
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,11 +49,11 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
     public SearchContactsAdapter(Context context,String username){
-        this.username = username;
-        this.displaynames = new String[5];
-        this.usernames = new ArrayList<String>();
         auth = FirebaseAuth.getInstance();
-        searchDatabase();
+        this.usernames = new ArrayList<Usernames>();
+        searchDatabase(username);
+        if(firebaseUsername == null)
+            return;
     }
 
     @Override
@@ -69,25 +67,24 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         final CardView cardView = holder.cardView;
         TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);
         TextView user_name = (TextView) cardView.findViewById(R.id.tvSearchUserName);
-        display_name.setText(displaynames[position]);
-        user_name.setText(usernames.get(position));
+        display_name.setText(usernames.get(position).getDisplayname());
+        user_name.setText(usernames.get(position).getUsername());
         actionTextClick(holder);
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return usernames.size();
     }
 
-    private void searchDatabase(){
+    private void searchDatabase(String username){
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    firebaserUsernames = dataSnapshot.getValue(Usernames.class);
-                    displaynames[0] = firebaserUsernames.getUsername();
-                    usernames.add(firebaserUsernames.getUsername());
+                    firebaseUsername = dataSnapshot.getValue(Usernames.class);
+                    usernames.add(firebaseUsername);
                 }
             }
 
@@ -108,15 +105,23 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 //in this case we add the user to our contacts
                 //set the value to true
                 //add the ourselves to the user set to false
-                //addFirebaseUser(usernames[i]);
+                addFirebaseUser(usernames.get(i));
                 System.out.println(i);
             }
         });
     }
 
-    private void addFirebaseUser(String username){
-        //contacts =  new HashMap<String,Boolean>();
-        //mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").setValue();
+    private void addFirebaseUser(Usernames addUsername){
+        contacts =  new HashMap<String,Boolean>();
+        contacts.put(addUsername.getUid(),true);
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("contacts").setValue(contacts);
 
+        addContacts = new HashMap<String,Boolean>();
+        addContacts.put(auth.getCurrentUser().getUid(),false);
+        mDatabase.child("Users").child(addUsername.getUid()).child("inbox").setValue(addContacts);
     }
+
+
+
+
 }

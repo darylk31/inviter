@@ -60,7 +60,6 @@ public class UserAreaActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private FirebaseUser user;
 
-    private final Uri defaultPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/inlcude-2df4d.appspot.com/o/default%2Fdownload.jpg?alt=media&token=5cada801-ac07-4534-b4bf-da5ab77b4679");
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,9 +85,6 @@ public class UserAreaActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        //Navigation Header
-        setDisplayPicture();
 
         //Navigation View
         navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
@@ -170,6 +166,10 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+
+        //Navigation Header
+        setDisplayPicture();
     }
 
 
@@ -252,16 +252,18 @@ public class UserAreaActivity extends AppCompatActivity {
         //}else {
         //    Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
 
-
+        /*
         Glide.with(this)
-                .load(defaultPhotoUrl)
+                .load(user.getPhotoUrl())
                 .into(profilePictureView);
+        */
     }
 
+    /*
     public void uploadProfilePicture(View view){
         startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
     }
-
+    */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         return super.onOptionsItemSelected(item);

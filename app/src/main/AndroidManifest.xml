@@ -27,7 +27,6 @@
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
         <activity android:name=".ForgotPasswordActivity" />
         <activity
             android:name=".SettingActivity"
@@ -44,7 +43,6 @@
             android:value="AIzaSyANXCkCvC17N7OoYXppaHKO2g1KiS8MeCM" />
 
         <activity android:name=".MakeEventActivity" />
-        <activity android:name=".RegisterActivity2" />
         <activity android:name=".EventPage" />
         <activity android:name=".Contacts.ContactsActivity" />
         <activity android:name=".InboxActivity" />

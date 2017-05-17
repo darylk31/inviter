@@ -8,6 +8,7 @@ public class Usernames {
     private String uid;
     private String username;
     private String email;
+    private String displayname;
 
     public Usernames(){
 
@@ -16,6 +17,7 @@ public class Usernames {
     public Usernames(String uid, String username, String email){
         this.uid = uid;
         this.username = username;
+        this.displayname = username;
         this.email = email;
     }
 
@@ -41,5 +43,13 @@ public class Usernames {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getDisplayname() {
+        return displayname;
+    }
+
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
     }
 }
