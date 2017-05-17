@@ -23,7 +23,7 @@ public class PhoneContactsFragment extends Fragment {
         PhoneContactsRecycler.setLayoutManager(layoutManager);
         int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_CONTACTS);
-        if (permissionCheck == 0) {
+        if (permissionCheck == 1) {
             Toast toast = Toast.makeText(getContext(), "Please enable permission to read phone contacts.", Toast.LENGTH_SHORT);
             toast.show();
             return PhoneContactsRecycler;
