@@ -2,9 +2,11 @@ package invite.hfad.com.inviter.Register;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -155,10 +157,12 @@ public class RegisterConfirm extends AppCompatActivity {
                             mAuth.signOut();
                         } else {
                             String uid = mAuth.getCurrentUser().getUid();
-                            mAuth.signOut();
+
                             User firebaseUser = new User(uid,username, firstname, lastname, email, password);
                             Usernames firebaseUsernames = new Usernames(uid,username, email);
                             EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
+                            setUserProfile(firebaseUser);
+                            mAuth.signOut();
                             mDatabase.child("Users").child(uid).setValue(firebaseUser);
                             mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
                             mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
@@ -191,6 +195,24 @@ public class RegisterConfirm extends AppCompatActivity {
 
     private void hideProgressDialog() {
         progressDialog.dismiss();
+    }
+
+    private void setUserProfile(User firebaseUser){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(firebaseUser.getDisplayname())
+                .setPhotoUri(Uri.parse(firebaseUser.getPhototUrl()))
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("REGISTER_CONFIRM", "User profile updated.");
+                        }
+                    }
+                });
     }
 
 }

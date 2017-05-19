@@ -80,6 +80,8 @@ public class UserAreaActivity extends AppCompatActivity {
             }
         };
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -247,16 +249,16 @@ public class UserAreaActivity extends AppCompatActivity {
     private void setDisplayPicture(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         final ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+
       //  if(user.getPhotoUrl() != null){
         //    Picasso.with(this).load(user.getPhotoUrl().toString()).into(profilePictureView);
         //}else {
         //    Picasso.with(this).load(defaultPhotoUrl).into(profilePictureView);
 
-        /*
+
         Glide.with(this)
                 .load(user.getPhotoUrl())
                 .into(profilePictureView);
-        */
     }
 
     /*
