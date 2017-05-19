@@ -22,13 +22,6 @@ import invite.hfad.com.inviter.R;
 
 public class ContactsActivity extends AppCompatActivity{
 
-    private String yearData;
-    private String monthData;
-    private String dayData;
-    private String titleData;
-    private String descriptionData;
-    private String hourData;
-    private String minuteData;
     private boolean fromMakeEvent = false;
 
     private TabLayout tabLayout;
@@ -43,13 +36,6 @@ public class ContactsActivity extends AppCompatActivity{
         Bundle extras = getIntent().getExtras();
 
         if(extras != null){
-            yearData = extras.getString("<yearData>");
-            monthData = extras.getString("monthData");
-            dayData = extras.getString("dayData");
-            hourData = extras.getString("hourData");
-            minuteData = extras.getString("minuteData");
-            titleData= extras.getString("titleData");
-            descriptionData = extras.getString("descriptionData");
             fromMakeEvent = extras.getBoolean("<fromEvent>");
         }
 

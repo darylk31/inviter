@@ -19,7 +19,7 @@ public class Contact {
         isContact = true;
     }
 
-    public Boolean getContact() {
+    public Boolean getIsContact() {
         return isContact;
     }
 
