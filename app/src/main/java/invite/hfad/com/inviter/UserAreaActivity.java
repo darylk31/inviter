@@ -272,4 +272,19 @@ public class UserAreaActivity extends AppCompatActivity {
         return false;
     }
 
+    private void countInboxItems(){
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("inbox").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 }
