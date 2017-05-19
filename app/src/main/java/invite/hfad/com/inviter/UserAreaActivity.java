@@ -65,7 +65,6 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
         setViewPager();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         auth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -159,9 +158,6 @@ public class UserAreaActivity extends AppCompatActivity {
                 //TODO: Display picture changes.
                 setDisplayPicture();
                 //TODO: Contacts changes, Events changes,
-
-
-
             }
 
             @Override
