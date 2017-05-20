@@ -37,9 +37,6 @@ public class User {
         this.password = password;
         this.displayname = userName;
         this.phototUrl = defaultURL;
-        this.contacts = new HashMap<String,Boolean>();
-        contacts.put(uid,true);
-        this.inbox = new HashMap<String,String>();
     }
 
 

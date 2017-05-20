@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
 
@@ -32,7 +33,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     private ArrayList<String> displaynames;
     private ArrayList<String> usernameDisplay;
     HashMap<String,Boolean> contacts;
-    HashMap<String,Boolean> addContacts;
+    HashMap<String,String> addContacts;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
@@ -78,6 +79,9 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
     private void searchDatabase(String username){
+
+        //TODO:
+        //If they're on my contacts they don't show up
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -111,17 +115,25 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         });
     }
 
-    private void addFirebaseUser(Usernames addUsername){
-        contacts =  new HashMap<String,Boolean>();
-        contacts.put(addUsername.getUid(),true);
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("contacts").setValue(contacts);
+    private void addFirebaseUser(final Usernames addUsername){
+        mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    Contact contact = new Contact(addUsername.getUid(),false);
+                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(contact);
 
-        addContacts = new HashMap<String,Boolean>();
-        addContacts.put(auth.getCurrentUser().getUid(),false);
-        mDatabase.child("Users").child(addUsername.getUid()).child("inbox").setValue(addContacts);
-    }
+                    Contact myContact = new Contact(auth.getCurrentUser().getUid(),false);
+                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(myContact);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
 
+        }
 
 
 }

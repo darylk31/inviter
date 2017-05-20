@@ -12,7 +12,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static invite.hfad.com.inviter.Utils.mDatabase;
 
 public class InboxActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;

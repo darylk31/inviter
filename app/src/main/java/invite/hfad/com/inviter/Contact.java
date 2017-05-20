@@ -14,9 +14,9 @@ public class Contact {
     public Contact(){
     }
 
-    public Contact(String uid){
+    public Contact(String uid,boolean isContact){
         this.uid = uid;
-        isContact = true;
+        this.isContact = isContact;
     }
 
     public Boolean getIsContact() {

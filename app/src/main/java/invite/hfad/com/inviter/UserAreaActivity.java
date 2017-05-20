@@ -59,6 +59,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private FirebaseUser user;
+    private int inboxCounter;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -166,6 +167,9 @@ public class UserAreaActivity extends AppCompatActivity {
         });
 
 
+        //CountInboxItems
+        countInboxItems();
+
         //Navigation Header
         setDisplayPicture();
     }
@@ -272,19 +276,19 @@ public class UserAreaActivity extends AppCompatActivity {
         return false;
     }
 
-    private void countInboxItems(){
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("inbox").addListenerForSingleValueEvent(new ValueEventListener() {
+    private void countInboxItems() {
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("inbox").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()){
-
+                inboxCounter = 0;
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    inboxCounter++;
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
+    }
 }
