@@ -29,11 +29,8 @@ import invite.hfad.com.inviter.Usernames;
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAdapter.ViewHolder> {
 
     private Usernames firebaseUsername;
-    private ArrayList<Usernames> usernames;
-    private ArrayList<String> displaynames;
-    private ArrayList<String> usernameDisplay;
-    HashMap<String,Boolean> contacts;
-    HashMap<String,String> addContacts;
+    private ArrayList<Usernames> usernameList;
+
 
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
@@ -49,10 +46,10 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         }
     }
 
-    public SearchContactsAdapter(Context context,String username){
+    public SearchContactsAdapter(Context context,ArrayList<Usernames> usernameList){
         auth = FirebaseAuth.getInstance();
-        this.usernames = new ArrayList<Usernames>();
-        searchDatabase(username);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        this.usernameList = usernameList;
         if(firebaseUsername == null)
             return;
     }
@@ -68,14 +65,14 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         final CardView cardView = holder.cardView;
         TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);
         TextView user_name = (TextView) cardView.findViewById(R.id.tvSearchUserName);
-        display_name.setText(usernames.get(position).getDisplayname());
-        user_name.setText(usernames.get(position).getUsername());
+        display_name.setText(usernameList.get(position).getDisplayname());
+        user_name.setText(usernameList.get(position).getUsername());
         actionTextClick(holder);
     }
 
     @Override
     public int getItemCount() {
-        return usernames.size();
+        return usernameList.size();
     }
 
     private void searchDatabase(String username){
@@ -88,7 +85,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    usernames.add(firebaseUsername);
+                    usernameList.add(firebaseUsername);
                 }
             }
 
@@ -109,14 +106,15 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 //in this case we add the user to our contacts
                 //set the value to true
                 //add the ourselves to the user set to false
-                addFirebaseUser(usernames.get(i));
+                System.out.println(usernameList.get(i).getUsername());
+                addFirebaseUser(usernameList.get(i));
                 System.out.println(i);
             }
         });
     }
 
     private void addFirebaseUser(final Usernames addUsername){
-        mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+      mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
@@ -131,7 +129,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
 
         }
 

@@ -8,10 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.FirebaseUI;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
+import invite.hfad.com.inviter.Utils;
 
 public class SearchContactsActivity extends AppCompatActivity {
 
@@ -31,9 +35,16 @@ public class SearchContactsActivity extends AppCompatActivity {
     private RecyclerView search_recycler;
     private SearchContactsAdapter adapter;
 
-    private DatabaseReference mDatabase;
-
     private Usernames usernameMatch;
+
+    private Usernames firebaseUsername;
+    private ArrayList<Usernames> usernameList;
+
+
+    private DatabaseReference mDatabase;
+    private FirebaseAuth auth;
+
+
 
 
     @Override
@@ -69,12 +80,68 @@ public class SearchContactsActivity extends AppCompatActivity {
 
 
             public void callSearch(String query){
-                adapter = new SearchContactsAdapter(getApplicationContext(), query);
-                Toast.makeText(SearchContactsActivity.this, "TEST", Toast.LENGTH_SHORT).show();
-                search_recycler.setAdapter(adapter);
+                if(query.equals(""))
+                    return;
+                checkFirebaseDatabase(query);
+                adapter = new SearchContactsAdapter(getApplicationContext(), usernameList);
+
+
             }
         });
     }
+
+    private void checkFirebaseDatabase(String query){
+
+        //TODO:
+        //If they're on my contacts they don't show up
+        usernameList = new ArrayList<Usernames>();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("Usernames").child(query).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    firebaseUsername = dataSnapshot.getValue(Usernames.class);
+                    usernameList.add(firebaseUsername);
+                    System.out.println("added");
+                    System.out.println(usernameList.get(0).getDisplayname());
+                }
+                search_recycler.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    /**
+
+    private void fireBaseTest(String query) {
+        if(query.equals(""))
+            return;
+        mDatabase = Utils.getDatabase().getReference();
+        FirebaseRecyclerAdapter<String, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<String, ItemViewHolder>(
+                String.class, R.layout.searchcontact_list_item, ItemViewHolder.class, mDatabase.child("Usernames").child(query)) {
+            protected void populateViewHolder(final ItemViewHolder viewHolder, String model, int position) {
+                String key = this.getRef(position).getKey();
+                System.out.println("Key:" + key + " Model: " + model);
+                TextView displayname = (TextView) viewHolder.itemView.findViewById(R.id.tvSearchDisplayName);
+                displayname.setText(model);
+            }
+        };
+        search_recycler.setAdapter(adapter);
+
+
+    }
+    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+     */
+
 
 
 
