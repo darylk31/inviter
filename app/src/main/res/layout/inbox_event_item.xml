@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/contacts_cardview"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/inbox_event_cardview"
     android:layout_width="match_parent"
     android:layout_height="85dp"
     android:layout_margin="5dp">
@@ -21,29 +21,30 @@
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
                 android:padding="10dp"
-                android:textSize="25sp"
-                android:textColor="#de9c17" />
+                android:textColor="#de9c17"
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="25sp"
                 android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/event_day"
                 android:layout_toRightOf="@+id/event_day"
-                android:layout_toEndOf="@+id/event_day" />
+                android:padding="10dp"
+                android:textSize="25sp" />
 
             <TextView
+                android:id="@+id/event_invite_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/invite_by"
                 android:layout_below="@+id/event_name"
                 android:layout_centerHorizontal="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#9eb1f0"
                 android:textSize="14dp"
                 android:textStyle="italic" />
+
         </RelativeLayout>
 
     </LinearLayout>
