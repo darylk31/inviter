@@ -41,6 +41,11 @@
             android:title = "Show Past Events..."
             android:summary = ""
             />
+        <Preference
+            android:key="pref_update_frequency"
+            android:title = "Contact Update Frequency"
+            android:summary = ""/>
+
     </PreferenceCategory>
 
     //Support

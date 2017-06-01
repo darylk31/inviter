@@ -45,7 +45,7 @@
         <activity android:name=".MakeEventActivity" />
         <activity android:name=".EventPage" />
         <activity android:name=".Contacts.ContactsActivity" />
-        <activity android:name=".InboxActivity" />
+        <activity android:name=".Inbox.InboxActivity" />
         <activity
             android:name=".UserAreaActivity"
             android:theme="@style/UserAreaTheme"></activity>
