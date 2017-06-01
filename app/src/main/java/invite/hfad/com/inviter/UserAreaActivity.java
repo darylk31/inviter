@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
+import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class UserAreaActivity extends AppCompatActivity {
 

@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter.Inbox;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
 
 
@@ -66,15 +69,33 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(InboxAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final InboxAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
         int viewType = getItemViewType(position);
         switch (viewType) {
             case 0:
-                TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
+                final TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
                 friendtext.setText(inbox.get(position) + " would like to add you!");
-                Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
-                Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
+                final Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
+                final Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
+                acceptbutton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        Toast.makeText(v.getContext(), inbox.get(pos) + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
+                        acceptbutton.setVisibility(Button.GONE);
+                        declinebutton.setVisibility(Button.GONE);
+                    }
+                });
+                declinebutton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        Toast.makeText(v.getContext(), inbox.get(pos) + "'s request denied.", Toast.LENGTH_SHORT).show();
+                        acceptbutton.setVisibility(Button.GONE);
+                        declinebutton.setVisibility(Button.GONE);
+                    }
+                });
             case 1:
                 TextView eventname = (TextView) cardView.findViewById(R.id.event_name);
                 TextView eventday = (TextView) cardView.findViewById(R.id.event_day);
