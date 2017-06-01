@@ -92,8 +92,6 @@ public class SearchContactsActivity extends AppCompatActivity {
 
     private void checkFirebaseDatabase(String query){
 
-        //TODO:
-        //If they're on my contacts they don't show up
         usernameList = new ArrayList<Usernames>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Usernames").child(query).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -105,7 +103,18 @@ public class SearchContactsActivity extends AppCompatActivity {
                     System.out.println("added");
                     System.out.println(usernameList.get(0).getDisplayname());
                 }
-                search_recycler.setAdapter(adapter);
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(usernameList.get(0).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(!dataSnapshot.exists())
+                            search_recycler.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
 
