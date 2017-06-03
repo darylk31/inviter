@@ -19,18 +19,22 @@
                 android:id="@+id/friend_request"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="25dp" />
+                android:maxLines="1"
+                android:text="Charles would like to add you!"
+                android:textSize="22dp"
+                android:textColor="@color/com_facebook_blue"/>
 
             <Button
                 android:id="@+id/accept_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accept"
-                android:backgroundTint="@color/colorWhite"
-                android:textColor="@color/com_facebook_blue"
                 android:layout_alignParentBottom="true"
                 android:layout_toLeftOf="@+id/decline_button"
-                android:layout_toStartOf="@+id/decline_button" />
+                android:layout_toStartOf="@+id/decline_button"
+                android:backgroundTint="@color/colorWhite"
+                android:elevation="0dp"
+                android:text="Accept"
+                android:textColor="@color/com_facebook_blue" />
 
             <Button
                 android:id="@+id/decline_button"
