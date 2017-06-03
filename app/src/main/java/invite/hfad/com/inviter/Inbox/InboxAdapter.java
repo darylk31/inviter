@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
@@ -77,6 +78,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 friendtext.setText(friendlist.get(position).getUsername() + " would like to add you!");
                 final Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
                 final Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
+
                 acceptbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -84,6 +86,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
+                        //Add them onto my contacts
+                        Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        friendlist.remove(pos);
                     }
                 });
                 declinebutton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +98,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        friendlist.remove(pos);
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
                     }

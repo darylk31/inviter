@@ -262,12 +262,9 @@ public class UserAreaActivity extends AppCompatActivity {
         }
     }
 
-    public void onMakeEvent(View v) {
-        Toast.makeText(UserAreaActivity.this,String.valueOf(inboxCounter),Toast.LENGTH_SHORT).show();
-        /*
+    public void onButtonClick(View v) {
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
-        */
     }
 
     private void setDisplayPicture(){
@@ -304,7 +301,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle(spanString);
 
                 } else{
-                    navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("ha");
+                    navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("Inbox");
                 }
             }
 
@@ -312,6 +309,12 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        countInboxItems();
     }
 
 }

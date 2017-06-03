@@ -47,7 +47,7 @@ public class RegisterUsername extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    mDatabase.child("Usernames").child(username.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child("Usernames").child(username.getText().toString().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!(dataSnapshot.exists())) {

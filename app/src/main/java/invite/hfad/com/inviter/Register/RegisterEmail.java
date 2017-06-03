@@ -47,7 +47,7 @@ public class RegisterEmail extends AppCompatActivity {
                 if (connected) {
                     String emailString = email.getText().toString();
                     emailString = emailString.substring(0,emailString.indexOf('.'));
-                    mDatabase.child("Email-Address").child(emailString).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child("Email-Address").child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {

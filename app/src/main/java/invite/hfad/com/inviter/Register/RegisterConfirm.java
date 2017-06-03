@@ -104,12 +104,12 @@ public class RegisterConfirm extends AppCompatActivity {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
 
-                    mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child("Usernames").child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {
                                 final String emailString = email.substring(0, email.indexOf('.'));
-                                mDatabase.child("Email-Address").child(emailString).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.child("Email-Address").child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (!(dataSnapshot.exists())) {
@@ -164,8 +164,8 @@ public class RegisterConfirm extends AppCompatActivity {
                             setUserProfile(firebaseUser);
                             mAuth.signOut();
                             mDatabase.child("Users").child(uid).setValue(firebaseUser);
-                            mDatabase.child("Email-Address").child(emailString).setValue(firebaseEmailAddress);
-                            mDatabase.child("Usernames").child(username).setValue(firebaseUsernames);
+                            mDatabase.child("Email-Address").child(emailString.toLowerCase()).setValue(firebaseEmailAddress);
+                            mDatabase.child("Usernames").child(username.toLowerCase()).setValue(firebaseUsernames);
                             Thread thread = new Thread(){
                                 @Override
                                 public void run() {
