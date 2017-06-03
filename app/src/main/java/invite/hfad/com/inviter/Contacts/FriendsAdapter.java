@@ -45,7 +45,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         try {
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS", null);
+            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS ORDER BY USERNAME;", null);
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
