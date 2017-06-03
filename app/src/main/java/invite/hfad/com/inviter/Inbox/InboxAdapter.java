@@ -82,15 +82,28 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 acceptbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int pos = holder.getAdapterPosition();
+                        final int pos = holder.getAdapterPosition();
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
-                        //Add them onto my contacts
-                        Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                        friendlist.remove(pos);
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(!dataSnapshot.exists()) {
+                                    //Add them onto my contacts
+                                    Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
+                                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
+                                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                        //friendlist.remove(pos);
+                        InboxAdapter.this.notifyItemRemoved(pos);
+                        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
+                        InboxAdapter.this.notifyDataSetChanged();
                     }
                 });
                 declinebutton.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +115,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         friendlist.remove(pos);
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
+                        friendlist.remove(pos);
+                        InboxAdapter.this.notifyItemRemoved(pos);
+                        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
+                        InboxAdapter.this.notifyDataSetChanged();
                     }
                 });
             case 1:

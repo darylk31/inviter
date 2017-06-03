@@ -209,8 +209,25 @@ public class UserAreaActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        countInboxItems();
         auth.addAuthStateListener(authListener);
+        if(auth == null){
+            startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+            finish();
+        }
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        countInboxItems();
+        auth.addAuthStateListener(authListener);
+        if(auth==null){
+            startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
+
 
     @Override
     public void onStop() {
@@ -293,7 +310,10 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    inboxCounter++;
+                    for(DataSnapshot dsChild : ds.getChildren()){
+                        inboxCounter = (int)dsChild.getChildrenCount();
+                        System.out.println(dsChild.getKey());
+                    }
                 }
                 if(inboxCounter > 0){
                     SpannableString spanString = new SpannableString("Inbox (" + inboxCounter + ")");
@@ -311,10 +331,5 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        countInboxItems();
-    }
 
 }
