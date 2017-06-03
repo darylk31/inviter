@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.Inbox.InboxAdapter;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
@@ -33,8 +34,8 @@ public class InboxActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private RecyclerView recycler;
 
-    private ArrayList<String> friendlist;
-    private ArrayList<String> eventlist;
+    private ArrayList<User> friendlist;
+    private ArrayList<Event> eventlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class InboxActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
-                                        friendlist.add(user.getDisplayname());
+                                        friendlist.add(user);
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist);
                                         recycler.setAdapter(adapter);
                                     }

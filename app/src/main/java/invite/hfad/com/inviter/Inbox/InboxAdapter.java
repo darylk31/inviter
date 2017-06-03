@@ -19,15 +19,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> {
 
-    private ArrayList<String> inbox;
-    //private ArrayList<String> friendlist;
-    //private ArrayList<String> eventlist;
+
+    private ArrayList<User> friendlist;
+    private ArrayList<Event> eventlist;
     private int friendrequests;
     private int eventrequests;
     private FirebaseAuth auth;
@@ -42,16 +44,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         }
     }
 
-    public InboxAdapter(ArrayList<String> friendlist, ArrayList<String> eventlist) {
+    public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist) {
         auth = FirebaseAuth.getInstance();
-        //friendlist = new ArrayList<>();
-        //eventlist = new ArrayList<>();
-        //searchinbox();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        this.friendlist = friendlist;
         friendrequests = friendlist.size();
+        this.eventlist = eventlist;
         eventrequests = eventlist.size();
-        inbox = new ArrayList<>(friendrequests + eventrequests);
-        inbox.addAll(friendlist);
-        inbox.addAll(eventlist);
     }
 
     @Override
@@ -75,14 +74,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         switch (viewType) {
             case 0:
                 final TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
-                friendtext.setText(inbox.get(position) + " would like to add you!");
+                friendtext.setText(friendlist.get(position).getUsername() + " would like to add you!");
                 final Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
                 final Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
                 acceptbutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), inbox.get(pos) + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
                     }
@@ -91,12 +90,13 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), inbox.get(pos) + "'s request denied.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
                     }
                 });
             case 1:
+                int pos = holder.getAdapterPosition() - friendrequests;
                 TextView eventname = (TextView) cardView.findViewById(R.id.event_name);
                 TextView eventday = (TextView) cardView.findViewById(R.id.event_day);
         }
@@ -104,7 +104,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return inbox.size();
+        return eventrequests + friendrequests;
     }
 
     @Override
@@ -113,31 +113,5 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
             return 0;
         }
         else return 1;
-    }
-
-    private void searchinbox() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").
-                addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                /*
-                if(dataSnapshot.exists()){
-                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                            Contact contact = snapshot.getValue(Contact.class);
-                            friendlist.add(contact.getUid());
-                    }
-                }
-                */
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
     }
 }
