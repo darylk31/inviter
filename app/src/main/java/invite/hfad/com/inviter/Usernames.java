@@ -9,6 +9,9 @@ public class Usernames {
     private String username;
     private String email;
     private String displayname;
+    private String photoUrl;
+
+    private final String defaultURL = "https://firebasestorage.googleapis.com/v0/b/inviter-96012.appspot.com/o/default%2Fdownload.jpg?alt=media&token=72fb0556-f0a9-440f-8d9e-4d29311847a1";
 
     public Usernames(){
 
@@ -19,6 +22,7 @@ public class Usernames {
         this.username = username;
         this.displayname = username;
         this.email = email;
+        photoUrl = defaultURL;
     }
 
     public String getUsername() {
@@ -51,5 +55,13 @@ public class Usernames {
 
     public void setDisplayname(String displayname) {
         this.displayname = displayname;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

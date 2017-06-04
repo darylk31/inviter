@@ -121,7 +121,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 int i = holder.getAdapterPosition();
                 if(mContext instanceof SearchContactsActivity){
                     System.out.println(usernameList.get(i).getUid());
-                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext,usernameList.get(i));
+                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext,usernameList.get(i).getUsername());
                     profileDialogBox.show();
                 }
             }

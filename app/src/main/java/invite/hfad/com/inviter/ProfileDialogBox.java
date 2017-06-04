@@ -14,11 +14,11 @@ import org.w3c.dom.Text;
  */
 
 public class ProfileDialogBox extends Dialog implements android.view.View.OnClickListener{
-    private Usernames user;
+    private String username;
 
-    public ProfileDialogBox(Activity a,Usernames user){
+    public ProfileDialogBox(Activity a,String username){
         super(a);
-        this.user = user;
+        this.username = username;
     }
 
     @Override
@@ -26,10 +26,6 @@ public class ProfileDialogBox extends Dialog implements android.view.View.OnClic
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.custom_profile_dialog);
-        TextView profile_username = (TextView) findViewById(R.id.profile_username);
-        TextView profile_displayname = (TextView) findViewById(R.id.profile_displayname);
-        profile_username.setText(user.getUsername());
-        profile_displayname.setText(user.getDisplayname());
     }
 
     @Override
