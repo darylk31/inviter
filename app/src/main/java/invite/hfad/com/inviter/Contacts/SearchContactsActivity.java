@@ -84,9 +84,7 @@ public class SearchContactsActivity extends AppCompatActivity {
                 if(query.equals(""))
                     return;
                 checkFirebaseDatabase(query);
-                adapter = new SearchContactsAdapter(getApplicationContext(), usernameList);
-
-
+                adapter = new SearchContactsAdapter(SearchContactsActivity.this, usernameList);
 
             }
         });
@@ -131,7 +129,6 @@ public class SearchContactsActivity extends AppCompatActivity {
     }
 
     /**
-
     private void fireBaseTest(String query) {
         if(query.equals(""))
             return;

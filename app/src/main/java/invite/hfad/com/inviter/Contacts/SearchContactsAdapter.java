@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter.Contacts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.Inbox.InboxActivity;
 import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
@@ -36,6 +38,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
 
+    private Context mContext;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -48,6 +51,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
     public SearchContactsAdapter(Context context,ArrayList<Usernames> usernameList){
+        this.mContext = context;
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         this.usernameList = usernameList;
@@ -108,15 +112,22 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 //in this case we add the user to our contacts
                 //set the value to true
                 //add the ourselves to the user set to false
+                /*
                 System.out.println(usernameList.get(i).getUsername());
                 addFirebaseUser(usernameList.get(i));
-                System.out.println(i);
+                */
+                if(mContext instanceof SearchContactsActivity){
+                    System.out.println(usernameList.get(i).getUid());
+                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext);
+                    profileDialogBox.show();
+                }
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
 
             @Override
             public boolean onLongClick(View v) {
+
                 return false;
             }
         });
