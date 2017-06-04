@@ -50,6 +50,7 @@ public class SearchContactsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_search_contacts);
         search = (SearchView) findViewById(R.id.searchview_contacts);
         search.onActionViewExpanded();
@@ -96,24 +97,36 @@ public class SearchContactsActivity extends AppCompatActivity {
         //If they're on my contacts they don't show up
         usernameList = new ArrayList<Usernames>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         mDatabase.child("Usernames").child(query).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    usernameList.add(firebaseUsername);
-                    System.out.println("added");
-                    System.out.println(usernameList.get(0).getDisplayname());
-                }
-                search_recycler.setAdapter(adapter);
+                    System.out.println(firebaseUsername.getUid());
+                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(!dataSnapshot.exists()){
+                                usernameList.add(firebaseUsername);
+                                System.out.println("added");
+                                System.out.println(usernameList.get(0).getDisplayname());
+                            }
 
+                            search_recycler.setAdapter(adapter);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
     }
 
     /**
