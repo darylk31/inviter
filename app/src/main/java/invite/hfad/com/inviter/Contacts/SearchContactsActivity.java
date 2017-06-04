@@ -87,6 +87,7 @@ public class SearchContactsActivity extends AppCompatActivity {
                 adapter = new SearchContactsAdapter(getApplicationContext(), usernameList);
 
 
+
             }
         });
     }

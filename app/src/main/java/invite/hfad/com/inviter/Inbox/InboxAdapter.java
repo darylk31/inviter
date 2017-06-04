@@ -75,7 +75,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         switch (viewType) {
             case 0:
                 final TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
-                friendtext.setText(friendlist.get(position).getUsername() + " would like to add you!");
+                friendtext.setText(friendlist.get(holder.getAdapterPosition()).getUsername() + " would like to add you!");
                 final Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
                 final Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
 
@@ -100,10 +100,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                             public void onCancelled(DatabaseError databaseError) {
                             }
                         });
-                        //friendlist.remove(pos);
-                        InboxAdapter.this.notifyItemRemoved(pos);
-                        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
-                        InboxAdapter.this.notifyDataSetChanged();
+                        removeAt(pos);
                     }
                 });
                 declinebutton.setOnClickListener(new View.OnClickListener() {
@@ -112,13 +109,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition();
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
                         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        mDatabase.child("Users").child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getUid()).removeValue();
                         friendlist.remove(pos);
                         acceptbutton.setVisibility(Button.GONE);
                         declinebutton.setVisibility(Button.GONE);
-                        friendlist.remove(pos);
-                        InboxAdapter.this.notifyItemRemoved(pos);
-                        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
-                        InboxAdapter.this.notifyDataSetChanged();
+                        removeAt(pos);
                     }
                 });
             case 1:
@@ -139,5 +134,12 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
             return 0;
         }
         else return 1;
+    }
+
+    private void removeAt(int pos){
+        friendlist.remove(pos);
+        InboxAdapter.this.notifyItemRemoved(pos);
+        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
+        InboxAdapter.this.notifyDataSetChanged();
     }
 }

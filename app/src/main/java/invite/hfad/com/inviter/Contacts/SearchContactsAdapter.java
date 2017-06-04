@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
 
@@ -52,6 +53,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         this.usernameList = usernameList;
         if(firebaseUsername == null)
             return;
+
     }
 
     @Override
@@ -109,6 +111,13 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 System.out.println(usernameList.get(i).getUsername());
                 addFirebaseUser(usernameList.get(i));
                 System.out.println(i);
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
             }
         });
     }
