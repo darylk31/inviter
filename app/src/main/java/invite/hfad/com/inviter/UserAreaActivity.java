@@ -305,13 +305,14 @@ public class UserAreaActivity extends AppCompatActivity {
     */
 
     private void countInboxItems() {
-        inboxCounter = 0;
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                inboxCounter = 0;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     for(DataSnapshot dsChild : ds.getChildren()){
-                        inboxCounter = (int)dsChild.getChildrenCount();
+                        //inboxCounter = (int)dsChild.getChildrenCount();
+                        inboxCounter++;
                         System.out.println(dsChild.getKey());
                     }
                 }
