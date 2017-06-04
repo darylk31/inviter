@@ -1,12 +1,12 @@
 package invite.hfad.com.inviter.Contacts;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,10 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
-import invite.hfad.com.inviter.Inbox.InboxActivity;
 import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
@@ -69,11 +67,26 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     @Override
     public void onBindViewHolder(final SearchContactsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
+        Button addSearchContactButton = (Button) cardView.findViewById(R.id.bAddSearchContact);
+        addSearchContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = holder.getAdapterPosition();
+                //base on the position we get their username
+                //and then check where they're from
+                //and then complete action
+                //in this case we add the user to our contacts
+                //set the value to true
+                //add the ourselves to the user set to false
+                System.out.println(usernameList.get(i).getUsername());
+                addFirebaseUser(usernameList.get(i));
+            }
+        });
         TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);
         TextView user_name = (TextView) cardView.findViewById(R.id.tvSearchUserName);
         display_name.setText(usernameList.get(position).getDisplayname());
         user_name.setText(usernameList.get(position).getUsername());
-        actionTextClick(holder);
+        cardViewClick(holder);
     }
 
     @Override
@@ -101,34 +114,16 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         });
     }
 
-    private void actionTextClick(final SearchContactsAdapter.ViewHolder holder){
+    private void cardViewClick(final SearchContactsAdapter.ViewHolder holder){
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int i = holder.getAdapterPosition();
-                //base on the position we get their username
-                //and then check where they're from
-                //and then complete action
-                //in this case we add the user to our contacts
-                //set the value to true
-                //add the ourselves to the user set to false
-                /*
-                System.out.println(usernameList.get(i).getUsername());
-                addFirebaseUser(usernameList.get(i));
-                */
                 if(mContext instanceof SearchContactsActivity){
                     System.out.println(usernameList.get(i).getUid());
-                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext);
+                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext,usernameList.get(i));
                     profileDialogBox.show();
                 }
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
-
-            @Override
-            public boolean onLongClick(View v) {
-
-                return false;
             }
         });
     }
