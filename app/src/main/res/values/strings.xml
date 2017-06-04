@@ -29,6 +29,8 @@
     <string name="email_text">Email Address</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm Password</string>
+    <string name="messenger_button_text">Message</string>
+    <string name="remove_button_text">Remove</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>
