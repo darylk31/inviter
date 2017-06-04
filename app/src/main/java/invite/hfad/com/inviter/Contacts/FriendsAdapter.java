@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -39,6 +40,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     String[] username;
     String[] displayname;
     String[] profile;
+    Context context;
 
 
     public FriendsAdapter(Context context){
@@ -63,6 +65,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             Toast toast = Toast.makeText(context, "Error loading your friends, please try again!", Toast.LENGTH_SHORT);
             toast.show();
         }
+        this.context = context;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,8 +85,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(FriendsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final FriendsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileDialogBox dialogBox = new ProfileDialogBox((ContactsActivity) context, username[holder.getAdapterPosition()] );
+                dialogBox.show();
+            }
+        });
         TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
         dname.setText(displayname[position]);
         TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
