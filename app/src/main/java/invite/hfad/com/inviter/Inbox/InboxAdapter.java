@@ -71,51 +71,37 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final InboxAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
+        final Button friendaccept = (Button) cardView.findViewById(R.id.accept_button);
+        final Button frienddecline = (Button) cardView.findViewById(R.id.decline_button);
+
+        friendaccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
+                //Add them onto my contacts
+                Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                removefriendrequest(pos);
+            }
+        });
+
+        frienddecline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                removefriendrequest(pos);
+            }
+        });
+
         int viewType = getItemViewType(position);
         switch (viewType) {
             case 0:
                 final TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
-                friendtext.setText(friendlist.get(holder.getAdapterPosition()).getUsername() + " would like to add you!");
-                final Button acceptbutton = (Button) cardView.findViewById(R.id.accept_button);
-                final Button declinebutton = (Button) cardView.findViewById(R.id.decline_button);
-
-                acceptbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
-                        acceptbutton.setVisibility(Button.GONE);
-                        declinebutton.setVisibility(Button.GONE);
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(!dataSnapshot.exists()) {
-                                    //Add them onto my contacts
-                                    Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
-                                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
-                                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                                }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
-                        removeAt(pos);
-                    }
-                });
-                declinebutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                        mDatabase.child("Users").child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getUid()).removeValue();
-                        friendlist.remove(pos);
-                        acceptbutton.setVisibility(Button.GONE);
-                        declinebutton.setVisibility(Button.GONE);
-                        removeAt(pos);
-                    }
-                });
+                friendtext.setText(friendlist.get(position).getUsername() + " would like to add you!");
             case 1:
                 int pos = holder.getAdapterPosition() - friendrequests;
                 TextView eventname = (TextView) cardView.findViewById(R.id.event_name);
@@ -129,17 +115,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     }
 
     @Override
-    public int getItemViewType(int position){
-        if (position < friendrequests){
+    public int getItemViewType(int position) {
+        if (position < friendrequests) {
             return 0;
-        }
-        else return 1;
+        } else return 1;
     }
 
-    private void removeAt(int pos){
+    public void removefriendrequest(int pos){
         friendlist.remove(pos);
+        friendrequests--;
         InboxAdapter.this.notifyItemRemoved(pos);
-        InboxAdapter.this.notifyItemRangeChanged(pos,getItemCount());
+        InboxAdapter.this.notifyItemRangeChanged(pos, getItemCount());
         InboxAdapter.this.notifyDataSetChanged();
+
     }
 }
