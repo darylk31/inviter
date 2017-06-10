@@ -9,6 +9,7 @@ import java.util.Date;
 public class EventObject {
     private String eventTitle;
     private Date eventDate;
+    private Date endDate;
     private String eventNote;
     private String userName;
     private EventPage eventPage;
