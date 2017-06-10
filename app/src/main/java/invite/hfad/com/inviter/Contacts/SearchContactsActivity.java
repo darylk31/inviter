@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +40,13 @@ public class SearchContactsActivity extends AppCompatActivity {
 
     private Usernames firebaseUsername;
     private ArrayList<Usernames> usernameList;
+    private ArrayList<Usernames> contactList;
 
 
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
 
-
+    private LinearLayout usernameSearchLayoutWrapper;
 
 
     @Override
@@ -58,8 +60,11 @@ public class SearchContactsActivity extends AppCompatActivity {
         search_recycler = (RecyclerView) findViewById(R.id.searchcontacts_recycler);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         search_recycler.setLayoutManager(mLayoutManager);
+
+        usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
         //adapter = new SearchContactsAdapter(getApplicationContext(),"");
         //search_recycler.setAdapter(adapter);
+
 
         getUsernames();
     }
@@ -83,9 +88,10 @@ public class SearchContactsActivity extends AppCompatActivity {
             public void callSearch(String query){
                 if(query.equals(""))
                     return;
+                usernameSearchLayoutWrapper.setVisibility(View.GONE);
+                System.out.println("GONE");
                 checkFirebaseDatabase(query);
                 adapter = new SearchContactsAdapter(SearchContactsActivity.this, usernameList);
-
             }
         });
     }
@@ -108,10 +114,10 @@ public class SearchContactsActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(!dataSnapshot.exists()){
                                 usernameList.add(firebaseUsername);
-                                System.out.println("added");
                                 System.out.println(usernameList.get(0).getDisplayname());
+                                System.out.println("VISIBLE");
+                                usernameSearchLayoutWrapper.setVisibility(View.VISIBLE);
                             }
-
                             search_recycler.setAdapter(adapter);
                         }
 
@@ -120,6 +126,7 @@ public class SearchContactsActivity extends AppCompatActivity {
                         }
                     });
                 }
+
             }
 
             @Override
@@ -128,30 +135,7 @@ public class SearchContactsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-    private void fireBaseTest(String query) {
-        if(query.equals(""))
-            return;
-        mDatabase = Utils.getDatabase().getReference();
-        FirebaseRecyclerAdapter<String, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<String, ItemViewHolder>(
-                String.class, R.layout.searchcontact_list_item, ItemViewHolder.class, mDatabase.child("Usernames").child(query)) {
-            protected void populateViewHolder(final ItemViewHolder viewHolder, String model, int position) {
-                String key = this.getRef(position).getKey();
-                System.out.println("Key:" + key + " Model: " + model);
-                TextView displayname = (TextView) viewHolder.itemView.findViewById(R.id.tvSearchDisplayName);
-                displayname.setText(model);
-            }
-        };
-        search_recycler.setAdapter(adapter);
 
-
-    }
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-     */
 
 
 

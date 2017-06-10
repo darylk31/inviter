@@ -17,6 +17,17 @@
         android:hint="Type to search..."
          />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchview_username_wrapper"
+        android:orientation="vertical"
+        android:layout_below="@id/searchview_contacts">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Add_username_text"/>
+
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/searchcontacts_recycler"
@@ -24,5 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchview_contacts"/>
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -1,17 +1,11 @@
 package invite.hfad.com.inviter;
 
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -31,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,14 +36,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
@@ -345,12 +333,18 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(!dataSnapshot.exists())
                     return;
+                Contact contact = dataSnapshot.getValue(Contact.class);
+                if(contact.getIsContact()){
+                  return;
+                }
+                contact.setContact(true);
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact.getUid()).setValue(contact);
                 mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
                             User user = dataSnapshot.getValue(User.class);
-                            notification(user);
+                            addRequestNotification(user);
                         }
                     }
 
@@ -379,7 +373,7 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void notification(User user){
+    private void addRequestNotification(User user){
         System.out.println("Notification entrance");
         if(user== null)
             return;
@@ -388,14 +382,14 @@ public class UserAreaActivity extends AppCompatActivity {
                         .setSmallIcon(R.drawable.twitter_button)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(user.getUsername() + "would like to add you!");
-        // Sets an ID for the notification
-        int mNotificationId = 001;
+        // Sets an unique ID for the addRequestNotification
+        int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-// Builds the notification and issues it.
+// Builds the addRequestNotification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
-        System.out.println("notification shown");
+        System.out.println("addRequestNotification shown");
     }
 
 

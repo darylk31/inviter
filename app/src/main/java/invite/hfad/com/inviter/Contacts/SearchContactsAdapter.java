@@ -67,7 +67,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     @Override
     public void onBindViewHolder(final SearchContactsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
-        Button addSearchContactButton = (Button) cardView.findViewById(R.id.bAddSearchContact);
+        final Button addSearchContactButton = (Button) cardView.findViewById(R.id.bAddSearchContact);
         addSearchContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +79,8 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 //set the value to true
                 //add the ourselves to the user set to false
                 System.out.println(usernameList.get(i).getUsername());
+                addSearchContactButton.setText("Added");
+                addSearchContactButton.setEnabled(false);
                 addFirebaseUser(usernameList.get(i));
             }
         });
@@ -94,25 +96,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         return usernameList.size();
     }
 
-    private void searchDatabase(String username){
-
-        //TODO:
-        //If they're on my contacts they don't show up
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    usernameList.add(firebaseUsername);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
 
     private void cardViewClick(final SearchContactsAdapter.ViewHolder holder){
         holder.itemView.setOnClickListener(new View.OnClickListener() {
