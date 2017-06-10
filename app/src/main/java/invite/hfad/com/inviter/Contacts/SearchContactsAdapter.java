@@ -133,7 +133,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    Contact contact = new Contact(addUsername.getUid(),true);
+                    Contact contact = new Contact(addUsername.getUid(),false);
                     mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(contact);
 
                     Contact myContact = new Contact(auth.getCurrentUser().getUid(),true);

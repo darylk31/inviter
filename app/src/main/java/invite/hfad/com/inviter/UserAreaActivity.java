@@ -345,9 +345,20 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(!dataSnapshot.exists())
                     return;
-                System.out.println("addRequest was called" + s);
+                mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            notification(user);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
                 System.out.println("what is datasnapshot " + dataSnapshot.getKey());
-                notification(dataSnapshot.getKey());
             }
 
             @Override
@@ -368,30 +379,15 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void notification(String s){
+    private void notification(User user){
         System.out.println("Notification entrance");
-        if(s.equals(""))
+        if(user== null)
             return;
-        final User[] users = new User[1];
-        mDatabase.child("Users").child(s).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    users[0] = dataSnapshot.getValue(User.class);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        if(users[0]==null)
-            return;
-        NotificationCompat.Builder mBuilder =
+                NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.twitter_button)
                         .setContentTitle(this.getString(R.string.app_name))
-                        .setContentText(users[0].getUsername() + "would like to add you!");
+                        .setContentText(user.getUsername() + "would like to add you!");
         // Sets an ID for the notification
         int mNotificationId = 001;
 // Gets an instance of the NotificationManager service
