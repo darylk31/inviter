@@ -97,6 +97,7 @@ public class MakeEventActivity extends Activity {
 
 
     public void onInvite(View view) {
+        /* THIS IS WORKING?
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString().trim();
@@ -110,6 +111,7 @@ public class MakeEventActivity extends Activity {
                         FirebaseAuth.getInstance().getCurrentUser().getUid(), titleData,descriptionData,eventDate));
 
         Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
+        */
         /**
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);

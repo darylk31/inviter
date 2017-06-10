@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -85,7 +88,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     // launch login activity
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     finish();
-                }
+                } else{
 
                 // User is signed in
                 String displayName = user.getDisplayName();
@@ -108,6 +111,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 //Navigation Header
                 setDisplayPicture();
                 */
+                }
             }
         };
 
@@ -123,6 +127,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //CountInboxItems
         countInboxItems();
+        addRequestListener();
 
         //Set drawer header
         setDrawer_username();
@@ -160,6 +165,8 @@ public class UserAreaActivity extends AppCompatActivity {
                     case R.id.nav_signout:
                         auth.signOut();
                         pref.edit().clear().commit();
+                        startActivity(new Intent(UserAreaActivity.this,LoginActivity.class));
+                        finish();
                         return true;
                     default:
                         return true;
@@ -313,7 +320,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     for(DataSnapshot dsChild : ds.getChildren()){
                         //inboxCounter = (int)dsChild.getChildrenCount();
                         inboxCounter++;
-                        System.out.println(dsChild.getKey());
+                        System.out.println("Inboxcounter was called with key :" + dsChild.getKey());
                     }
                 }
                 if(inboxCounter > 0){
@@ -330,6 +337,67 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    private void addRequestListener(){
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(!dataSnapshot.exists())
+                    return;
+                System.out.println("addRequest was called" + s);
+                System.out.println("what is datasnapshot " + dataSnapshot.getKey());
+                notification(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void notification(String s){
+        System.out.println("Notification entrance");
+        if(s.equals(""))
+            return;
+        final User[] users = new User[1];
+        mDatabase.child("Users").child(s).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    users[0] = dataSnapshot.getValue(User.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.twitter_button)
+                        .setContentTitle(this.getString(R.string.app_name))
+                        .setContentText(users[0].getUsername() + "would like to add you!");
+        // Sets an ID for the notification
+        int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        System.out.println("notification shown");
     }
 
 
