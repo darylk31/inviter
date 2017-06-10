@@ -385,6 +385,8 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        if(users[0]==null)
+            return;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.twitter_button)
