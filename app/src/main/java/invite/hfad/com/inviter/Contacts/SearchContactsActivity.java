@@ -39,6 +39,7 @@ public class SearchContactsActivity extends AppCompatActivity {
     private FirebaseAuth auth;
 
     private LinearLayout usernameSearchLayoutWrapper;
+    private LinearLayout friendsSearchLayoutWrapper;
 
 
     @Override
@@ -60,7 +61,8 @@ public class SearchContactsActivity extends AppCompatActivity {
 
         usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
         usernameSearchLayoutWrapper.setVisibility(View.GONE);
-
+        friendsSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_contacts_wrapper);
+        friendsSearchLayoutWrapper.setVisibility(View.GONE);
 
         getUsernames();
     }
@@ -82,14 +84,20 @@ public class SearchContactsActivity extends AppCompatActivity {
 
 
             public void callSearch(String query){
-                if(query.equals(""))
+                if(query.equals("")){
+                    hideAllAdapterViews();
                     return;
+                }
                 usernameSearchLayoutWrapper.setVisibility(View.GONE);
-                System.out.println("GONE");
                 checkFirebaseDatabase(query);
                 adapter = new SearchUsernameAdapter(SearchContactsActivity.this, usernameList);
                 friendsAdapter = new SearchFriendsAdapter(SearchContactsActivity.this, query);
                 search_friends_recycler.setAdapter(friendsAdapter);
+                if(friendsAdapter.getItemCount() == 0)
+                    friendsSearchLayoutWrapper.setVisibility(View.GONE);
+                else
+                    friendsSearchLayoutWrapper.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -133,6 +141,10 @@ public class SearchContactsActivity extends AppCompatActivity {
         });
     }
 
+    private void hideAllAdapterViews(){
+        usernameSearchLayoutWrapper.setVisibility(View.GONE);
+        friendsSearchLayoutWrapper.setVisibility(View.GONE);
+    }
 
 
 
