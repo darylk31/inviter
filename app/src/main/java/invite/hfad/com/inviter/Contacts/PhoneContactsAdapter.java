@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import invite.hfad.com.inviter.R;
 
@@ -55,7 +56,7 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
             names = new String[getItemCount()];
             storeContacts();
         } catch (Exception e) {
-            e.printStackTrace();
+            Toast.makeText(context, "Please allow permission to search phone contacts", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -94,7 +95,11 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
 
     @Override
     public int getItemCount() {
-        return cursor.getCount();
+        try{
+            return cursor.getCount();}
+        catch (Exception e) {
+            return 0;
+        }
     }
 
 
