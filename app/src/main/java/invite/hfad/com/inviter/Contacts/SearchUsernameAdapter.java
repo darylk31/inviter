@@ -27,7 +27,7 @@ import invite.hfad.com.inviter.Usernames;
  * Created by Daryl on 5/9/2017.
  */
 
-public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAdapter.ViewHolder> {
+public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAdapter.ViewHolder> {
 
     private Usernames firebaseUsername;
     private ArrayList<Usernames> usernameList;
@@ -48,7 +48,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         }
     }
 
-    public SearchContactsAdapter(Context context,ArrayList<Usernames> usernameList){
+    public SearchUsernameAdapter(Context context, ArrayList<Usernames> usernameList){
         this.mContext = context;
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -59,13 +59,13 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
     @Override
-    public SearchContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchUsernameAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.searchcontact_list_item, parent, false);
         return new ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(final SearchContactsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final SearchUsernameAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
         final Button addSearchContactButton = (Button) cardView.findViewById(R.id.bAddSearchContact);
         addSearchContactButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +97,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     }
 
 
-    private void cardViewClick(final SearchContactsAdapter.ViewHolder holder){
+    private void cardViewClick(final SearchUsernameAdapter.ViewHolder holder){
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

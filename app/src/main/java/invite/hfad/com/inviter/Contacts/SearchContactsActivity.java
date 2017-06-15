@@ -1,23 +1,14 @@
 package invite.hfad.com.inviter.Contacts;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.ui.FirebaseUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,13 +19,12 @@ import java.util.ArrayList;
 
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
-import invite.hfad.com.inviter.Utils;
 
 public class SearchContactsActivity extends AppCompatActivity {
 
     private SearchView search;
     private RecyclerView search_recycler;
-    private SearchContactsAdapter adapter;
+    private SearchUsernameAdapter adapter;
 
     private Usernames usernameMatch;
 
@@ -63,7 +53,7 @@ public class SearchContactsActivity extends AppCompatActivity {
 
         usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
         usernameSearchLayoutWrapper.setVisibility(View.GONE);
-        //adapter = new SearchContactsAdapter(getApplicationContext(),"");
+        //adapter = new SearchUsernameAdapter(getApplicationContext(),"");
         //search_recycler.setAdapter(adapter);
 
 
@@ -92,7 +82,7 @@ public class SearchContactsActivity extends AppCompatActivity {
                 usernameSearchLayoutWrapper.setVisibility(View.GONE);
                 System.out.println("GONE");
                 checkFirebaseDatabase(query);
-                adapter = new SearchContactsAdapter(SearchContactsActivity.this, usernameList);
+                adapter = new SearchUsernameAdapter(SearchContactsActivity.this, usernameList);
             }
         });
     }
