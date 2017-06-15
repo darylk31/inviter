@@ -103,6 +103,7 @@ public class MakeEventActivity extends Activity {
         Event event = new Event(dateData,timeData,"","",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         Intent intent = new Intent(this, EventSelectContacts.class);
         intent.putExtra("myEvent", (Parcelable) event);
+        System.out.println(event.toString());
         startActivity(intent);
         /* THIS IS WORKING?
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);

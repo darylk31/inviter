@@ -41,6 +41,40 @@ public class Event implements Parcelable{
         //chat object
     }
 
+    public Event (String day,
+                  String time,
+                  String end_day,
+                  String end_time,
+                  String event_name,
+                  String description,
+                  String creator,
+                  List<String> invitedId) {
+        this.day = day;
+        this.time = time;
+        this.end_day = end_day;
+        this.end_time = end_time;
+        this.event_name = event_name;
+        this.description = description;
+        //location
+        this.creator = creator;
+        this.invitedId = invitedId;
+        //chat object
+    }
+
+    public Event(Parcel in){
+        String[] data = new String[7];
+        in.readStringArray(data);
+        for(int i = 0 ; i < data.length ; i++)
+            System.out.println(i + ":" + data[i]);
+        this.day = data[0];
+        this.time = data[1];
+        this.end_day = data[2];
+        this.end_time = data[3];
+        this.event_name = data[4];
+        this.description = data[5];
+        this.creator = data[6];
+    }
+
     public String getDay() {
         return day;
     }
@@ -120,6 +154,25 @@ public class Event implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        ;
+        dest.writeStringArray(new String[]{day,time,end_day,end_time,event_name,description,creator});
     }
+
+
+    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    @Override
+    public String toString(){
+        String a = "day:" + day + " time:" + time + " event_name:" + event_name + " description:" + description + " creator:" + creator;
+        return a;
+    }
+
 }
