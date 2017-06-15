@@ -62,6 +62,7 @@ public class SearchContactsActivity extends AppCompatActivity {
         search_recycler.setLayoutManager(mLayoutManager);
 
         usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
+        usernameSearchLayoutWrapper.setVisibility(View.GONE);
         //adapter = new SearchContactsAdapter(getApplicationContext(),"");
         //search_recycler.setAdapter(adapter);
 

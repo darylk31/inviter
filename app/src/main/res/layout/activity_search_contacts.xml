@@ -37,5 +37,26 @@
         android:layout_below="@id/searchview_contacts"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchview_contacts_wrapper"
+        android:layout_below="@id/searchview_contacts_wrapper"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/My_contacts_Text"/>
+
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/search_my_contacts"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchview_contacts"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

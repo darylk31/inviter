@@ -32,6 +32,7 @@
     <string name="messenger_button_text">Message</string>
     <string name="remove_button_text">Remove</string>
     <string name="Add_username_text">Add Username</string>
+    <string name="My_contacts_Text">Contacts</string>
     <string-array name="Reminder_Options">
         <item>30 Minutes</item>
         <item>1 Hour</item>
