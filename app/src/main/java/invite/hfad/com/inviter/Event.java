@@ -1,5 +1,8 @@
 package invite.hfad.com.inviter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,7 +10,7 @@ import java.util.List;
  * Created by Daryl on 9/14/2016.
  */
 
-public class Event {
+public class Event implements Parcelable{
     private String day;
     private String time;
     private String end_day;
@@ -26,8 +29,7 @@ public class Event {
                   String end_time,
                   String event_name,
                   String description,
-                  String creator,
-                  LinkedList invited_list) {
+                  String creator) {
         this.day = day;
         this.time = time;
         this.end_day = end_day;
@@ -36,8 +38,6 @@ public class Event {
         this.description = description;
         //location
         this.creator = creator;
-        this.invitedId = new LinkedList();
-        invitedId = invited_list;
         //chat object
     }
 
@@ -111,5 +111,15 @@ public class Event {
 
     public void setEventId(int eventId) {
         this.eventId = eventId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ;
     }
 }
