@@ -18,6 +18,7 @@ import invite.hfad.com.inviter.UserAreaActivity;
 public class EventSelectContacts extends AppCompatActivity {
 
     private Event event;
+    private SelectContactsAdapter adapter;
 
 
     @Override
@@ -26,7 +27,8 @@ public class EventSelectContacts extends AppCompatActivity {
         setContentView(R.layout.activity_event_select_contacts);
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.selectfriends_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new SelectContactsAdapter(getApplicationContext()));
+        adapter = new SelectContactsAdapter(getApplicationContext());
+        recyclerView.setAdapter(adapter);
 
         event = getIntent().getParcelableExtra("myEvent");
         System.out.println("EventSelectContacts Event:" + event.toString());
@@ -34,17 +36,19 @@ public class EventSelectContacts extends AppCompatActivity {
     }
 
     public void onButtonClick(View view){
-        /*
-        Set event object arraylist to whatever the list is
-         */
+        Toast.makeText(this,adapter.getArrayList().toString(),Toast.LENGTH_LONG).show();
+        event.setInvitedId(adapter.getArrayList());
         FirebaseDatabase.getInstance()
                 .getReference()
+                .child("Events")
                 .push()
                 .setValue(event);
+        /*
         //TODO
         //Should really open event right after an event is created
         Intent intent = new Intent(this, UserAreaActivity.class);
         startActivity(intent);
         finish();
+        */
     }
 }

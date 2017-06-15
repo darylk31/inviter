@@ -133,4 +133,8 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
         this.displayname = display;
         this.profile = profile;
     }
+
+    public ArrayList<String> getArrayList(){
+        return invited;
+    }
 }
