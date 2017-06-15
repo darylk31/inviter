@@ -25,6 +25,8 @@ public class SearchContactsActivity extends AppCompatActivity {
     private SearchView search;
     private RecyclerView search_recycler;
     private SearchUsernameAdapter adapter;
+    private RecyclerView search_friends_recycler;
+    private SearchFriendsAdapter friendsAdapter;
 
     private Usernames usernameMatch;
 
@@ -51,10 +53,13 @@ public class SearchContactsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         search_recycler.setLayoutManager(mLayoutManager);
 
+        search_friends_recycler = (RecyclerView) findViewById(R.id.searchfriends_recycler);
+        RecyclerView.LayoutManager friendLayoutManager = new LinearLayoutManager(getApplicationContext());
+        search_friends_recycler.setLayoutManager(friendLayoutManager);
+
+
         usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
         usernameSearchLayoutWrapper.setVisibility(View.GONE);
-        //adapter = new SearchUsernameAdapter(getApplicationContext(),"");
-        //search_recycler.setAdapter(adapter);
 
 
         getUsernames();
@@ -83,6 +88,8 @@ public class SearchContactsActivity extends AppCompatActivity {
                 System.out.println("GONE");
                 checkFirebaseDatabase(query);
                 adapter = new SearchUsernameAdapter(SearchContactsActivity.this, usernameList);
+                friendsAdapter = new SearchFriendsAdapter(SearchContactsActivity.this, query);
+                search_friends_recycler.setAdapter(friendsAdapter);
             }
         });
     }
