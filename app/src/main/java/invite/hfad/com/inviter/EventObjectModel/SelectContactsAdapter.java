@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
 import invite.hfad.com.inviter.Contacts.FriendsAdapter;
@@ -36,9 +38,12 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
     String[] profile;
     Context context;
     ArrayList<String> invited;
+    TextView selected_list;
+    ArrayList<String> selected_names;
 
 
-    public SelectContactsAdapter(Context context){
+
+    public SelectContactsAdapter(Context context, TextView list){
         try {
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
@@ -57,6 +62,10 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
                 invited = new ArrayList<>();
 
             }
+            this.selected_list = list;
+            list.setText("Just Me");
+            selected_names = new ArrayList<>();
+
 
 
         } catch (SQLiteException e) {
@@ -93,10 +102,18 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
                 if (selected.getVisibility() == View.INVISIBLE){
                     selected.setVisibility(View.VISIBLE);
                     invited.add(uid[holder.getAdapterPosition()]);
+                    selected_names.add(displayname[holder.getAdapterPosition()]);
+                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
                 }
                 else {
                     selected.setVisibility(View.INVISIBLE);
                     invited.remove(uid[holder.getAdapterPosition()]);
+                    selected_names.remove(displayname[holder.getAdapterPosition()]);
+                    if (selected_names.isEmpty()){
+                        selected_list.setText("Just Me");
+                    }
+                    else
+                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
                 }
             }
         });

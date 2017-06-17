@@ -20,13 +20,13 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE EVENTS ("
-                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "EID TEXT PRIMARY KEY, "
                 + "DAY TEXT, "
                 + "TITLE TEXT, "
                 + "DESCRIPTION TEXT, "
                 + "TIME TEXT, "
-                + "TEST TEXT, "
-                + "ALLDAY INTEGER);");
+                + "ENDDAY TEXT, "
+                + "ENDTIME TEXT;");
 
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "UID TEXT PRIMARY KEY, "
@@ -49,36 +49,29 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion){
         if (oldVersion < newVersion) {
             db.execSQL("CREATE TABLE EVENTS ("
-                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "EID TEXT PRIMARY KEY, "
                     + "DAY TEXT, "
                     + "TITLE TEXT, "
                     + "DESCRIPTION TEXT, "
                     + "TIME TEXT, "
-                    + "TEST TEXT, "
-                    + "ALLDAY INTEGER);");
+                    + "ENDDAY TEXT, "
+                    + "ENDTIME TEXT, "
+                    + "ALLDAY INTEGER "
+                    + "REMINDER INTEGER);");
         }
     }
 
 
     public static void insert_event(SQLiteDatabase db,
-                                    String dayData,
-                                    String titleData,
-                                    String descriptionData,
-                                    String timeData,
-                                    boolean allDayData){
+                                    Event event){
         ContentValues eventValues = new ContentValues();
-        eventValues.put("DAY", dayData);
-        eventValues.put("TITLE", titleData);
-        eventValues.put("DESCRIPTION", descriptionData);
-        eventValues.put("TIME", timeData);
-        if (allDayData) {
-            eventValues.put("ALLDAY", 1);
-            db.insert("EVENTS", null, eventValues);
-        }
-        else {
-            eventValues.put("ALLDAY", 0);
-            db.insert("EVENTS", null, eventValues);
-        }
+        eventValues.put("DAY", event.getDay());
+        eventValues.put("TITLE", event.getEvent_name());
+        eventValues.put("DESCRIPTION", event.getDescription());
+        eventValues.put("TIME", event.getTime());
+        eventValues.put("ENDDAY", event.getEnd_day());
+        eventValues.put("ENDTIME", event.getEnd_time());
+        db.insert("EVENTS",null, eventValues);
     }
 
     public static void delete_event(SQLiteDatabase db,
