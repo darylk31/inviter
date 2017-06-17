@@ -81,16 +81,10 @@ public class EventSelectContacts extends AppCompatActivity {
         }
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Event").child(newKey).setValue(newKey);
 
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Events")
-                .push()
-                .setValue(event);
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         db = databaseHelper.getWritableDatabase();
         UserDatabaseHelper.insert_event(db, event);
 
-        /*
         //TODO
         //Should really open event right after an event is created
         Intent intent = new Intent(this, UserAreaActivity.class);
