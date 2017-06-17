@@ -55,6 +55,7 @@ public class EventSelectContacts extends AppCompatActivity {
     public void onButtonClick(View view){
         event.setInvitedId(adapter.getArrayList());
         final String newKey = mDatabase.push().getKey();
+        event.setEventId(newKey);
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox

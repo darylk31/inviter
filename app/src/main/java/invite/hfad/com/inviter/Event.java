@@ -17,7 +17,7 @@ public class Event implements Parcelable{
     private String end_time;
     private String event_name;
     private String description;
-    private int eventId;
+    private String eventId;
     private List invitedId;
     private String creator;
 
@@ -139,11 +139,11 @@ public class Event implements Parcelable{
         this.creator = creator;
     }
 
-    public int getEventId() {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
