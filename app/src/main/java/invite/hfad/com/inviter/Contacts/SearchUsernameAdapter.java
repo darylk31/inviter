@@ -116,11 +116,9 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    Contact contact = new Contact(addUsername.getUid(),false);
-                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(contact);
+                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(true);
 
-                    Contact myContact = new Contact(auth.getCurrentUser().getUid(),true);
-                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(myContact);
+                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(true);
                 }
             }
             @Override

@@ -61,8 +61,7 @@ public class InboxActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Contact contact = snapshot.getValue(Contact.class);
-                                mDatabase.child("Users").child(contact.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
