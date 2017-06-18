@@ -3,6 +3,7 @@ package invite.hfad.com.inviter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,16 +27,18 @@ public class Event implements Parcelable{
                   String endDate,
                   String event_name,
                   String description,
-                  String creator) {
+                  String creator,
+                  List<String> invitedId) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         //location
         this.creator = creator;
+        this.invitedId = invitedId;
         //chat object
     }
-
+/*
     public Event (String startDate,
                   String endDate,
                   String event_name,
@@ -50,7 +53,9 @@ public class Event implements Parcelable{
         this.creator = creator;
         this.invitedId = invitedId;
         //chat object
+
     }
+    */
 
     public Event(Parcel in){
         String[] data = new String[5];
@@ -62,6 +67,7 @@ public class Event implements Parcelable{
         this.event_name = data[2];
         this.description = data[3];
         this.creator = data[4];
+        this.invitedId = new ArrayList<String>();
     }
 
     public String getStartDate(){
@@ -97,11 +103,11 @@ public class Event implements Parcelable{
         this.description = description;
     }
 
-    public List getInvitedId() {
+    public List<String> getInvitedId() {
         return invitedId;
     }
 
-    public void setInvitedId(List invitedId) {
+    public void setInvitedId(List<String> invitedId) {
         this.invitedId = invitedId;
     }
 

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -101,7 +102,7 @@ public class MakeEventActivity extends Activity {
 
     public void onInvite(View view) {
         String startDate = dateData + " " + timeData;
-        Event event = new Event(startDate,"",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        Event event = new Event(startDate,"",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),new ArrayList<String>());
         Intent intent = new Intent(this, EventSelectContacts.class);
         intent.putExtra("myEvent", (Parcelable) event);
         System.out.println(event.toString());

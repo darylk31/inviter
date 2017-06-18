@@ -100,8 +100,10 @@ public class InboxActivity extends AppCompatActivity {
                                 mDatabase.child("Events").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Event event = dataSnapshot.getValue(Event.class);
-                                        eventlist.add(event);
+                                        if(dataSnapshot.exists()){
+                                            Event event = dataSnapshot.getValue(Event.class);
+                                            eventlist.add(event);
+                                        }
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
                                         recycler.setAdapter(adapter);
                                     }

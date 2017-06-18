@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
 import invite.hfad.com.inviter.Contacts.FriendsAdapter;
@@ -151,7 +152,7 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
         this.profile = profile;
     }
 
-    public ArrayList<String> getArrayList(){
+    public List<String> getArrayList(){
         return invited;
     }
 }
