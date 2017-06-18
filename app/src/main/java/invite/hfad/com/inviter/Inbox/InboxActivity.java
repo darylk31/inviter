@@ -68,6 +68,8 @@ public class InboxActivity extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
                                         friendlist.add(user);
+                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
+                                        recycler.setAdapter(adapter);
                                     }
 
                                     @Override
@@ -102,6 +104,7 @@ public class InboxActivity extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if(dataSnapshot.exists()){
                                             Event event = dataSnapshot.getValue(Event.class);
+                                            //event.getEndDate(); check if event is already over.
                                             eventlist.add(event);
                                         }
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);

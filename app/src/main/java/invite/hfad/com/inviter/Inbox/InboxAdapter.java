@@ -24,6 +24,7 @@ import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> {
@@ -107,15 +108,43 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 break;
 
             case 1:
-                int pos = holder.getAdapterPosition() - friendrequests;
+                final int pos = holder.getAdapterPosition() - friendrequests;
                 TextView eventname = (TextView) cardView.findViewById(R.id.inbox_event_name);
                 eventname.setText(eventlist.get(pos).getEvent_name());
                 TextView eventday = (TextView) cardView.findViewById(R.id.inbox_event_day);
                 eventday.setText(eventlist.get(pos).getStartDate());
                 TextView invitedby = (TextView) cardView.findViewById(R.id.inbox_event_inviteby);
                 invitedby.setText(invitedbylist.get(pos));
+
+                final Button eventaccept = (Button) cardView.findViewById(R.id.event_accept_button);
+                final Button eventdecline = (Button) cardView.findViewById(R.id.event_decline_button);
+
+                eventaccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition() - friendrequests;
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Event").child(eventlist.get(pos).getEventId())
+                                .setValue(eventlist.get(pos).getEventId());
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request")
+                                .child(eventlist.get(pos).getEventId()).removeValue();
+                        Toast.makeText(v.getContext(), eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
+                        removeeventrequest(pos);
+                    }
+                });
+
+                eventdecline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition() - friendrequests;
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request")
+                                .child(eventlist.get(pos).getEventId()).removeValue();
+                        Toast.makeText(v.getContext(), " Event request declined.", Toast.LENGTH_SHORT).show();
+                        removeeventrequest(pos);
+                    }
+                });
         }
     }
+
 
     @Override
     public int getItemCount() {
@@ -134,6 +163,16 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         friendrequests--;
         InboxAdapter.this.notifyItemRemoved(pos);
         InboxAdapter.this.notifyItemRangeChanged(pos, getItemCount());
+        InboxAdapter.this.notifyDataSetChanged();
+
+    }
+
+    public void removeeventrequest(int pos){
+        eventlist.remove(pos);
+        invitedbylist.remove(pos);
+        eventrequests--;
+        InboxAdapter.this.notifyItemRemoved(pos + friendrequests);
+        InboxAdapter.this.notifyItemRangeChanged(pos + friendrequests, getItemCount());
         InboxAdapter.this.notifyDataSetChanged();
 
     }
