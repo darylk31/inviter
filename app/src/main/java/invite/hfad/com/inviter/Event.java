@@ -78,6 +78,7 @@ public class Event implements Parcelable{
 
     public void setEndDate(String endDate){
         this.endDate = endDate;
+
     }
 
     public String getEvent_name() {
