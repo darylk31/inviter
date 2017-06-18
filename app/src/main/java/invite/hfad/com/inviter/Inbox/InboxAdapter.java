@@ -72,46 +72,47 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final InboxAdapter.ViewHolder holder, int position) {
-        final CardView cardView = holder.cardView;
-        final Button friendaccept = (Button) cardView.findViewById(R.id.friend_accept_button);
-        final Button frienddecline = (Button) cardView.findViewById(R.id.friend_decline_button);
-
-        friendaccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = holder.getAdapterPosition();
-                Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
-                //Add them onto my contacts
-                Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                removefriendrequest(pos);
-            }
-        });
-
-        frienddecline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = holder.getAdapterPosition();
-                Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                mDatabase.child("Users").child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getUid()).removeValue();
-                removefriendrequest(pos);
-            }
-        });
-
         int viewType = getItemViewType(position);
+        CardView cardView = holder.cardView;
         switch (viewType) {
             case 0:
                 final TextView friendtext = (TextView) cardView.findViewById(R.id.friend_request);
                 friendtext.setText(friendlist.get(position).getUsername() + " would like to add you!");
+                final Button friendaccept = (Button) cardView.findViewById(R.id.friend_accept_button);
+                final Button frienddecline = (Button) cardView.findViewById(R.id.friend_decline_button);
+
+                friendaccept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
+                        //Add them onto my contacts
+                        Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        removefriendrequest(pos);
+                    }
+                });
+
+                frienddecline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = holder.getAdapterPosition();
+                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
+                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        mDatabase.child("Users").child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getUid()).removeValue();
+                        removefriendrequest(pos);
+                    }
+                });
+                break;
+
             case 1:
                 int pos = holder.getAdapterPosition() - friendrequests;
-                TextView eventname = (TextView) cardView.findViewById(R.id.event_name);
+                TextView eventname = (TextView) cardView.findViewById(R.id.inbox_event_name);
                 eventname.setText(eventlist.get(pos).getEvent_name());
-                TextView eventday = (TextView) cardView.findViewById(R.id.event_day);
+                TextView eventday = (TextView) cardView.findViewById(R.id.inbox_event_day);
                 eventday.setText(eventlist.get(pos).getStartDate());
-                TextView invitedby = (TextView) cardView.findViewById(R.id.event_invite_by);
+                TextView invitedby = (TextView) cardView.findViewById(R.id.inbox_event_inviteby);
                 invitedby.setText(invitedbylist.get(pos));
         }
     }

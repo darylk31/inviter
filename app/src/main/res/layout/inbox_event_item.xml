@@ -17,7 +17,7 @@
 
 
             <TextView
-                android:id="@+id/event_day"
+                android:id="@+id/inbox_event_day"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
                 android:padding="10dp"
@@ -25,26 +25,26 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/event_name"
+                android:id="@+id/inbox_event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/event_day"
-                android:layout_toRightOf="@+id/event_day"
                 android:padding="10dp"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/inbox_event_day"
+                android:layout_toEndOf="@+id/inbox_event_day" />
 
             <TextView
-                android:id="@+id/event_invite_by"
+                android:id="@+id/inbox_event_inviteby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#9eb1f0"
                 android:textSize="14dp"
                 android:textStyle="italic"
-                android:layout_below="@+id/event_name"
-                android:layout_toRightOf="@+id/event_day"
-                android:layout_toEndOf="@+id/event_day" />
+                android:layout_below="@+id/inbox_event_name"
+                android:layout_toRightOf="@+id/inbox_event_day"
+                android:layout_toEndOf="@+id/inbox_event_day" />
 
             <Button
                 android:id="@+id/event_accept_button"
