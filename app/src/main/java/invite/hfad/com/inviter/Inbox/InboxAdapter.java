@@ -31,6 +31,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
     private ArrayList<User> friendlist;
     private ArrayList<Event> eventlist;
+    private ArrayList<String> invitedbylist;
     private int friendrequests;
     private int eventrequests;
     private FirebaseAuth auth;
@@ -45,13 +46,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         }
     }
 
-    public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist) {
+    public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist, ArrayList<String> invitedbylist) {
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         this.friendlist = friendlist;
         friendrequests = friendlist.size();
         this.eventlist = eventlist;
         eventrequests = eventlist.size();
+        this.invitedbylist = invitedbylist;
     }
 
     @Override
@@ -71,8 +73,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final InboxAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
-        final Button friendaccept = (Button) cardView.findViewById(R.id.accept_button);
-        final Button frienddecline = (Button) cardView.findViewById(R.id.decline_button);
+        final Button friendaccept = (Button) cardView.findViewById(R.id.friend_accept_button);
+        final Button frienddecline = (Button) cardView.findViewById(R.id.friend_decline_button);
 
         friendaccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +108,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
             case 1:
                 int pos = holder.getAdapterPosition() - friendrequests;
                 TextView eventname = (TextView) cardView.findViewById(R.id.event_name);
+                eventname.setText(eventlist.get(pos).getEvent_name());
                 TextView eventday = (TextView) cardView.findViewById(R.id.event_day);
+                eventday.setText(eventlist.get(pos).getStartDate());
+                TextView invitedby = (TextView) cardView.findViewById(R.id.event_invite_by);
+                invitedby.setText(invitedbylist.get(pos));
         }
     }
 

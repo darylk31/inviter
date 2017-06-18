@@ -38,12 +38,36 @@
                 android:id="@+id/event_invite_by"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/event_name"
-                android:layout_centerHorizontal="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#9eb1f0"
                 android:textSize="14dp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_below="@+id/event_name"
+                android:layout_toRightOf="@+id/event_day"
+                android:layout_toEndOf="@+id/event_day" />
+
+            <Button
+                android:id="@+id/event_accept_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorWhite"
+                android:elevation="0dp"
+                android:text="Accept"
+                android:textColor="@color/com_facebook_blue"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/event_decline_button"
+                android:layout_toStartOf="@+id/event_decline_button" />
+
+            <Button
+                android:id="@+id/event_decline_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Decline"
+                android:backgroundTint="@color/colorWhite"
+                android:textColor="@color/com_facebook_blue"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 
