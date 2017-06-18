@@ -41,7 +41,7 @@ public class Event implements Parcelable{
                   String event_name,
                   String description,
                   String creator,
-                  List<String> invitedId) {
+                  List invitedId) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
