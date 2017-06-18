@@ -19,7 +19,6 @@ public class Event implements Parcelable{
     private List invitedId;
     private List acceptedId;
     private String creator;
-    private String invitedBy;
 
     public Event(){};
 
@@ -63,6 +62,22 @@ public class Event implements Parcelable{
         this.event_name = data[2];
         this.description = data[3];
         this.creator = data[4];
+    }
+
+    public String getStartDate(){
+        return startDate;
+    }
+
+    public String getEndDate(){
+        return endDate;
+    }
+
+    public void setStartDate(String startDate){
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(String endDate){
+        this.endDate = endDate;
     }
 
     public String getEvent_name() {
@@ -133,4 +148,11 @@ public class Event implements Parcelable{
         return a;
     }
 
+    public List getAcceptedId() {
+        return acceptedId;
+    }
+
+    public void setAcceptedId(List acceptedId) {
+        this.acceptedId = acceptedId;
+    }
 }
