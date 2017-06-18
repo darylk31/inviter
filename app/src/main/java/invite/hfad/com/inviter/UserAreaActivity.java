@@ -333,12 +333,12 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if(!dataSnapshot.exists())
                     return;
-                Contact contact = dataSnapshot.getValue(Contact.class);
-                if(contact.getIsContact()){
+                String contact = dataSnapshot.getKey();
+                Contact ctest = new Contact(contact,true);
+                if(ctest.getIsContact()){
                   return;
                 }
-                contact.setContact(true);
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact.getUid()).setValue(contact);
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact).setValue(contact);
                 mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

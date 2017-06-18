@@ -11,29 +11,25 @@ import java.util.List;
  */
 
 public class Event implements Parcelable{
-    private String day;
-    private String time;
-    private String end_day;
-    private String end_time;
+    private String startDate;
+    private String endDate;
     private String event_name;
     private String description;
     private String eventId;
     private List invitedId;
+    private List acceptedId;
     private String creator;
+    private String invitedBy;
 
     public Event(){};
 
-    public Event (String day,
-                  String time,
-                  String end_day,
-                  String end_time,
+    public Event (String startDate,
+                  String endDate,
                   String event_name,
                   String description,
                   String creator) {
-        this.day = day;
-        this.time = time;
-        this.end_day = end_day;
-        this.end_time = end_time;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         //location
@@ -41,18 +37,14 @@ public class Event implements Parcelable{
         //chat object
     }
 
-    public Event (String day,
-                  String time,
-                  String end_day,
-                  String end_time,
+    public Event (String startDate,
+                  String endDate,
                   String event_name,
                   String description,
                   String creator,
                   List<String> invitedId) {
-        this.day = day;
-        this.time = time;
-        this.end_day = end_day;
-        this.end_time = end_time;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         //location
@@ -62,49 +54,15 @@ public class Event implements Parcelable{
     }
 
     public Event(Parcel in){
-        String[] data = new String[7];
+        String[] data = new String[5];
         in.readStringArray(data);
         for(int i = 0 ; i < data.length ; i++)
             System.out.println(i + ":" + data[i]);
-        this.day = data[0];
-        this.time = data[1];
-        this.end_day = data[2];
-        this.end_time = data[3];
-        this.event_name = data[4];
-        this.description = data[5];
-        this.creator = data[6];
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getEnd_day() {
-        return end_day;
-    }
-
-    public void setEnd_day(String end_day) {
-        this.end_day = end_day;
-    }
-
-    public String getEnd_time() {
-        return end_time;
-    }
-
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+        this.startDate = data[0];
+        this.endDate = data[1];
+        this.event_name = data[2];
+        this.description = data[3];
+        this.creator = data[4];
     }
 
     public String getEvent_name() {
@@ -154,7 +112,7 @@ public class Event implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{day,time,end_day,end_time,event_name,description,creator});
+        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator});
     }
 
 
@@ -171,7 +129,7 @@ public class Event implements Parcelable{
 
     @Override
     public String toString(){
-        String a = "day:" + day + " time:" + time + " event_name:" + event_name + " description:" + description + " creator:" + creator;
+        String a = "startDate:" + startDate + "endDate: " + endDate + " event_name:" + event_name + " description:" + description + " creator:" + creator;
         return a;
     }
 

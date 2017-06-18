@@ -62,8 +62,9 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public static void insert_event(SQLiteDatabase db,
-                                    Event event){
+    public static void insert_event(
+            SQLiteDatabase db, Event event){
+        /*
         ContentValues eventValues = new ContentValues();
         eventValues.put("DAY", event.getDay());
         eventValues.put("TITLE", event.getEvent_name());
@@ -72,6 +73,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         eventValues.put("ENDDAY", event.getEnd_day());
         eventValues.put("ENDTIME", event.getEnd_time());
         db.insert("EVENTS",null, eventValues);
+        */
     }
 
     public static void delete_event(SQLiteDatabase db,

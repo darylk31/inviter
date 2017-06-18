@@ -100,7 +100,8 @@ public class MakeEventActivity extends Activity {
 
 
     public void onInvite(View view) {
-        Event event = new Event(dateData,timeData,"","",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        String startDate = dateData + " " + timeData;
+        Event event = new Event(startDate,"",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         Intent intent = new Intent(this, EventSelectContacts.class);
         intent.putExtra("myEvent", (Parcelable) event);
         System.out.println(event.toString());
@@ -167,6 +168,7 @@ public class MakeEventActivity extends Activity {
                 mTimePicker.show();
             }
         });
+        timeData = String.format("%02d:%02d",00,01);
     }
 
     public void onStartDateDialog() {

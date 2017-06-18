@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
+import invite.hfad.com.inviter.Utils;
 
 public class SearchContactsActivity extends AppCompatActivity {
 
@@ -109,13 +110,13 @@ public class SearchContactsActivity extends AppCompatActivity {
         usernameList = new ArrayList<Usernames>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("Usernames").child(query).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Utils.USERNAMES).child(query).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     firebaseUsername = dataSnapshot.getValue(Usernames.class);
                     System.out.println(firebaseUsername.getUid());
-                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Contacts").child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(!dataSnapshot.exists()){
