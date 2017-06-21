@@ -86,8 +86,7 @@ public class EventSelectContacts extends AppCompatActivity {
         db = databaseHelper.getWritableDatabase();
         UserDatabaseHelper.insert_event(db, event);
 
-        //TODO
-        //Should really open event right after an event is created
+        
         Intent intent = new Intent(this, UserAreaActivity.class);
         startActivity(intent);
         finish();

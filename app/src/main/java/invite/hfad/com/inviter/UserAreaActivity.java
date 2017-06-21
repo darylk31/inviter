@@ -243,7 +243,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
-        adapter.addFragment(new HomeOldFragment());
+        adapter.addFragment(new HomeFragment());
         adapter.addFragment(new HomeOldFragment());
 
         viewPager.setAdapter(adapter);

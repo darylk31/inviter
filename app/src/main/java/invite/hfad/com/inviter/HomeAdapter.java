@@ -47,7 +47,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
                 SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
                 if (newEvents) {
-                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
+                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= NOW() " + "ORDER BY date(" + "DAY" + ") ASC", null);
                     this.event_db = event_db;
                     this.cursor = cursor;
                     storeEvents();
@@ -129,8 +129,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             String[] ids = new String[getItemCount()];
             for (int i = 0; i < getItemCount(); i++) {
                 cursor.moveToPosition(i);
-                names[i] = cursor.getString(2);
-                dates[i] = cursor.getString(1);
+                names[i] = cursor.getString(4);
+                dates[i] = cursor.getString(2);
                 ids[i] = cursor.getString(0);
             }
             this.event_names = names;

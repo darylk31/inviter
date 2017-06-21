@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences("UserPref", 0).edit();
                     editor.putString("userID", userId);
                     editor.commit();
+                    // TODO: Pull every FUKING thing from firebase.
 
                     Intent intent = new Intent(LoginActivity.this,UserAreaActivity.class);
                     startActivity(intent);

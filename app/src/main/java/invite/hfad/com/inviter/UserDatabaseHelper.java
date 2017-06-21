@@ -21,12 +21,11 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE EVENTS ("
                 + "EID TEXT PRIMARY KEY, "
+                + "CREATOR TEXT, "
                 + "DAY TEXT, "
+                + "ENDDAY TEXT,"
                 + "TITLE TEXT, "
-                + "DESCRIPTION TEXT, "
-                + "TIME TEXT, "
-                + "ENDDAY TEXT, "
-                + "ENDTIME TEXT;");
+                + "DESCRIPTION TEXT);");
 
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "UID TEXT PRIMARY KEY, "
@@ -64,16 +63,16 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     public static void insert_event(
             SQLiteDatabase db, Event event){
-        /*
+
         ContentValues eventValues = new ContentValues();
-        eventValues.put("DAY", event.getDay());
+        eventValues.put("EID", event.getEventId());
+        eventValues.put("CREATOR", event.getCreator());
+        eventValues.put("DAY", event.getStartDate());
+        eventValues.put("ENDDAY", event.getEndDate());
         eventValues.put("TITLE", event.getEvent_name());
         eventValues.put("DESCRIPTION", event.getDescription());
-        eventValues.put("TIME", event.getTime());
-        eventValues.put("ENDDAY", event.getEnd_day());
-        eventValues.put("ENDTIME", event.getEnd_time());
         db.insert("EVENTS",null, eventValues);
-        */
+
     }
 
     public static void delete_event(SQLiteDatabase db,
