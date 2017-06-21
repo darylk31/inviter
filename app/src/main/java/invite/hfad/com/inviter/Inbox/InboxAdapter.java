@@ -17,7 +17,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.Event;
@@ -112,7 +115,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 TextView eventname = (TextView) cardView.findViewById(R.id.inbox_event_name);
                 eventname.setText(eventlist.get(pos).getEvent_name());
                 TextView eventday = (TextView) cardView.findViewById(R.id.inbox_event_day);
-                eventday.setText(eventlist.get(pos).getStartDate());
+                try{
+
+                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(eventlist.get(pos).getStartDate());
+                    eventday.setText(date.toString());
+                    System.out.println(date.toString());
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
                 TextView invitedby = (TextView) cardView.findViewById(R.id.inbox_event_inviteby);
                 invitedby.setText(invitedbylist.get(pos));
 
