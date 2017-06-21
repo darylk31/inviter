@@ -325,7 +325,7 @@
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onInvite"
+        android:onClick="onButtonClick"
         android:id="@+id/bInvite"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="15dp"

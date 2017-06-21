@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/inbox_event_cardview"
     android:layout_width="match_parent"
-    android:layout_height="85dp"
+    android:layout_height="125dp"
     android:layout_margin="5dp">
 
     <LinearLayout
@@ -15,59 +15,74 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <RelativeLayout
+                android:id="@+id/inbox_event_date_wrapper"
+                android:layout_width="100dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/inbox_event_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#de9c17"
+                    android:textSize="25sp"/>
+                <TextView
+                    android:id="@+id/inbox_event_day"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/inbox_event_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#de9c17"
+                    android:textSize="25sp" />
+            </RelativeLayout>
 
-            <TextView
-                android:id="@+id/inbox_event_day"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:textColor="#de9c17"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/inbox_event_name"
+            <RelativeLayout
+                android:layout_toRightOf="@+id/inbox_event_date_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="25sp"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/inbox_event_day"
-                android:layout_toEndOf="@+id/inbox_event_day" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/inbox_event_inviteby"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="#9eb1f0"
-                android:textSize="14dp"
-                android:textStyle="italic"
-                android:layout_below="@+id/inbox_event_name"
-                android:layout_toRightOf="@+id/inbox_event_day"
-                android:layout_toEndOf="@+id/inbox_event_day" />
+                <TextView
+                    android:id="@+id/inbox_event_inviteby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#9eb1f0"
+                    android:textSize="14dp"
+                    android:textStyle="italic"
+                    android:layout_alignParentTop="true" />
 
-            <Button
-                android:id="@+id/event_accept_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorWhite"
-                android:elevation="0dp"
-                android:text="Accept"
-                android:textColor="@color/com_facebook_blue"
-                android:layout_alignParentBottom="true"
-                android:layout_toLeftOf="@+id/event_decline_button"
-                android:layout_toStartOf="@+id/event_decline_button" />
+                <TextView
+                    android:id="@+id/inbox_event_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textSize="25sp"
+                    android:layout_below="@+id/inbox_event_inviteby"
+                     />
 
-            <Button
-                android:id="@+id/event_decline_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Decline"
-                android:backgroundTint="@color/colorWhite"
-                android:textColor="@color/com_facebook_blue"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+
+                <Button
+                    android:id="@+id/event_accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorWhite"
+                    android:elevation="0dp"
+                    android:text="Accept"
+                    android:textColor="@color/com_facebook_blue"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"/>
+
+                <Button
+                    android:id="@+id/event_decline_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Decline"
+                    android:backgroundTint="@color/colorWhite"
+                    android:textColor="@color/com_facebook_blue"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@id/event_accept_button"/>
+
+            </RelativeLayout>
+
 
         </RelativeLayout>
 

@@ -17,9 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import invite.hfad.com.inviter.Contact;
@@ -115,11 +118,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 TextView eventname = (TextView) cardView.findViewById(R.id.inbox_event_name);
                 eventname.setText(eventlist.get(pos).getEvent_name());
                 TextView eventday = (TextView) cardView.findViewById(R.id.inbox_event_day);
+                TextView eventMonth = (TextView) cardView.findViewById(R.id.inbox_event_month);
                 try{
-
                     Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(eventlist.get(pos).getStartDate());
-                    eventday.setText(date.toString());
-                    System.out.println(date.toString());
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date);
+                    eventMonth.setText(new SimpleDateFormat("MMMM").format(date));
+                    eventday.setText(new SimpleDateFormat("dd").format(date));
+                    System.out.println("dateMonth: " + new SimpleDateFormat("MMMM").format(date) + " dateDay" + new SimpleDateFormat("dd").format(date));
                 }catch (ParseException e){
                     e.printStackTrace();
                 }

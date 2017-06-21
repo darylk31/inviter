@@ -100,28 +100,18 @@ public class MakeEventActivity extends Activity {
     }
 
 
-    public void onInvite(View view) {
+    public void onButtonClick(View view) {
+        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
+        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
+        titleData = etTitle.getText().toString().trim();
+        descriptionData = etDescription.getText().toString().trim();
         String startDate = dateData + " " + timeData;
         Event event = new Event(startDate,"",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),new ArrayList<String>());
         Intent intent = new Intent(this, EventSelectContacts.class);
         intent.putExtra("myEvent", (Parcelable) event);
         System.out.println(event.toString());
         startActivity(intent);
-        /* THIS IS WORKING?
-        final EditText etTitle = (EditText) findViewById(R.id.etTitle);
-        final EditText etDescription = (EditText) findViewById(R.id.etDescription);
-        titleData = etTitle.getText().toString().trim();
-        descriptionData = etDescription.getText().toString().trim();
-        EventObject event = new EventObject(dateData,timeData,"","",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"");
-        //Sends information to Firebase
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .push()
-                .setValue(new invite.hfad.com.inviter.EventObject(
-                        FirebaseAuth.getInstance().getCurrentUser().getUid(), titleData,descriptionData,eventDate));
-
         Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
-        */
         /**
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
@@ -156,20 +146,20 @@ public class MakeEventActivity extends Activity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         hourData = Integer.toString(hourOfDay);
                         minuteData = Integer.toString(minute);
-                        //timeData = String.format("%02d:%02d", hourOfDay, minute);
+
                         int hour = hourOfDay % 12;
                         if (hour == 0)
                             hour = 12;
                         String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
-                        timeData = timeText;
                         tvTime.setText(timeText);
+                        timeData = String.format("%02d:%02d:%02d", hourOfDay, minute,00);
                     }
                 }, mHour, mMinute, false);
                 mTimePicker.setTitle("Time");
                 mTimePicker.show();
             }
         });
-        timeData = String.format("%02d:%02d",00,01);
+        timeData = String.format("%02d:%02d:%02d",00,00,01);
     }
 
     public void onStartDateDialog() {
