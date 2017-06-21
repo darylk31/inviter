@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,9 +17,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Usernames;
 
@@ -26,7 +27,7 @@ import invite.hfad.com.inviter.Usernames;
  * Created by Daryl on 5/9/2017.
  */
 
-public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAdapter.ViewHolder> {
+public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAdapter.ViewHolder> {
 
     private Usernames firebaseUsername;
     private ArrayList<Usernames> usernameList;
@@ -35,6 +36,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
 
+    private Context mContext;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,57 +48,27 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
         }
     }
 
-    public SearchContactsAdapter(Context context,ArrayList<Usernames> usernameList){
+    public SearchUsernameAdapter(Context context, ArrayList<Usernames> usernameList){
+        this.mContext = context;
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         this.usernameList = usernameList;
         if(firebaseUsername == null)
             return;
+
     }
 
     @Override
-    public SearchContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchUsernameAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.searchcontact_list_item, parent, false);
         return new ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(final SearchContactsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final SearchUsernameAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
-        TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);
-        TextView user_name = (TextView) cardView.findViewById(R.id.tvSearchUserName);
-        display_name.setText(usernameList.get(position).getDisplayname());
-        user_name.setText(usernameList.get(position).getUsername());
-        actionTextClick(holder);
-    }
-
-    @Override
-    public int getItemCount() {
-        return usernameList.size();
-    }
-
-    private void searchDatabase(String username){
-
-        //TODO:
-        //If they're on my contacts they don't show up
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    usernameList.add(firebaseUsername);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void actionTextClick(final SearchContactsAdapter.ViewHolder holder){
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        final Button addSearchContactButton = (Button) cardView.findViewById(R.id.bAddSearchContact);
+        addSearchContactButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int i = holder.getAdapterPosition();
@@ -107,8 +79,34 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
                 //set the value to true
                 //add the ourselves to the user set to false
                 System.out.println(usernameList.get(i).getUsername());
+                addSearchContactButton.setText("Added");
+                addSearchContactButton.setEnabled(false);
                 addFirebaseUser(usernameList.get(i));
-                System.out.println(i);
+            }
+        });
+        TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);
+        TextView user_name = (TextView) cardView.findViewById(R.id.tvSearchUserName);
+        display_name.setText(usernameList.get(position).getDisplayname());
+        user_name.setText(usernameList.get(position).getUsername());
+        cardViewClick(holder);
+    }
+
+    @Override
+    public int getItemCount() {
+        return usernameList.size();
+    }
+
+
+    private void cardViewClick(final SearchUsernameAdapter.ViewHolder holder){
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = holder.getAdapterPosition();
+                if(mContext instanceof SearchContactsActivity){
+                    System.out.println(usernameList.get(i).getUid());
+                    ProfileDialogBox profileDialogBox = new ProfileDialogBox((SearchContactsActivity) mContext,usernameList.get(i).getUsername());
+                    profileDialogBox.show();
+                }
             }
         });
     }
@@ -118,11 +116,9 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactsAd
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    Contact contact = new Contact(addUsername.getUid(),false);
-                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(contact);
+                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(true);
 
-                    Contact myContact = new Contact(auth.getCurrentUser().getUid(),false);
-                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(myContact);
+                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(true);
                 }
             }
             @Override

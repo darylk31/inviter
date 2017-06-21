@@ -1,22 +1,14 @@
 package invite.hfad.com.inviter.Contacts;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
-import com.firebase.ui.FirebaseUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,23 +25,28 @@ public class SearchContactsActivity extends AppCompatActivity {
 
     private SearchView search;
     private RecyclerView search_recycler;
-    private SearchContactsAdapter adapter;
+    private SearchUsernameAdapter adapter;
+    private RecyclerView search_friends_recycler;
+    private SearchFriendsAdapter friendsAdapter;
 
     private Usernames usernameMatch;
 
     private Usernames firebaseUsername;
     private ArrayList<Usernames> usernameList;
+    private ArrayList<Usernames> contactList;
 
 
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
 
-
+    private LinearLayout usernameSearchLayoutWrapper;
+    private LinearLayout friendsSearchLayoutWrapper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_search_contacts);
         search = (SearchView) findViewById(R.id.searchview_contacts);
         search.onActionViewExpanded();
@@ -57,8 +54,16 @@ public class SearchContactsActivity extends AppCompatActivity {
         search_recycler = (RecyclerView) findViewById(R.id.searchcontacts_recycler);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         search_recycler.setLayoutManager(mLayoutManager);
-        //adapter = new SearchContactsAdapter(getApplicationContext(),"");
-        //search_recycler.setAdapter(adapter);
+
+        search_friends_recycler = (RecyclerView) findViewById(R.id.searchfriends_recycler);
+        RecyclerView.LayoutManager friendLayoutManager = new LinearLayoutManager(getApplicationContext());
+        search_friends_recycler.setLayoutManager(friendLayoutManager);
+
+
+        usernameSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_username_wrapper);
+        usernameSearchLayoutWrapper.setVisibility(View.GONE);
+        friendsSearchLayoutWrapper = (LinearLayout) findViewById(R.id.searchview_contacts_wrapper);
+        friendsSearchLayoutWrapper.setVisibility(View.GONE);
 
         getUsernames();
     }
@@ -80,11 +85,19 @@ public class SearchContactsActivity extends AppCompatActivity {
 
 
             public void callSearch(String query){
-                if(query.equals(""))
+                if(query.equals("")){
+                    hideAllAdapterViews();
                     return;
+                }
+                usernameSearchLayoutWrapper.setVisibility(View.GONE);
                 checkFirebaseDatabase(query);
-                adapter = new SearchContactsAdapter(getApplicationContext(), usernameList);
-
+                adapter = new SearchUsernameAdapter(SearchContactsActivity.this, usernameList);
+                friendsAdapter = new SearchFriendsAdapter(SearchContactsActivity.this, query);
+                search_friends_recycler.setAdapter(friendsAdapter);
+                if(friendsAdapter.getItemCount() == 0)
+                    friendsSearchLayoutWrapper.setVisibility(View.GONE);
+                else
+                    friendsSearchLayoutWrapper.setVisibility(View.VISIBLE);
 
             }
         });
@@ -92,29 +105,34 @@ public class SearchContactsActivity extends AppCompatActivity {
 
     private void checkFirebaseDatabase(String query){
 
+        //TODO:
+        //If they're on my contacts they don't show up
         usernameList = new ArrayList<Usernames>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Usernames").child(query).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabase.child(Utils.USERNAMES).child(query).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    usernameList.add(firebaseUsername);
-                    System.out.println("added");
-                    System.out.println(usernameList.get(0).getDisplayname());
-                }
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(usernameList.get(0).getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.exists())
+                    System.out.println(firebaseUsername.getUid());
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Contacts").child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(!dataSnapshot.exists()){
+                                usernameList.add(firebaseUsername);
+                                System.out.println(usernameList.get(0).getDisplayname());
+                                System.out.println("VISIBLE");
+                                usernameSearchLayoutWrapper.setVisibility(View.VISIBLE);
+                            }
                             search_recycler.setAdapter(adapter);
-                    }
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
 
             }
 
@@ -122,34 +140,13 @@ public class SearchContactsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
     }
 
-    /**
-
-    private void fireBaseTest(String query) {
-        if(query.equals(""))
-            return;
-        mDatabase = Utils.getDatabase().getReference();
-        FirebaseRecyclerAdapter<String, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<String, ItemViewHolder>(
-                String.class, R.layout.searchcontact_list_item, ItemViewHolder.class, mDatabase.child("Usernames").child(query)) {
-            protected void populateViewHolder(final ItemViewHolder viewHolder, String model, int position) {
-                String key = this.getRef(position).getKey();
-                System.out.println("Key:" + key + " Model: " + model);
-                TextView displayname = (TextView) viewHolder.itemView.findViewById(R.id.tvSearchDisplayName);
-                displayname.setText(model);
-            }
-        };
-        search_recycler.setAdapter(adapter);
-
-
+    private void hideAllAdapterViews(){
+        usernameSearchLayoutWrapper.setVisibility(View.GONE);
+        friendsSearchLayoutWrapper.setVisibility(View.GONE);
     }
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-     */
+
 
 
 

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import invite.hfad.com.inviter.Contact;
+import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.Inbox.InboxAdapter;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
@@ -33,8 +34,9 @@ public class InboxActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private RecyclerView recycler;
 
-    private ArrayList<String> friendlist;
-    private ArrayList<String> eventlist;
+    private ArrayList<User> friendlist;
+    private ArrayList<Event> eventlist;
+    private ArrayList<String> invitedbylist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class InboxActivity extends AppCompatActivity {
 
         friendlist = new ArrayList<>();
         eventlist = new ArrayList<>();
+        invitedbylist = new ArrayList<>();
         searchinbox();
     }
 
@@ -60,13 +63,12 @@ public class InboxActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Contact contact = snapshot.getValue(Contact.class);
-                                mDatabase.child("Users").child(contact.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
-                                        friendlist.add(user.getDisplayname());
-                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist);
+                                        friendlist.add(user);
+                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
                                         recycler.setAdapter(adapter);
                                     }
 
@@ -75,6 +77,45 @@ public class InboxActivity extends AppCompatActivity {
 
                                     }
                                 });
+                            }
+                            searchevents();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
+    }
+
+    public void searchevents(){
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request").
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                String invitedby = snapshot.getValue(String.class);
+                                invitedbylist.add(invitedby);
+                                mDatabase.child("Events").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()){
+                                            Event event = dataSnapshot.getValue(Event.class);
+                                            //event.getEndDate(); check if event is already over.
+                                            eventlist.add(event);
+                                        }
+                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
+                                        recycler.setAdapter(adapter);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+
                             }
 
                         }
@@ -85,7 +126,6 @@ public class InboxActivity extends AppCompatActivity {
 
                     }
                 });
-
 
     }
 }

@@ -1,21 +1,17 @@
 package invite.hfad.com.inviter;
 
-import android.content.Context;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,25 +25,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
@@ -85,7 +76,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     // launch login activity
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     finish();
-                }
+                } else{
 
                 // User is signed in
                 String displayName = user.getDisplayName();
@@ -108,6 +99,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 //Navigation Header
                 setDisplayPicture();
                 */
+                }
             }
         };
 
@@ -123,6 +115,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //CountInboxItems
         countInboxItems();
+        addRequestListener();
 
         //Set drawer header
         setDrawer_username();
@@ -160,6 +153,8 @@ public class UserAreaActivity extends AppCompatActivity {
                     case R.id.nav_signout:
                         auth.signOut();
                         pref.edit().clear().commit();
+                        startActivity(new Intent(UserAreaActivity.this,LoginActivity.class));
+                        finish();
                         return true;
                     default:
                         return true;
@@ -209,8 +204,25 @@ public class UserAreaActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        countInboxItems();
         auth.addAuthStateListener(authListener);
+        if(auth == null){
+            startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+            finish();
+        }
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        countInboxItems();
+        auth.addAuthStateListener(authListener);
+        if(auth==null){
+            startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
+
 
     @Override
     public void onStop() {
@@ -262,12 +274,9 @@ public class UserAreaActivity extends AppCompatActivity {
         }
     }
 
-    public void onMakeEvent(View v) {
-        Toast.makeText(UserAreaActivity.this,String.valueOf(inboxCounter),Toast.LENGTH_SHORT).show();
-        /*
+    public void onButtonClick(View v) {
         Intent intent = new Intent(this, MakeEventActivity.class);
         startActivity(intent);
-        */
     }
 
     private void setDisplayPicture(){
@@ -291,12 +300,16 @@ public class UserAreaActivity extends AppCompatActivity {
     */
 
     private void countInboxItems() {
-        inboxCounter = 0;
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                inboxCounter = 0;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    inboxCounter++;
+                    for(DataSnapshot dsChild : ds.getChildren()){
+                        //inboxCounter = (int)dsChild.getChildrenCount();
+                        inboxCounter++;
+                        System.out.println("Inboxcounter was called with key :" + dsChild.getKey());
+                    }
                 }
                 if(inboxCounter > 0){
                     SpannableString spanString = new SpannableString("Inbox (" + inboxCounter + ")");
@@ -304,7 +317,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle(spanString);
 
                 } else{
-                    navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("ha");
+                    navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("Inbox");
                 }
             }
 
@@ -313,5 +326,71 @@ public class UserAreaActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void addRequestListener(){
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(!dataSnapshot.exists())
+                    return;
+                String contact = dataSnapshot.getKey();
+                Contact ctest = new Contact(contact,true);
+                if(ctest.getIsContact()){
+                  return;
+                }
+                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact).setValue(contact);
+                mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            User user = dataSnapshot.getValue(User.class);
+                            addRequestNotification(user);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+                System.out.println("what is datasnapshot " + dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void addRequestNotification(User user){
+        System.out.println("Notification entrance");
+        if(user== null)
+            return;
+                NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.twitter_button)
+                        .setContentTitle(this.getString(R.string.app_name))
+                        .setContentText(user.getUsername() + "would like to add you!");
+        // Sets an unique ID for the addRequestNotification
+        int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+// Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the addRequestNotification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        System.out.println("addRequestNotification shown");
+    }
+
 
 }

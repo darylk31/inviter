@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.CheckBox;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +38,8 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+
+import invite.hfad.com.inviter.EventObjectModel.EventSelectContacts;
 
 public class MakeEventActivity extends Activity {
 
@@ -97,11 +101,18 @@ public class MakeEventActivity extends Activity {
 
 
     public void onInvite(View view) {
+        String startDate = dateData + " " + timeData;
+        Event event = new Event(startDate,"",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),new ArrayList<String>());
+        Intent intent = new Intent(this, EventSelectContacts.class);
+        intent.putExtra("myEvent", (Parcelable) event);
+        System.out.println(event.toString());
+        startActivity(intent);
+        /* THIS IS WORKING?
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString().trim();
         descriptionData = etDescription.getText().toString().trim();
-
+        EventObject event = new EventObject(dateData,timeData,"","",titleData,descriptionData,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),"");
         //Sends information to Firebase
         FirebaseDatabase.getInstance()
                 .getReference()
@@ -110,6 +121,7 @@ public class MakeEventActivity extends Activity {
                         FirebaseAuth.getInstance().getCurrentUser().getUid(), titleData,descriptionData,eventDate));
 
         Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
+        */
         /**
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
@@ -157,6 +169,7 @@ public class MakeEventActivity extends Activity {
                 mTimePicker.show();
             }
         });
+        timeData = String.format("%02d:%02d",00,01);
     }
 
     public void onStartDateDialog() {
