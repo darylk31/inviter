@@ -53,6 +53,7 @@ public class InboxActivity extends AppCompatActivity {
         eventlist = new ArrayList<>();
         invitedbylist = new ArrayList<>();
         searchinbox();
+        searchevents();
     }
 
     public void searchinbox() {
@@ -78,7 +79,6 @@ public class InboxActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                            searchevents();
                         }
                     }
 
