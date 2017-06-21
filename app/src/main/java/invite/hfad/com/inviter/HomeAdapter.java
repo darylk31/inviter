@@ -50,11 +50,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
                     this.event_db = event_db;
                     this.cursor = cursor;
+                    storeEvents();
+                    cursor.close();
+                    event_db.close();
                 }
                 else {
                     Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY < date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
                     this.event_db = event_db;
                     this.cursor = cursor;
+                    storeEvents();
+                    cursor.close();
+                    event_db.close();
                 }
 
             } catch (SQLiteException e) {
@@ -62,10 +68,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 Toast toast = Toast.makeText(context, "Error: Database unavailable", Toast.LENGTH_SHORT);
                 toast.show();
             }
-
-            storeEvents();
-            cursor.close();
-            event_db.close();
         }
 
 
@@ -116,6 +118,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        if (cursor == null){
+            return 0;
+        }
         return cursor.getCount();
     }
 
