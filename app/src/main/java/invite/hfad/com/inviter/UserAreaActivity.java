@@ -1,12 +1,15 @@
 package invite.hfad.com.inviter;
 
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -17,28 +20,41 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +82,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private TextView drawer_username;
     private FirebaseUser user;
     private int inboxCounter;
+    private ImageView profilePictureView;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -97,14 +114,6 @@ public class UserAreaActivity extends AppCompatActivity {
                         profileUri = userInfo.getPhotoUrl();
                     }
                 }
-
-                /*
-                drawer_username = (TextView) findViewById(R.id.drawer_username);
-                drawer_username.setText("AH");
-
-                //Navigation Header
-                setDisplayPicture();
-                */
                 }
             }
         };
@@ -242,14 +251,14 @@ public class UserAreaActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        navigationView.setCheckedItem(R.id.nav_dashboard);
+        viewPager.setAdapter(makeAdapter());
         countInboxItems();
         auth.addAuthStateListener(authListener);
         if(auth==null){
             startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
             finish();
         }
-        navigationView.setCheckedItem(R.id.nav_dashboard);
-        viewPager.setAdapter(makeAdapter());
 
     }
 
@@ -261,6 +270,38 @@ public class UserAreaActivity extends AppCompatActivity {
             auth.removeAuthStateListener(authListener);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED) {
+
+        }
+        if (resultCode == RESULT_OK) {
+            Uri selectedimg = data.getData();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            UploadTask task = storageRef.child("profile/" + user.getUid() + ".jpg").putFile(selectedimg);
+            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setPhotoUri(taskSnapshot.getDownloadUrl())
+                            .build();
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                                        setDisplayPicture();
+                                    }
+                                }
+                            });
+                    }});
+
+            };
+        }
 
     private void setViewPager() {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -311,12 +352,37 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     private void setDisplayPicture(){
-        final ImageView profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+        profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
 
         Glide.with(this)
                 .load(user.getPhotoUrl())
                 .into(profilePictureView);
+
+
+        profilePictureView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(UserAreaActivity.this);
+                builder.setItems(R.array.Profile_Options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch(which){
+                            case 0:
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
+                                break;
+                            case 1:
+                                break;
+                    }
+                }});
+                builder.show();
+
+        }});
     }
+
+
 
     private void setDrawer_username(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
@@ -324,11 +390,6 @@ public class UserAreaActivity extends AppCompatActivity {
         drawer_username.setText(user.getDisplayName());
     }
 
-    /*
-    public void uploadProfilePicture(View view){
-        startActivityForResult(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
-    }
-    */
 
     private void countInboxItems() {
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").addValueEventListener(new ValueEventListener() {
