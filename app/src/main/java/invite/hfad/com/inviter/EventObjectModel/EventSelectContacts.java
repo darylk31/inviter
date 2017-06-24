@@ -15,12 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
-import invite.hfad.com.inviter.Contacts.FriendsAdapter;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
@@ -85,6 +81,7 @@ public class EventSelectContacts extends AppCompatActivity {
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         db = databaseHelper.getWritableDatabase();
         UserDatabaseHelper.insert_event(db, event);
+        Toast.makeText(this, "Successfully added Event", Toast.LENGTH_LONG).show();
 
         
         Intent intent = new Intent(this, UserAreaActivity.class);

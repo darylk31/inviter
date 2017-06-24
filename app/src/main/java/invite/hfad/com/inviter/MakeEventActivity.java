@@ -111,7 +111,6 @@ public class MakeEventActivity extends Activity {
         intent.putExtra("myEvent", (Parcelable) event);
         System.out.println(event.toString());
         startActivity(intent);
-        Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
         /**
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
