@@ -77,7 +77,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     public static void delete_event(SQLiteDatabase db,
                                     String id){
-        db.delete("EVENTS", "_id=" + id, null);
+        db.delete("EVENTS", "EID=" + id, null);
     }
 
     public static void insert_friend(SQLiteDatabase db,
