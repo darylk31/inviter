@@ -248,6 +248,9 @@ public class UserAreaActivity extends AppCompatActivity {
             startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
             finish();
         }
+        navigationView.setCheckedItem(R.id.nav_dashboard);
+        viewPager.setAdapter(makeAdapter());
+
     }
 
 
@@ -267,16 +270,17 @@ public class UserAreaActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_history_black_24dp));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(makeAdapter());
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+    }
 
+    private ViewPagerAdapter makeAdapter(){
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
         adapter.addFragment(new HomeFragment());
         adapter.addFragment(new HomeOldFragment());
-
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
+        return adapter;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
