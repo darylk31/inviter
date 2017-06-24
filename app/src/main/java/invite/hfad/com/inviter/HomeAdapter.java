@@ -47,7 +47,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
                 SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
                 if (newEvents) {
-                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY >= NOW() " + "ORDER BY date(" + "DAY" + ") ASC", null);
+                    Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY >= date('now', 'localtime') ORDER BY date(DAY) ASC", null);
                     this.event_db = event_db;
                     this.cursor = cursor;
                     storeEvents();

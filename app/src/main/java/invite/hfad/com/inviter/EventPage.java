@@ -39,13 +39,14 @@ public class EventPage extends Activity {
         try {
             SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getApplicationContext());
             SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-            Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE _id=" + id, null);
+            Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
             cursor.moveToLast();
             TextView event_name = (TextView) findViewById(R.id.tv_eventpagename);
-            this.event_string = cursor.getString(2);
+            this.event_string = cursor.getString(4);
             event_name.setText(event_string);
             TextView event_date = (TextView) findViewById(R.id.tv_eventpagedate);
-            String event_day = cursor.getString(1);
+            String event_day = cursor.getString(2);
+            //TODO: Select just date.
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
                 String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
@@ -55,8 +56,9 @@ public class EventPage extends Activity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            //TODO: Select just time.
             TextView event_time = (TextView) findViewById(R.id.tv_eventpagetime);
-            event_time.setText(cursor.getString(4));
+            event_time.setText(cursor.getString(2));
             cursor.close();
             event_db.close();
 
@@ -137,13 +139,14 @@ public class EventPage extends Activity {
             SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getApplicationContext());
             SQLiteDatabase event_db = eventDatabaseHelper.getWritableDatabase();
             UserDatabaseHelper.delete_event(event_db, id);
-            event_db.close();}
+            event_db.close();
+            startActivity(new Intent(this, UserAreaActivity.class));}
         catch (SQLiteException e){
             e.printStackTrace();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Error: Unable to delete", Toast.LENGTH_SHORT);
             toast.show();}
 
-        Toast toast = Toast.makeText(this.getApplicationContext(), "Deleted", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.getApplicationContext(), "Event Deleted", Toast.LENGTH_SHORT);
         toast.show();}
 
     public void onSendMessage(View view){}

@@ -1,6 +1,8 @@
 package invite.hfad.com.inviter.Inbox;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.UserDatabaseHelper;
 import invite.hfad.com.inviter.Utils;
 
 
