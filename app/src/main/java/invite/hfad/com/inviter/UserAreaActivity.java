@@ -3,6 +3,8 @@ package invite.hfad.com.inviter;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -198,7 +200,9 @@ public class UserAreaActivity extends AppCompatActivity {
                     public void run() {
                         // call service
                         System.out.println("Contacts Scheduled Call");
-                        UpdateHelper.updateContacts(getApplicationContext());
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                        UserDatabaseHelper.updateContacts(db, getApplicationContext());
                         System.out.println("Contacts updated");
                     }
                 }, 0, 3, TimeUnit.DAYS);
@@ -244,6 +248,9 @@ public class UserAreaActivity extends AppCompatActivity {
             startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
             finish();
         }
+        navigationView.setCheckedItem(R.id.nav_dashboard);
+        viewPager.setAdapter(makeAdapter());
+
     }
 
 
@@ -263,16 +270,17 @@ public class UserAreaActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_history_black_24dp));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(makeAdapter());
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+    }
 
+    private ViewPagerAdapter makeAdapter(){
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
         adapter.addFragment(new HomeFragment());
         adapter.addFragment(new HomeOldFragment());
-
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
+        return adapter;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

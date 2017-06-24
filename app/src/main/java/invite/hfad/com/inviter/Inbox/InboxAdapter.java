@@ -144,6 +144,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition() - friendrequests;
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Event").child(eventlist.get(pos).getEventId())
                                 .setValue(eventlist.get(pos).getEventId());
+
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(v.getContext());
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                        UserDatabaseHelper.insert_event(db, eventlist.get(pos));
+
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request")
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         Toast.makeText(v.getContext(), eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
