@@ -32,60 +32,10 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         friendsrecycler = (RecyclerView) inflater.inflate(R.layout.fragment_friends, container, false);
-        updateFriends();
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        FriendsAdapter adapter = new FriendsAdapter(getContext());
+        friendsrecycler.setAdapter(adapter);
         friendsrecycler.setLayoutManager(manager);
         return friendsrecycler;
     }
-
-    private void updateFriends(){
-        //code to check timestamp
-        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
-        db = databaseHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM FRIENDS;");
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                User user = dataSnapshot.getValue(User.class);
-                                storeUser(user);
-                                FriendsAdapter adapter = new FriendsAdapter(getContext());
-                                friendsrecycler.setAdapter(adapter);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-    }
-
-    private void storeUser(User user){
-        ContentValues userinfo = new ContentValues();
-        userinfo.put("UID", user.getUid());
-        userinfo.put("USERNAME", user.getUsername());
-        userinfo.put("DISPLAY", user.getDisplayname());
-        userinfo.put("PHOTO", user.getPhototUrl());
-        db.insert("FRIENDS", null, userinfo);
-    }
-
 }

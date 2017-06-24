@@ -40,8 +40,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
+import invite.hfad.com.inviter.Contacts.FriendsFragment;
 import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class UserAreaActivity extends AppCompatActivity {
@@ -180,7 +184,25 @@ public class UserAreaActivity extends AppCompatActivity {
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
+        //Update Scheduler
+        scheduleUpdate();
+
     }
+
+    private void scheduleUpdate() {
+        ScheduledExecutorService scheduler =
+                Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.scheduleAtFixedRate
+                (new Runnable() {
+                    public void run() {
+                        // call service
+                        System.out.println("Contacts updated");
+                        UpdateHelper.updateContacts();
+                    }
+                }, 10, 10, TimeUnit.SECONDS);
+    }
+
 
 
     @Override
