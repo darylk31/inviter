@@ -139,13 +139,14 @@ public class EventPage extends Activity {
             SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getApplicationContext());
             SQLiteDatabase event_db = eventDatabaseHelper.getWritableDatabase();
             UserDatabaseHelper.delete_event(event_db, id);
-            event_db.close();}
+            event_db.close();
+            startActivity(new Intent(this, UserAreaActivity.class));}
         catch (SQLiteException e){
             e.printStackTrace();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Error: Unable to delete", Toast.LENGTH_SHORT);
             toast.show();}
 
-        Toast toast = Toast.makeText(this.getApplicationContext(), "Deleted", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.getApplicationContext(), "Event Deleted", Toast.LENGTH_SHORT);
         toast.show();}
 
     public void onSendMessage(View view){}
