@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -22,8 +23,8 @@ public class UpdateHelper {
     static SQLiteDatabase db;
     public UpdateHelper(){}
 
-    public static void updateContacts() {
-        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+    public static void updateContacts(Context applicationContext) {
+        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(applicationContext);
         db = databaseHelper.getWritableDatabase();
         db.execSQL("DELETE FROM FRIENDS;");
         FirebaseAuth auth = FirebaseAuth.getInstance();
