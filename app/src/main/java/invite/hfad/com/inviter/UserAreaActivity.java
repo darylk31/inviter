@@ -197,8 +197,9 @@ public class UserAreaActivity extends AppCompatActivity {
                 (new Runnable() {
                     public void run() {
                         // call service
-                        System.out.println("Contacts updated");
+                        System.out.println("Contacts Scheduled Call");
                         UpdateHelper.updateContacts();
+                        System.out.println("Contacts updated");
                     }
                 }, 10, 10, TimeUnit.SECONDS);
     }
