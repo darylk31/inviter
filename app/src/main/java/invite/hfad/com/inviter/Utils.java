@@ -13,6 +13,10 @@ public class Utils {
     public static final String USER = "Users";
     public static final String CONTACTS = "Contacts";
     public static final String USERNAMES = "Usernames";
+    public static final String CHAT = "Chat";
+    public static final String EVENT = "Events";
+
+    public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
 
     private static FirebaseDatabase mDatabase;
 
