@@ -51,6 +51,7 @@ import invite.hfad.com.inviter.Contacts.ContactsActivity;
 
 
 public class EventPage extends Activity {
+    private static boolean TOOLBAR_COLLAPSED = true;
     String id;
     String event_string;
     Toolbar toolbar;
@@ -137,34 +138,7 @@ public class EventPage extends Activity {
                 return true;
             }
         });
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
-        appBarLayout.setExpanded(false);
-        //Get Title Showing
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                                                    CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
-                                                    @Override
-                                                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                                                        int collapsed_num = appBarLayout.getTotalScrollRange();
-                                                        if (verticalOffset == -collapsed_num) {
-                                                            collapsingToolbarLayout.setTitleEnabled(true);
-                                                            collapsingToolbarLayout.setTitle(event_string);
-                                                        } else {
-                                                            collapsingToolbarLayout.setTitleEnabled(false);
-                                                        }
-                                                        //Automatically pushes if Vertical Offset > 50%
-                /*
-                DisplayMetrics displaymetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                int height = displaymetrics.heightPixels;
-                if(verticalOffset >= height /2 ){
-                    //Setexpandable false
-
-                }
-                */
-                                                    }
-                                                }
-        );
+        appBarListener();
         populateChat();
     }
 
@@ -228,11 +202,10 @@ public class EventPage extends Activity {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-
         // New child entires
         mFirebaseDatabaseReference = Utils.getDatabase().getReference();
         System.out.println(id);
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage,MessageViewHolder>(
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(
                 FriendlyMessage.class,
                 R.layout.item_message,
                 MessageViewHolder.class,
@@ -284,11 +257,10 @@ public class EventPage extends Activity {
                 }
             }
         };
-
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount){
-                super.onItemRangeInserted(positionStart,itemCount);
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
                 int friendlyMessageCount = mFirebaseAdapter.getItemCount();
                 int lastVisiblePosition =
                         mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -298,16 +270,16 @@ public class EventPage extends Activity {
                 if (lastVisiblePosition == -1 ||
                         (positionStart >= (friendlyMessageCount - 1) &&
                                 lastVisiblePosition == (positionStart - 1))) {
-                    mMessageRecyclerView.scrollToPosition(positionStart);   }
+                    mMessageRecyclerView.scrollToPosition(positionStart);
+                }
             }
         });
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mMessageEditText.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(mSharedPreferences
-                .getInt(Utils.FRIENDLY_MSG_LENGTH,DEFAULT_MSG_LENGTH_LIMIT))
+                        .getInt(Utils.FRIENDLY_MSG_LENGTH, DEFAULT_MSG_LENGTH_LIMIT))
         });
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -316,9 +288,9 @@ public class EventPage extends Activity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().trim().length() > 0){
+                if (s.toString().trim().length() > 0) {
                     mSendButton.setEnabled(true);
-                } else{
+                } else {
                     mSendButton.setEnabled(false);
                 }
             }
@@ -327,20 +299,18 @@ public class EventPage extends Activity {
             public void afterTextChanged(Editable s) {
             }
         });
-
         //Send Chat text
         mSendButton = (Button) findViewById(R.id.sendButton);
-        mSendButton.setOnClickListener(new View.OnClickListener(){
+        mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(),
-                        mUsername,mPhotoUrl,null);
+                        mUsername, mPhotoUrl, null);
                 mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
         });
-
         //Send Images
         mAddMessageImageView = (ImageView)
                 findViewById(R.id.addMessageImageView);
@@ -354,10 +324,48 @@ public class EventPage extends Activity {
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
-
-
-
     }
+
+        private void appBarListener(){
+            appBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
+            appBarLayout.setExpanded(false);
+            final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+            //Get Title Showing
+            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    int collapsed_num = appBarLayout.getTotalScrollRange();
+
+                    if(verticalOffset == -collapsed_num){
+                        collapsingToolbarLayout.setTitleEnabled(true);
+                        collapsingToolbarLayout.setTitle(event_string);
+                    } else{
+                        collapsingToolbarLayout.setTitleEnabled(false);
+                    }
+                    if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                        // Collapsed
+                        TOOLBAR_COLLAPSED = true;
+                    }
+                    else if (verticalOffset == 0) {
+                        TOOLBAR_COLLAPSED = false;
+                    } else{
+                        TOOLBAR_COLLAPSED = false;
+                    }
+                }}
+            );
+        }
+
+        @Override
+        public void onBackPressed() {
+            if(TOOLBAR_COLLAPSED){
+                super.onBackPressed();
+            } else {
+                AppBarLayout appBar = (AppBarLayout) findViewById(R.id.appbar_layout);
+                appBar.setExpanded(false, true);
+            }
+        }
+
+
 
     /*
     public void Test(){
