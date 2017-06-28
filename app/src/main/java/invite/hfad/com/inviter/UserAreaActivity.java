@@ -275,7 +275,6 @@ public class UserAreaActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
-
         }
         if (resultCode == RESULT_OK) {
             Uri selectedimg = data.getData();
@@ -298,8 +297,8 @@ public class UserAreaActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                    //TODO: Need to update profile photo URL in Users table.  PhotoUri is already updated in Firebase Auth.
                     }});
-
             };
         }
 
