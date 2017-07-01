@@ -201,7 +201,7 @@ public class RegisterConfirm extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(firebaseUser.getUsername())
-                .setPhotoUri(Uri.parse(firebaseUser.getPhototUrl()))
+                .setPhotoUri(Uri.parse(firebaseUser.getPhotoUrl()))
                 .build();
 
         user.updateProfile(profileUpdates)

@@ -99,8 +99,8 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                         mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                User user = dataSnapshot.getValue(User.class);
-                                insert_friend(db, user);
+//                                User user = dataSnapshot.getValue(User.class);
+//                                insert_friend(db, user);
                             }
 
                             @Override
@@ -123,7 +123,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         friendValues.put("UID", user.getUid());
         friendValues.put("USERNAME", user.getUsername());
         friendValues.put("DISPLAY", user.getDisplayname());
-        friendValues.put("PHOTO", user.getPhototUrl());
+        friendValues.put("PHOTO", user.getPhotoUrl());
         db.insert("FRIENDS", null, friendValues);
     }
 

@@ -16,6 +16,10 @@ public class Utils {
     public static final String CHAT = "Chat";
     public static final String EVENT = "Events";
 
+    //USER TABLE STUFF
+    public static final String USER_PHOTO_URL = "photoUrl";
+    public static final String USER_USERNAME = "username";
+
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
 
     private static FirebaseDatabase mDatabase;

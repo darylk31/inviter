@@ -1,8 +1,5 @@
 package invite.hfad.com.inviter;
 
-import android.net.Uri;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +11,7 @@ public class User {
     private String username;
     private String firstname;
     private String lastname;
-    private String phototUrl;
+    private String photoUrl;
     private String email;
     private String password;
     private String displayname;
@@ -36,7 +33,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.displayname = userName;
-        this.phototUrl = defaultURL;
+        this.photoUrl = defaultURL;
     }
 
 
@@ -88,12 +85,12 @@ public class User {
         this.displayname = displayname;
     }
 
-    public String getPhototUrl() {
-        return phototUrl;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setPhototUrl(String phototUrl) {
-        this.phototUrl = phototUrl;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public Map<String, Boolean> getContacts() {
