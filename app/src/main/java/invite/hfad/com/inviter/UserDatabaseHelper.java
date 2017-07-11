@@ -99,8 +99,10 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                         mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-//                                User user = dataSnapshot.getValue(User.class);
-//                                insert_friend(db, user);
+                                if(dataSnapshot.exists()) {
+                                    User user = dataSnapshot.getValue(User.class);
+                                    insert_friend(db, user);
+                                }
                             }
 
                             @Override

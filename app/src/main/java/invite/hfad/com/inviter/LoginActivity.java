@@ -9,15 +9,21 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -51,14 +57,34 @@ public class LoginActivity extends AppCompatActivity {
         showProcessDialog();
         if(!validateForm())
             return;
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            performLogin(email,password);
+        } else{
+            DatabaseReference mDatabase = Utils.getDatabase().getReference();
+            mDatabase.child(Utils.USERNAMES).child(email)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot != null){
+                                Usernames usernames = dataSnapshot.getValue(Usernames.class);
+                                performLogin(usernames.getEmail(),password);
+                            }
+                        }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
+                        }
+                    });
+        }
+    }
+
+    private void performLogin(String email, String password){
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
                 if(!task.isSuccessful()){
                     Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-
                     progressDialog.dismiss();
                 }
                 else {
@@ -76,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         });
-
     }
 
     private boolean validateForm(){
