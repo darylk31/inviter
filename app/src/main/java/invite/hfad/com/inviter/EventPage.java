@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -167,6 +168,7 @@ public class EventPage extends Activity {
         public ImageView messageImageView;
         public TextView messengerTextView;
         public CircleImageView messengerImageView;
+        public TextView messageTimeStamp;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -174,6 +176,7 @@ public class EventPage extends Activity {
             messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+            messageTimeStamp = (TextView) itemView.findViewById(R.id.messageTimeStamp);
         }
     }
 
@@ -255,6 +258,17 @@ public class EventPage extends Activity {
                             .load(friendlyMessage.getPhotoUrl())
                             .into(viewHolder.messengerImageView);
                 }
+                //TimeStamp
+                if(friendlyMessage.getTimeStamp() != null){
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                    try {
+                        Date date = format.parse(friendlyMessage.getTimeStamp());
+                        viewHolder.messageTimeStamp.setText(date.toString());
+                        System.out.println( "this is the sent time" + date.toString());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -305,8 +319,9 @@ public class EventPage extends Activity {
 
             @Override
             public void onClick(View v) {
+                String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(),
-                        mUsername, mPhotoUrl, null);
+                        mUsername, mPhotoUrl,timeStamp, null);
                 mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
