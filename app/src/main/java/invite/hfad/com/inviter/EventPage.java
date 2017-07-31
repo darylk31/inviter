@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -120,27 +121,21 @@ public class EventPage extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.invite_eventpage:
-                        Intent invite_intent = new Intent(EventPage.this, ContactsActivity.class);
-                        startActivity(invite_intent);
-                        break;
-                    case R.id.edit_eventpage:
-                        Intent edit_intent = new Intent(EventPage.this, MakeEventActivity.class);
-                        edit_intent.putExtra("Edit Id", id);
-                        startActivity(edit_intent);
-                        break;
-                    case R.id.delete_eventpage:
-                        //Alert dialog to confirm
-                        deleteEvent();
-                        Intent delete_intent = new Intent(EventPage.this, UserAreaActivity.class);
-                        startActivity(delete_intent);
-                        break;
+                    default:
+                        Toast.makeText(EventPage.this, "WOW", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
         });
         appBarListener();
         populateChat();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+
+        getMenuInflater().inflate(R.menu.menu_eventpage, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 
