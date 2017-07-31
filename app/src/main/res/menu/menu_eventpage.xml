@@ -4,6 +4,12 @@
     tools:context="invite.hfad.com.inviter.EventPage">
 
     <item
+        android:id="@+id/event_info"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Event Details"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/edit_eventpage"
         android:orderInCategory="1"
         android:title="Edit..."
