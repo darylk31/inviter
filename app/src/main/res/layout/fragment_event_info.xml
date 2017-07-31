@@ -12,7 +12,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#fcf3f3"
+        android:textColor="#530909"
         android:textSize="32dp"
         android:textStyle="bold" />
 
@@ -24,7 +24,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tv_eventpagename"
         android:layout_marginTop="48dp"
-        android:textColor="#f5caca"
+        android:textColor="#530909"
         android:textSize="28dp" />
 
     <TextView

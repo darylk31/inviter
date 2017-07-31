@@ -103,7 +103,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), EventPage.class);
+                    Intent intent = new Intent(v.getContext(), EventViewPager.class);
                     intent.putExtra("event_id", event_ids[position]);
                     v.getContext().startActivity(intent);
                 }

@@ -55,6 +55,7 @@
         <activity android:name=".Register.RegisterPassword" />
         <activity android:name=".Register.RegisterConfirm" />
         <activity android:name=".EventObjectModel.EventSelectContacts" />
+        <activity android:name=".EventViewPager"></activity>
     </application>
 
 </manifest>

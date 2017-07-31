@@ -28,13 +28,14 @@ public class EventInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        id = getArguments().getString("event_id");
         return inflater.inflate(R.layout.fragment_event_info, container, false);
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        View view = getView();
+        view = getView();
         try {
             SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getContext());
             SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
