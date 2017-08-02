@@ -11,7 +11,6 @@
             android:id="@+id/calendar_nameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:layout_alignBaseline="@+id/calendar_timeTV"
             android:layout_alignBottom="@+id/calendar_timeTV"
             android:layout_centerHorizontal="true" />
@@ -23,7 +22,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="TextView"
             android:textColor="@color/colorAccent" />
     </RelativeLayout>
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -45,10 +46,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         TextView event_time = (TextView)cardView.findViewById(R.id.calendar_timeTV);
         event_name.setText(event_names[position]);
         //TODO: get time.
-        DateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         try {
             Date date = format.parse(event_times[position]);
-            event_time.setText(date.toString());
+            //TODO: filter out 0:0 and add am/pm
+            event_time.setText(Integer.toString(date.getHours())+ ":" + Integer.toString(date.getMinutes()));
 
         } catch (ParseException e) {
             e.printStackTrace();
