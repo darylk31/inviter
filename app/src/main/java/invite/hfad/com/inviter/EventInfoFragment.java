@@ -37,10 +37,10 @@ public class EventInfoFragment extends Fragment {
         super.onStart();
         view = getView();
         try {
-            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getContext());
-            SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-            Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
-            cursor.moveToLast();
+                SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getContext());
+                SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
+                cursor.moveToLast();
             TextView event_name = (TextView) view.findViewById(R.id.tv_eventpagename);
             this.event_string = cursor.getString(4);
             event_name.setText(event_string);

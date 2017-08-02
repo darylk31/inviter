@@ -51,8 +51,6 @@ dependencies {
 dependencies {
     compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.firebaseui:firebase-ui:0.6.0'
-}
-dependencies {
     compile 'com.google.firebase:firebase-auth:9.2.1'
 }
 dependencies {
@@ -60,30 +58,12 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
 }
 dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
-}
-dependencies {
-    compile 'com.android.support.constraint:constraint-layout:+'
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
 }
 dependencies {
     compile 'com.android.support:support-v4:23.+'
 }
 dependencies {
     compile 'com.android.support.constraint:constraint-layout:+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
-}
-dependencies {
-    compile 'com.android.support:support-v4:23.+'
 }
 apply plugin: 'com.google.gms.google-services'
