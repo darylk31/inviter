@@ -62,6 +62,8 @@ import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class UserAreaActivity extends AppCompatActivity {
 
+    private static int pageNumber;
+
     private ViewPager viewPager;
     private TabLayout tabLayout;
     public static final int GET_FROM_GALLERY = 3;
@@ -247,6 +249,7 @@ public class UserAreaActivity extends AppCompatActivity {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_dashboard);
         viewPager.setAdapter(makeAdapter());
+        viewPager.setCurrentItem(pageNumber);
         countInboxItems();
         auth.addAuthStateListener(authListener);
         if(auth==null){
@@ -324,7 +327,22 @@ public class UserAreaActivity extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(makeAdapter());
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageNumber = position;
+                tabLayout.setScrollPosition(position,0f,true);
+                System.out.println("position changed to:" + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 

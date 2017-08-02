@@ -18,6 +18,7 @@ public class EventViewPager extends AppCompatActivity {
 
     String id;
     ViewPager viewPager;
+    private static int pageNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class EventViewPager extends AppCompatActivity {
 
         viewPager = (ViewPager) findViewById(R.id.event_viewpager);
         setupViewPager(viewPager);
+        viewPager.setCurrentItem(pageNumber);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -37,11 +39,27 @@ public class EventViewPager extends AppCompatActivity {
         args.putString("event_id", id);
         EventInfoFragment p1 = new EventInfoFragment();
         p1.setArguments(args);
-        PhoneContactsFragment p2 = new PhoneContactsFragment();
+        EventChatFragment p2 = new EventChatFragment();
+        p2.setArguments(args);
 
         adapter.addFragment(p1, "Event Info");
         adapter.addFragment(p2, "Event Chat");
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                pageNumber = position;
+                System.out.println("position changed to:" + position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
