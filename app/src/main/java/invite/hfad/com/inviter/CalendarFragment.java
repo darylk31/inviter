@@ -53,8 +53,8 @@ public class CalendarFragment extends Fragment {
                 String day;
                 //converted_date in yyyy-MM-dd format.
                 if (date.getMonth() >= 10){
-                    month = Integer.toString(date.getMonth());}
-                else month = "0" + Integer.toString(date.getMonth());
+                    month = Integer.toString(date.getMonth() + 1);}
+                else month = "0" + Integer.toString(date.getMonth() + 1);
 
                 if (date.getDay() >= 10) {
                     day = Integer.toString(date.getDay());}
