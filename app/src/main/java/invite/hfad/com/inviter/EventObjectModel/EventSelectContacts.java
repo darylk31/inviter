@@ -73,9 +73,7 @@ public class EventSelectContacts extends AppCompatActivity {
                 }
             });
         }
-        if(!adapter.getArrayList().isEmpty()){
-            mDatabase.child("Events").child(newKey).setValue(event);
-        }
+        mDatabase.child("Events").child(newKey).setValue(event);
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Event").child(newKey).setValue(newKey);
 
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());

@@ -9,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by Daryl on 8/1/2017.
  */
@@ -39,7 +45,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         TextView event_time = (TextView)cardView.findViewById(R.id.calendar_timeTV);
         event_name.setText(event_names[position]);
         //TODO: get time.
-        //event_time.setText(event_times[position]);
+        DateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+        try {
+            Date date = format.parse(event_times[position]);
+            event_time.setText(date.toString());
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
