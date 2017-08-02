@@ -14,7 +14,7 @@ public class HomeOldFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState) {
         RecyclerView homeRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_home, container, false);
-        HomeAdapter adapter = new HomeAdapter(getActivity().getApplicationContext(), true);
+        HomeAdapter adapter = new HomeAdapter(getActivity().getApplicationContext(), false);
         homeRecycler.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         homeRecycler.setLayoutManager(layoutManager);
