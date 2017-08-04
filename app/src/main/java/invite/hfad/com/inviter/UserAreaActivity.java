@@ -377,7 +377,7 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     public void onButtonClick(View v) {
-        Intent intent = new Intent(this, MakeEventActivity.class);
+        Intent intent = new Intent(this, CreateEvent.class);
         startActivity(intent);
     }
 

@@ -18,6 +18,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
+import java.util.Calendar;
+
 
 public class CalendarFragment extends Fragment {
     MaterialCalendarView calendarView;
@@ -46,21 +48,14 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        calendarView.setSelectedDate(Calendar.getInstance());
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 String month;
                 String day;
                 //converted_date in yyyy-MM-dd format.
-                if (date.getMonth() >= 10){
-                    month = Integer.toString(date.getMonth() + 1);}
-                else month = "0" + Integer.toString(date.getMonth() + 1);
-
-                if (date.getDay() >= 10) {
-                    day = Integer.toString(date.getDay());}
-                else day = "0" + Integer.toString(date.getDay());
-
-                String converted_date = Integer.toString(date.getYear()) + "-" + month + "-" + day;
+                String converted_date = String.format("%04d-%02d-%02d",date.getYear(),date.getMonth()+1,date.getDay());
 
                 try {
                     SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());

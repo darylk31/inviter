@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="invite.hfad.com.inviter.CreateEvent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="20">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/etTitle"
+            android:hint="@string/Event_Title"
+            android:textSize="35sp"
+            android:layout_weight="3"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:weightSum="10"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+            <TextView
+                android:id="@+id/tvDateDisplay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text=""
+                android:layout_weight="5"
+                />
+            <TextView
+                android:id="@+id/tvStartTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Time"
+                android:layout_weight="5"/>
+        </LinearLayout>
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:layout_weight="12"
+            android:id="@+id/calendarView"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp">
+        </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:ems="10"
+            android:id="@+id/etDescription"
+            android:hint="@string/Event_Description"
+            android:gravity="bottom"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_weight="4"
+            android:background="@drawable/event_edit_text_bg"
+            />
+    </LinearLayout>
+
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_send_black_24dp"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onButtonClick"
+        android:id="@+id/bInvite"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:padding="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+</RelativeLayout>

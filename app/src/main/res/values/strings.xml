@@ -51,4 +51,5 @@
         <item>New Photo</item>
         <item>Remove Photo</item>
     </string-array>
+    <string name="title_activity_make_event">MakeEvent</string>
 </resources>
