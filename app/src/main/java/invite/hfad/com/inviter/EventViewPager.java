@@ -1,11 +1,19 @@
 package invite.hfad.com.inviter;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +34,7 @@ public class EventViewPager extends AppCompatActivity {
         setContentView(R.layout.activity_event_view_pager);
         getSupportActionBar().hide();
         this.id = getIntent().getStringExtra("event_id");
-
+        updateEvent();
         viewPager = (ViewPager) findViewById(R.id.event_viewpager);
         setupViewPager(viewPager);
         viewPager.setCurrentItem(pageNumber);
@@ -89,5 +97,25 @@ public class EventViewPager extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    private void updateEvent(){
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events").child(id);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    Event event = dataSnapshot.getValue(Event.class);
+                    SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                    UserDatabaseHelper.update_event(db, id, event);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
