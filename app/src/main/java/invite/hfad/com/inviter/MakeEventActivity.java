@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -171,7 +173,7 @@ public class MakeEventActivity extends Activity {
         // set current date into datepicker
         datePicker.init(dpyear, dpmonth, dpday, null);
         final int day = datePicker.getDayOfMonth();
-        final int month = datePicker.getMonth() + 1;
+        final int month = datePicker.getMonth();
         final int year = datePicker.getYear();
         String dateString = String.format("%d-%d-%d", year, month, day);
         try {

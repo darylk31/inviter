@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,11 +46,21 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         TextView event_time = (TextView)cardView.findViewById(R.id.calendar_timeTV);
         event_name.setText(event_names[position]);
         //TODO: get time.
-        DateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         try {
+            event_time.setText("hours: ");
             Date date = format.parse(event_times[position]);
-            event_time.setText(date.toString());
-
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int hours = cal.get(Calendar.HOUR_OF_DAY);
+            int hoursConversion = hours; //used to check for am or pm
+            int minutes = cal.get(Calendar.MINUTE);
+            hours = hours % 12;
+            if(hours == 0)
+                hours = 12;
+            System.out.println("HOURS:" + hours);
+            String timeText = String.format("%02d:%02d %s", hours, minutes, hoursConversion < 12 ? "AM" : "PM");
+            event_time.setText(timeText);
         } catch (ParseException e) {
             e.printStackTrace();
         }
