@@ -3,6 +3,9 @@ package invite.hfad.com.inviter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -34,7 +37,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -88,23 +95,30 @@ public class EventChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //View rootView = inflater.inflate(R.layout.fragment_event_chat, container, false);
         id = getArguments().getString("event_id");
-        //populateFragment();
         return inflater.inflate(R.layout.fragment_event_chat, container, false);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.menu_eventpage,menu);
-        super.onCreateOptionsMenu(menu,inflater);
+    public void onActivityCreated(Bundle savedInstanceState){
+        rootView = getView();
+        toolbar = (Toolbar) rootView.findViewById(R.id.event_chat_toolbar);
+        toolbar.inflateMenu(R.menu.menu_eventpage);
+        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
+        cursor.moveToLast();
+        toolbar.setTitle(cursor.getString(0));
+        System.out.println(cursor);
+        super.onActivityCreated(savedInstanceState);
+
     }
+
 
     @Override
     public void onStart(){
-        super.onStart();
-        rootView = getView();
         populateFragment();
+        super.onStart();
     }
 
 

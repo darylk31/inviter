@@ -87,6 +87,15 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM EVENTS WHERE EID LIKE '" + id + "';");
     }
 
+    public static void update_event(SQLiteDatabase db, String id, Event event){
+        ContentValues eventValues = new ContentValues();
+        eventValues.put("DAY", event.getStartDate());
+        eventValues.put("ENDDAY", event.getEndDate());
+        eventValues.put("TITLE", event.getEvent_name());
+        eventValues.put("DESCRIPTION", event.getDescription());
+        db.update("EVENTS", eventValues, "EID='" + id + "'", null);
+    }
+
     public static void updateContacts(final SQLiteDatabase db, Context context) {
         db.execSQL("DELETE FROM FRIENDS;");
         FirebaseAuth auth = FirebaseAuth.getInstance();
