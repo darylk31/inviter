@@ -38,6 +38,7 @@ public class EventViewPager extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.event_viewpager);
         setupViewPager(viewPager);
         viewPager.setCurrentItem(pageNumber);
+        viewPager.setOffscreenPageLimit(1);
     }
 
     private void setupViewPager(ViewPager viewPager) {

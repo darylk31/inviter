@@ -1,6 +1,8 @@
 package invite.hfad.com.inviter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -8,11 +10,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,6 +43,7 @@ public class EventInfoFragment extends Fragment {
     public void onStart(){
         super.onStart();
         view = getView();
+        setEventPicture();
         try {
                 SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getContext());
                 SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
@@ -98,5 +106,13 @@ public class EventInfoFragment extends Fragment {
 
         });
         */
+    }
+
+    private void setEventPicture(){
+        ImageView EventPictureView = (ImageView) view.findViewById(R.id.event_image);
+
+        Glide.with(this)
+                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                .into(EventPictureView);
     }
 }

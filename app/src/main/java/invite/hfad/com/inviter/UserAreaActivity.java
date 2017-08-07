@@ -343,6 +343,7 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+        viewPager.setOffscreenPageLimit(2);
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 

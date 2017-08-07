@@ -14,11 +14,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 
 public class CalendarFragment extends Fragment {
@@ -73,6 +77,28 @@ public class CalendarFragment extends Fragment {
                         toast.show();
 
                     }
+            }
+        });
+
+        calendarView.addDecorators(new DayViewDecorator() {
+            @Override
+            public boolean shouldDecorate(CalendarDay day) {
+                String converted_date = String.format("%04d-%02d-%02d",day.getYear(),day.getMonth()+1,day.getDay());
+
+                try{
+                SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
+                SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY LIKE '%" + converted_date + "%';", null);
+                    if (cursor != null && cursor.moveToFirst()){
+                    return true;}
+                }
+                catch (Exception e){}
+                return false;
+            }
+
+            @Override
+            public void decorate(DayViewFacade view) {
+                view.addSpan(new DotSpan(10,R.color.colorAccent));
             }
         });
 
