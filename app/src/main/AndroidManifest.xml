@@ -30,6 +30,7 @@
         <activity android:name=".ForgotPasswordActivity"/>
         <activity
             android:name=".SettingActivity"
+            android:screenOrientation="portrait"
             android:label="Preferences"/>
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -42,20 +43,28 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyANXCkCvC17N7OoYXppaHKO2g1KiS8MeCM"/>
 
-        <activity android:name=".MakeEventActivity"/>
+        <activity android:name=".MakeEventActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".EventPage"/>
-        <activity android:name=".Contacts.ContactsActivity"/>
-        <activity android:name=".Inbox.InboxActivity"/>
+        <activity android:name=".Contacts.ContactsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Inbox.InboxActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UserAreaActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/UserAreaTheme"/>
         <activity android:name=".Register.RegisterName"/>
         <activity android:name=".Register.RegisterEmail"/>
         <activity android:name=".Register.RegisterUsername"/>
         <activity android:name=".Register.RegisterPassword"/>
         <activity android:name=".Register.RegisterConfirm"/>
-        <activity android:name=".EventObjectModel.EventSelectContacts"/>
-        <activity android:name=".EventViewPager"/>
+        <activity
+            android:name=".EventObjectModel.EventSelectContacts"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".EventViewPager"
+            android:screenOrientation="portrait" />
         <activity android:name=".CreateEvent">
         </activity>
     </application>

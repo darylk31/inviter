@@ -56,7 +56,7 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
             names = new String[getItemCount()];
             storeContacts();
         } catch (Exception e) {
-            Toast.makeText(context, "Please allow permission to search phone contacts", Toast.LENGTH_SHORT).show();
+
         }
     }
 

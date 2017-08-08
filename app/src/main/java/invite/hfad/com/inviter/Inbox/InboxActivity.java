@@ -1,11 +1,14 @@
 package invite.hfad.com.inviter.Inbox;
 
+import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.Inbox.InboxAdapter;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.UserAreaActivity;
 import invite.hfad.com.inviter.Utils;
 
 
@@ -38,16 +42,20 @@ public class InboxActivity extends AppCompatActivity {
     private ArrayList<Event> eventlist;
     private ArrayList<String> invitedbylist;
 
+    private TextView tv_empty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
         getSupportActionBar().setTitle("Inbox");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recycler = (RecyclerView) findViewById(R.id.inbox_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(layoutManager);
         auth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        tv_empty = (TextView)findViewById(R.id.tv_emptyInbox);
 
         friendlist = new ArrayList<>();
         eventlist = new ArrayList<>();
@@ -63,6 +71,7 @@ public class InboxActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+                            tv_empty.setVisibility(View.INVISIBLE);
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -96,6 +105,7 @@ public class InboxActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()){
+                            tv_empty.setVisibility(View.INVISIBLE);
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                                 String invitedby = snapshot.getValue(String.class);
                                 invitedbylist.add(invitedby);
@@ -127,5 +137,15 @@ public class InboxActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(this, UserAreaActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

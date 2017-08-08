@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.security.Permission;
 
 import invite.hfad.com.inviter.R;
 
@@ -18,19 +21,22 @@ public class PhoneContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView PhoneContactsRecycler = (RecyclerView) inflater.inflate(R.layout.fragment_phonecontacts, container, false);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        PhoneContactsRecycler.setLayoutManager(layoutManager);
-        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_CONTACTS);
-        if (permissionCheck == 1) {
-            Toast toast = Toast.makeText(getContext(), "Please enable permission to read phone contacts.", Toast.LENGTH_SHORT);
-            toast.show();
-            return PhoneContactsRecycler;
-        }
-        else{
-        PhoneContactsAdapter adapter = new PhoneContactsAdapter(getActivity().getApplicationContext());
-        PhoneContactsRecycler.setAdapter(adapter);
-        return PhoneContactsRecycler;}
+        return inflater.inflate(R.layout.fragment_phonecontacts, container, false);
     }
-}
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PhoneContactsAdapter adapter = new PhoneContactsAdapter(getActivity().getApplicationContext());
+        if (adapter.getItemCount() == 0) {
+            TextView permission_message = (TextView) getView().findViewById(R.id.tv_phoneContacts);
+            permission_message.setText("Please enable permission to access phone contacts.");
+        } else {
+            RecyclerView PhoneContactsRecycler = (RecyclerView) getView().findViewById(R.id.phoneContacts_recycler);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            PhoneContactsRecycler.setLayoutManager(layoutManager);
+            PhoneContactsRecycler.setAdapter(adapter);
+        }
+    }
+    }
+

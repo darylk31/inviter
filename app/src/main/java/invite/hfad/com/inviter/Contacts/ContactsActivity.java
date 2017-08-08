@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.UserAreaActivity;
 
 
 public class ContactsActivity extends AppCompatActivity{
@@ -32,6 +34,8 @@ public class ContactsActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        getSupportActionBar().setTitle("Contacts");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle extras = getIntent().getExtras();
 
@@ -58,12 +62,14 @@ public class ContactsActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if (id == R.id.search_contacts){
-            startActivity(new Intent(this, SearchContactsActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(this, UserAreaActivity.class));
+                break;
+            case R.id.search_contacts:
+                startActivity(new Intent(this, SearchContactsActivity.class));
+                break;}
+        return true;
     }
 
     private void setupViewPager(ViewPager viewPager) {
