@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import invite.hfad.com.inviter.R;
 
 public class FriendsFragment extends Fragment {
@@ -21,11 +23,22 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        friendsrecycler = (RecyclerView) inflater.inflate(R.layout.fragment_friends, container, false);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+        return inflater.inflate(R.layout.fragment_friends, container, false);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
         FriendsAdapter adapter = new FriendsAdapter(getContext());
-        friendsrecycler.setAdapter(adapter);
-        friendsrecycler.setLayoutManager(manager);
-        return friendsrecycler;
+        if (adapter.getItemCount() == 0){
+            TextView tv_friends = (TextView) getView().findViewById(R.id.tv_friends);
+            tv_friends.setText("You have no friends, get inviting!");
+        }
+        else {
+            friendsrecycler = (RecyclerView) getView().findViewById(R.id.friends_recycler);
+            RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext());
+            friendsrecycler.setAdapter(adapter);
+            friendsrecycler.setLayoutManager(manager);
+        }
     }
 }

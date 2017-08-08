@@ -52,8 +52,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
-                Toast toast = Toast.makeText(context, "You have no friends, get including!", Toast.LENGTH_SHORT);
-                toast.show();
                 db.close();}
             else {
                 storeFriends();
@@ -63,8 +61,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
         } catch (SQLiteException e) {
             e.printStackTrace();
-            Toast toast = Toast.makeText(context, "Error loading your friends, please try again!", Toast.LENGTH_SHORT);
-            toast.show();
         }
         this.context = context;
     }

@@ -29,7 +29,7 @@
             android:layout_width="86dp"
             android:layout_height="86dp"
             android:layout_weight="1"
-            android:layout_margin="3dp"
+            android:layout_margin="5dp"
             app:civ_border_color="#FF000000"
             app:civ_border_width="1dp" />
 
@@ -181,19 +181,23 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/tv_eventinfooptions"
             android:layout_weight="1"
-            android:text="Edit..."
+            android:clickable="true"
+            android:text="Options..."
             android:textAlignment="center"
-            android:textColor="?android:attr/colorControlActivated"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/tv_eventinfoinvite"
             android:layout_weight="1"
-            android:text="Leave Event"
+            android:clickable="true"
+            android:text="Invite!"
             android:textAlignment="center"
-            android:textColor="?attr/colorControlActivated"
+            android:textColor="@android:color/holo_green_dark"
             android:textSize="16dp" />
     </LinearLayout>
 

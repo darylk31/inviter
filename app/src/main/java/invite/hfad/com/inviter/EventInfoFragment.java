@@ -75,37 +75,8 @@ public class EventInfoFragment extends Fragment {
             Toast toast = Toast.makeText(this.getContext(), "Error: Event unavailable", Toast.LENGTH_SHORT);
             toast.show();
         }
-
-
-
-        /*
-        toolbar.inflateMenu(R.menu.menu_eventpage);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.invite_eventpage:
-                        Intent invite_intent = new Intent(EventPage.this, ContactsActivity.class);
-                        startActivity(invite_intent);
-                        break;
-                    case R.id.edit_eventpage:
-                        Intent edit_intent = new Intent(EventPage.this, MakeEventActivity.class);
-                        edit_intent.putExtra("Edit Id", id);
-                        startActivity(edit_intent);
-                        break;
-                    case R.id.delete_eventpage:
-                        //Alert dialog to confirm
-                        deleteEvent();
-                        Intent delete_intent = new Intent(EventPage.this, UserAreaActivity.class);
-                        startActivity(delete_intent);
-                        break;
-                }
-                return true;
-            }
-
-
-        });
-        */
+        onEventOptions();
+        onEventInvite();
     }
 
     private void setEventPicture(){
@@ -114,5 +85,86 @@ public class EventInfoFragment extends Fragment {
         Glide.with(this)
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .into(EventPictureView);
+    }
+
+    public void onEventOptions(){
+        getView().findViewById(R.id.tv_eventinfooptions).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setItems(R.array.EventInfo_Options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case 0:
+                                Intent edit_intent = new Intent(getContext(), MakeEventActivity.class);
+                                edit_intent.putExtra("Edit Id", id);
+                                startActivity(edit_intent);
+                                break;
+                            case 1:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Leave Event");
+                                builder.setMessage("The event will be removed from your calendar, are you sure?");
+                                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
+                                        SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                                        UserDatabaseHelper.delete_event(event_db, id);
+                                        event_db.close();
+                                        //TODO: Delete from firebase.
+                                        Intent intent = new Intent(getContext(), UserAreaActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                                builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                AlertDialog.Builder delete_builder = new AlertDialog.Builder(getContext());
+                                delete_builder.setTitle("Delete Event");
+                                delete_builder.setMessage("The event will be deleted, are you sure?");
+                                delete_builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
+                                        SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                                        UserDatabaseHelper.delete_event(event_db, id);
+                                        event_db.close();
+                                        //TODO: Delete from firebase.
+                                        Intent intent = new Intent(getContext(), UserAreaActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                                delete_builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog delete_alert = delete_builder.create();
+                                delete_alert.show();
+                                break;
+                        }
+                    }
+                });
+                builder.create();
+                builder.show();
+            }
+        });
+
+
+    }
+
+    private void onEventInvite(){
+        getView().findViewById(R.id.tv_eventinfoinvite);
     }
 }

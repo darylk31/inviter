@@ -38,11 +38,11 @@ public class CalendarFragment extends Fragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         view = getView();
-        calendarView = (MaterialCalendarView)view.findViewById(R.id.calendarView);
-        recyclerView = (RecyclerView)view.findViewById(R.id.calender_recycler);
+        calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.calender_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
@@ -59,46 +59,51 @@ public class CalendarFragment extends Fragment {
                 String month;
                 String day;
                 //converted_date in yyyy-MM-dd format.
-                String converted_date = String.format("%04d-%02d-%02d",date.getYear(),date.getMonth()+1,date.getDay());
+                String converted_date = String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay());
 
                 try {
                     SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
                     SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
                     Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY LIKE '%" + converted_date + "%';", null);
-                    if (cursor != null && cursor.moveToFirst()){
+                    if (cursor != null && cursor.moveToFirst()) {
                         recyclerView.setAdapter(new CalendarAdapter(cursor));
                         cursor.close();
-                        }
-                    else {recyclerView.setAdapter(null);}
+                    } else {
+                        recyclerView.setAdapter(null);
                     }
-                    catch (Exception e){
-                        e.printStackTrace();
-                        Toast toast = Toast.makeText(getContext(), "Error loading this date, please try again!", Toast.LENGTH_SHORT);
-                        toast.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast toast = Toast.makeText(getContext(), "Error loading this date, please try again!", Toast.LENGTH_SHORT);
+                    toast.show();
 
-                    }
+                }
             }
         });
 
         calendarView.addDecorators(new DayViewDecorator() {
             @Override
             public boolean shouldDecorate(CalendarDay day) {
-                String converted_date = String.format("%04d-%02d-%02d",day.getYear(),day.getMonth()+1,day.getDay());
+                String converted_date = String.format("%04d-%02d-%02d", day.getYear(), day.getMonth() + 1, day.getDay());
 
-                try{
-                SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
-                SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-                Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY LIKE '%" + converted_date + "%';", null);
-                    if (cursor != null && cursor.moveToFirst()){
-                    return true;}
-                }
-                catch (Exception e){}
+                try {
+                    SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getContext());
+                    SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+                    Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY LIKE '%" + converted_date + "%';", null);
+
+                    if (cursor != null && cursor.moveToFirst()) {
+                        return true;
+                    }
+
+                    cursor.close();
+                    event_db.close();
+
+                } catch (Exception e) {}
                 return false;
             }
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(10,R.color.colorAccent));
+                view.addSpan(new DotSpan(10, R.color.colorAccent));
             }
         });
 
