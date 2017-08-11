@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -95,21 +96,6 @@ public class UserAreaActivity extends AppCompatActivity {
                     // launch login activity
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     finish();
-                } else{
-
-                // User is signed in
-                String displayName = user.getDisplayName();
-                Uri profileUri = user.getPhotoUrl();
-                // If the above were null, iterate the provider data
-                // and set with the first non null data
-                for (UserInfo userInfo : user.getProviderData()) {
-                    if (displayName == null && userInfo.getDisplayName() != null) {
-                        displayName = userInfo.getDisplayName();
-                    }
-                    if (profileUri == null && userInfo.getPhotoUrl() != null) {
-                        profileUri = userInfo.getPhotoUrl();
-                    }
-                }
                 }
             }
         };
@@ -164,7 +150,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     case R.id.nav_signout:
                         auth.signOut();
                         pref.edit().clear().commit();
-                        startActivity(new Intent(UserAreaActivity.this,LoginActivity.class));
+                        startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                         finish();
                         return true;
                     default:
@@ -214,27 +200,26 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
         countInboxItems();
         auth.addAuthStateListener(authListener);
-        if(auth == null){
+        if (auth == null) {
             startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
             finish();
         }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_dashboard);
         viewPager.setAdapter(makeAdapter());
         viewPager.setCurrentItem(pageNumber);
         countInboxItems();
         auth.addAuthStateListener(authListener);
-        if(auth==null){
+        if (auth == null) {
             startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
             finish();
         }
@@ -286,7 +271,7 @@ public class UserAreaActivity extends AppCompatActivity {
                     mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) {
                                 mDatabase.child(Utils.USERNAMES).child(dataSnapshot.getValue().toString()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
                             }
                         }
@@ -296,9 +281,11 @@ public class UserAreaActivity extends AppCompatActivity {
 
                         }
                     });
-                }});
-            };
+                }
+            });
         }
+        ;
+    }
 
     private void setViewPager() {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -317,7 +304,7 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 pageNumber = position;
-                tabLayout.setScrollPosition(position,0f,true);
+                tabLayout.setScrollPosition(position, 0f, true);
                 System.out.println("position changed to:" + position);
             }
 
@@ -329,7 +316,7 @@ public class UserAreaActivity extends AppCompatActivity {
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 
-    private ViewPagerAdapter makeAdapter(){
+    private ViewPagerAdapter makeAdapter() {
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
         adapter.addFragment(new HomeFragment());
@@ -364,12 +351,18 @@ public class UserAreaActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setDisplayPicture(){
+    private void setDisplayPicture() {
         profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
 
-        Glide.with(this)
-                .load(user.getPhotoUrl())
-                .into(profilePictureView);
+        if (user.getPhotoUrl() == null) {
+            Glide.with(this)
+                    .load(R.drawable.profile_image)
+                    .into(profilePictureView);
+        } else {
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .into(profilePictureView);
+        }
 
 
         profilePictureView.setOnClickListener(new View.OnClickListener() {
@@ -379,7 +372,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 builder.setItems(R.array.Picture_Options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch(which){
+                        switch (which) {
                             case 0:
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
@@ -387,17 +380,34 @@ public class UserAreaActivity extends AppCompatActivity {
                                 startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
                                 break;
                             case 1:
+                                UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                        .setPhotoUri(null)
+                                        .build();
+                                user.updateProfile(profileUpdate)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(getApplicationContext(), "Profile photo removed.", Toast.LENGTH_SHORT).show();
+                                                setDisplayPicture();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "Please try again.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                                 break;
+                        }
                     }
-                }});
+                });
                 builder.show();
 
-        }});
+            }
+        });
     }
 
 
-
-    private void setDrawer_username(){
+    private void setDrawer_username() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
         drawer_username = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
         drawer_username.setText(user.getDisplayName());
@@ -410,18 +420,18 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 inboxCounter = 0;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    for(DataSnapshot dsChild : ds.getChildren()){
+                    for (DataSnapshot dsChild : ds.getChildren()) {
                         //inboxCounter = (int)dsChild.getChildrenCount();
                         inboxCounter++;
                         System.out.println("Inboxcounter was called with key :" + dsChild.getKey());
                     }
                 }
-                if(inboxCounter > 0){
+                if (inboxCounter > 0) {
                     SpannableString spanString = new SpannableString("Inbox (" + inboxCounter + ")");
                     spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle(spanString);
 
-                } else{
+                } else {
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("Inbox");
                 }
             }
@@ -432,22 +442,22 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void addRequestListener(){
+    private void addRequestListener() {
         mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(!dataSnapshot.exists())
+                if (!dataSnapshot.exists())
                     return;
                 String contact = dataSnapshot.getKey();
-                Contact ctest = new Contact(contact,true);
-                if(ctest.getIsContact()){
-                  return;
+                Contact ctest = new Contact(contact, true);
+                if (ctest.getIsContact()) {
+                    return;
                 }
                 mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact).setValue(contact);
                 mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
+                        if (dataSnapshot.exists()) {
                             User user = dataSnapshot.getValue(User.class);
                             addRequestNotification(user);
                         }
@@ -478,11 +488,11 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void addRequestNotification(User user){
+    private void addRequestNotification(User user) {
         System.out.println("Notification entrance");
-        if(user== null)
+        if (user == null)
             return;
-                NotificationCompat.Builder mBuilder =
+        NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.twitter_button)
                         .setContentTitle(this.getString(R.string.app_name))
