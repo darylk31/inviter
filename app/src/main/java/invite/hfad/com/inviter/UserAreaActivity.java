@@ -394,7 +394,7 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(UserAreaActivity.this);
-                builder.setItems(R.array.Profile_Options, new DialogInterface.OnClickListener() {
+                builder.setItems(R.array.Picture_Options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch(which){

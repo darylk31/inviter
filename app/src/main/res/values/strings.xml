@@ -47,7 +47,7 @@
         <item>Weekends</item>
         <item>Lol theres no way i can do this but open a calender for user to press</item>
     </string-array>
-    <string-array name="Profile_Options">
+    <string-array name="Picture_Options">
         <item>New Photo</item>
         <item>Remove Photo</item>
     </string-array>
