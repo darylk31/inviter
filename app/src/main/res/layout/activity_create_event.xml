@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scrollView1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true" >
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,21 +42,35 @@
                 android:layout_weight="5"
                 />
             <TextView
-                android:id="@+id/tvStartTime"
+                android:id="@+id/tvStartTimeDisplay"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="Time"
                 android:layout_weight="5"/>
         </LinearLayout>
+
+
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:layout_weight="12"
+            android:layout_weight="11"
             android:id="@+id/calendarView"
             android:layout_width="fill_parent"
             android:layout_height="0dp">
         </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
 
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+           <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/edit_text_height"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                />
+        </RelativeLayout>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -73,8 +92,7 @@
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onButtonClick"
-        android:id="@+id/bInvite"
+        android:id="@+id/bEventSelectContacts"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="15dp"
         android:padding="15dp"
@@ -82,3 +100,4 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 </RelativeLayout>
+f</ScrollView>

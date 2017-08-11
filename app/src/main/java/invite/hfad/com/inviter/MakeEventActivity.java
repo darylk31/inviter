@@ -379,8 +379,6 @@ public class MakeEventActivity extends Activity {
                 .setTitle("lol");
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
     }
 
     public void onRepeatClick(View v) {
