@@ -100,6 +100,7 @@ public class EventInfoFragment extends Fragment {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("events/" + id + ".jpg");
 
+        /*
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -108,6 +109,22 @@ public class EventInfoFragment extends Fragment {
                             .into(EventPictureView);
                 }
             });
+            */
+
+        storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Glide.with(EventInfoFragment.this)
+                            .load(task.getResult())
+                            .into(EventPictureView);
+                }
+                else
+                    Glide.with(EventInfoFragment.this)
+                        .load(R.drawable.event_camera)
+                        .into(EventPictureView);
+            }
+        });
 
 
         EventPictureView.setOnClickListener(new View.OnClickListener() {
