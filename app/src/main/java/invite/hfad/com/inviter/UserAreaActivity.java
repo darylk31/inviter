@@ -494,7 +494,7 @@ public class UserAreaActivity extends AppCompatActivity {
             return;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.twitter_button)
+                        .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(user.getUsername() + "would like to add you!");
         // Sets an unique ID for the addRequestNotification
