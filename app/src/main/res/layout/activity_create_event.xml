@@ -35,19 +35,21 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin">
             <TextView
                 android:id="@+id/tvDateDisplay"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:text=""
                 android:layout_weight="5"
                 />
+
             <TextView
                 android:id="@+id/tvStartTimeDisplay"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="Time"
                 android:layout_weight="5"/>
+
         </LinearLayout>
 
 
@@ -62,26 +64,38 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-           <fragment
-                android:id="@+id/place_autocomplete_fragment"
+
+            <ImageView
+                android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/edit_text_height"
-                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                android:background="@android:color/transparent"
-                android:gravity="left"
-                />
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_place_black_24dp" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_toEndOf="@+id/imageView2"
+                android:layout_toRightOf="@+id/imageView2"
+                android:clickable="true"
+                android:hint="Add location..."
+                android:textSize="18sp" />
+
         </RelativeLayout>
+
         <EditText
+            android:id="@+id/etDescription"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:ems="10"
-            android:id="@+id/etDescription"
-            android:hint="@string/Event_Description"
-            android:gravity="bottom"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_weight="4"
             android:background="@drawable/event_edit_text_bg"
-            />
+            android:ems="10"
+            android:gravity="bottom"
+            android:hint="Description" />
     </LinearLayout>
 
 

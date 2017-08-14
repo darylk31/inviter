@@ -11,16 +11,22 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -49,6 +55,8 @@ public class CreateEvent extends AppCompatActivity {
     private String startTimeData;
     private String endDateData;
     private String endTimeData;
+    private int PLACE_PICKER_REQUEST = 1;
+    private TextView tvLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +67,16 @@ public class CreateEvent extends AppCompatActivity {
         onStartDateSelect();
         onStartTimeClick();
         onButtonClick();
-        googleLocationFragment();
+
     }
 
-    private void getViews(){
+    @Override
+    public void onStart() {
+        super.onStart();
+        setUpGoogleLocation();
+    }
+
+    private void getViews() {
         startCalendarView = (MaterialCalendarView) findViewById(R.id.calendarView);
         dateTextDisplay = (TextView) findViewById(R.id.tvDateDisplay);
         timeTextDisplay = (TextView) findViewById(R.id.tvStartTimeDisplay);
@@ -71,7 +85,7 @@ public class CreateEvent extends AppCompatActivity {
         button = (FloatingActionButton) findViewById(R.id.bEventSelectContacts);
     }
 
-    private void onStartDateSelect(){
+    private void onStartDateSelect() {
         startCalendarView.setSelectedDate(Calendar.getInstance());
         String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(new Date());
         dateTextDisplay.setText(output);
@@ -79,7 +93,7 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 try {
-                    String converted_date = String.format("%04d-%02d-%02d",date.getYear(),date.getMonth()+1,date.getDay());
+                    String converted_date = String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay());
                     Date newDate = new SimpleDateFormat("yyyy-MM-dd").parse(converted_date);
                     startDateData = converted_date;
                     String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(newDate);
@@ -91,7 +105,7 @@ public class CreateEvent extends AppCompatActivity {
         });
     }
 
-    private void onStartTimeClick(){
+    private void onStartTimeClick() {
         timeTextDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +120,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (hour == 0)
                             hour = 12;
                         String timeText = String.format("%02d:%02d %s", hour, minute, hourOfDay < 12 ? "AM" : "PM");
-                        startTimeData = String.format("%02d:%02d:%02d",hourOfDay,minute,00);
+                        startTimeData = String.format("%02d:%02d:%02d", hourOfDay, minute, 00);
                         timeTextDisplay.setText(timeText);
                     }
                 }, mHour, mMinute, false);
@@ -116,33 +130,48 @@ public class CreateEvent extends AppCompatActivity {
         });
     }
 
-    private void onButtonClick(){
+    private void onButtonClick() {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
-                Event event = new Event(date,endDateData,title,description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),new ArrayList<String>());
-                Intent intent = new Intent(CreateEvent.this , EventSelectContacts.class);
-                intent.putExtra("myEvent",(Parcelable) event);
+                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), new ArrayList<String>());
+                Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
+                intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);
             }
         });
     }
 
-    public void googleLocationFragment() {
+    public void setUpGoogleLocation() {
+        tvLocation = (TextView) findViewById(R.id.tvLocation);
+        tvLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
+        /*
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 this.getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
-/*
-* The following code example shows setting an AutocompleteFilter on a PlaceAutocompleteFragment to
-* set a filter returning only results with a precise address.
-*/
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build();
         autocompleteFragment.setFilter(typeFilter);
+
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
@@ -156,7 +185,20 @@ public class CreateEvent extends AppCompatActivity {
                 //Log.i(TAG, "An error occurred: " + status);
             }
         });
+        */
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                tvLocation.setText(place.getAddress());
+            }
+        }
+    }
+
+
 
 
     @Override
