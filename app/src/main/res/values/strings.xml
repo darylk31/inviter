@@ -58,4 +58,6 @@
         <item>Delete Event (Admin)</item>
     </string-array>
     <string name="title_activity_make_event">MakeEvent</string>
+    <string name="pin_message_text">Pin Message</string>
+    <string name="copy_button">Copy</string>
 </resources>

@@ -1,6 +1,6 @@
 package invite.hfad.com.inviter;
 
-import android.content.Context;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +22,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -37,11 +38,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -87,8 +84,7 @@ public class EventChatFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -96,14 +92,25 @@ public class EventChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         id = getArguments().getString("event_id");
-        return inflater.inflate(R.layout.fragment_event_chat, container, false);
+        this.setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_event_chat, container, false);
+        toolbar = (Toolbar) view.findViewById(R.id.event_chat_toolbar);
+        toolbar.inflateMenu(R.menu.menu_eventpage);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final DialogFragment pinDialog = new PinFragment();
+                android.app.FragmentManager fm = getActivity().getFragmentManager();
+                pinDialog.show(fm,"dialog");
+                return true;
+            }
+        });
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         rootView = getView();
-        toolbar = (Toolbar) rootView.findViewById(R.id.event_chat_toolbar);
-        toolbar.inflateMenu(R.menu.menu_eventpage);
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
@@ -111,7 +118,26 @@ public class EventChatFragment extends Fragment {
         toolbar.setTitle(cursor.getString(0));
         System.out.println(cursor);
         super.onActivityCreated(savedInstanceState);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        System.out.println("createOptionsMenu");
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.menu_eventpage, menu);
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch(item.getItemId()){
+            case R.id.pin_messages:
+                System.out.println("does it work");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -128,6 +154,7 @@ public class EventChatFragment extends Fragment {
         public TextView messengerTextView;
         public CircleImageView messengerImageView;
         public TextView messageTimeStamp;
+        private String id;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -137,10 +164,10 @@ public class EventChatFragment extends Fragment {
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
             messageTimeStamp = (TextView) itemView.findViewById(R.id.messageTimeStamp);
         }
+
     }
 
     private void populateFragment(){
-
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //Set default username as anonymous
         mUsername = ANONYMOUS;
@@ -169,7 +196,7 @@ public class EventChatFragment extends Fragment {
                 mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT)) {
 
             @Override
-            protected void populateViewHolder(final MessageViewHolder viewHolder, FriendlyMessage friendlyMessage, int position) {
+            protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -223,6 +250,18 @@ public class EventChatFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if(friendlyMessage.getId() != null) {
+                            Toast.makeText(getActivity(), friendlyMessage.getId(), Toast.LENGTH_LONG).show();
+                            final DialogFragment chatDialogFragment = new ChatDialogFragment();
+                            android.app.FragmentManager fm = getActivity().getFragmentManager();
+                            chatDialogFragment.show(fm,"dialog");
+                        }
+                        return true;
+                    }
+                });
             }
         };
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -269,14 +308,15 @@ public class EventChatFragment extends Fragment {
         });
         //Send Chat text
         mSendButton = (Button) rootView.findViewById(R.id.sendButton);
+        final String friendlyMessageId = mFirebaseDatabaseReference.push().getKey();
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(),
+                FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
                         mUsername, mPhotoUrl,timeStamp, null);
-                mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).push().setValue(friendlyMessage);
+                mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
         });

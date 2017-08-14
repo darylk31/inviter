@@ -65,7 +65,9 @@
         <activity
             android:name=".EventViewPager"
             android:screenOrientation="portrait" />
-        <activity android:name=".CreateEvent">
+        <activity
+            android:name=".CreateEvent"
+                  android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 

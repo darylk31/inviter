@@ -27,7 +27,8 @@ public class FriendlyMessage {
     public FriendlyMessage() {
     }
 
-    public FriendlyMessage(String text, String name, String photoUrl, String timeStamp, String imageUrl) {
+    public FriendlyMessage(String id,String text, String name, String photoUrl, String timeStamp, String imageUrl) {
+        this.id = id;
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;

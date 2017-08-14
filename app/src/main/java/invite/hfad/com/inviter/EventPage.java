@@ -238,6 +238,7 @@ public class EventPage extends Activity {
             }
         });
         //Send Chat text
+        /*
         mSendButton = (Button) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
@@ -263,6 +264,7 @@ public class EventPage extends Activity {
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
+    */
     }
 
 }

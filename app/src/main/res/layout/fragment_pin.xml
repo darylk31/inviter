@@ -5,9 +5,20 @@
              tools:context="invite.hfad.com.inviter.PinFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
-
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/pin_button"
+            android:text="@string/pin_message_text"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_below="@id/pin_button"
+            android:text="@string/remove_button_text"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 </FrameLayout>
