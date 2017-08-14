@@ -255,7 +255,11 @@ public class EventChatFragment extends Fragment {
                     public boolean onLongClick(View view) {
                         if(friendlyMessage.getId() != null) {
                             Toast.makeText(getActivity(), friendlyMessage.getId(), Toast.LENGTH_LONG).show();
-                            final DialogFragment chatDialogFragment = new ChatDialogFragment();
+                            DialogFragment chatDialogFragment = new ChatDialogFragment();
+                            Bundle args = new Bundle();
+                            args.putString("message",friendlyMessage.getText());
+                            args.putString("id",friendlyMessage.getId());
+                            chatDialogFragment.setArguments(args);
                             android.app.FragmentManager fm = getActivity().getFragmentManager();
                             chatDialogFragment.show(fm,"dialog");
                         }

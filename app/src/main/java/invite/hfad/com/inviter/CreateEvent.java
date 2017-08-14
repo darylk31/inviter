@@ -66,6 +66,7 @@ public class CreateEvent extends AppCompatActivity {
     private String startTimeData;
     private String endDateData;
     private String endTimeData;
+    private String location;
     private int PLACE_PICKER_REQUEST = 1;
     private int LOCATION_PERMISSION = 11;
     private TextView tvLocation;
@@ -149,7 +150,10 @@ public class CreateEvent extends AppCompatActivity {
                 String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), new ArrayList<String>());
+                if(location == null) {
+                    location = "";
+                }
+                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), new ArrayList<String>(),location);
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);
@@ -206,6 +210,7 @@ public class CreateEvent extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 tvLocation.setText(place.getAddress());
+                location = tvLocation.getText().toString();
                 tvLocation.postDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -101,7 +101,7 @@ public class MakeEventActivity extends Activity {
         l1.getLayoutParams().height = height - actionbar;
     }
 
-
+/**
     public void onButtonClick(View view) {
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
@@ -113,7 +113,7 @@ public class MakeEventActivity extends Activity {
         intent.putExtra("myEvent", (Parcelable) event);
         System.out.println(event.toString());
         startActivity(intent);
-        /**
+
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         final EditText etDescription = (EditText) findViewById(R.id.etDescription);
         titleData = etTitle.getText().toString().trim();
@@ -129,9 +129,9 @@ public class MakeEventActivity extends Activity {
             Toast.makeText(MakeEventActivity.this, "Successfully added Event", Toast.LENGTH_LONG).show();
             startActivity(i);
         }
-         */
-    }
 
+    }
+*/
 
     public void onStartTimeClick(){
         final TextView tvTime = (TextView) findViewById(R.id.tvStartTime);

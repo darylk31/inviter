@@ -17,9 +17,12 @@ public class Event implements Parcelable{
     private String event_name;
     private String description;
     private String eventId;
+    private String location;
     private List<String> invitedId;
     private List<String> acceptedId;
     private String creator;
+
+    private final int PARAMETERS = 6;
 
     public Event(){};
 
@@ -28,12 +31,14 @@ public class Event implements Parcelable{
                   String event_name,
                   String description,
                   String creator,
-                  List<String> invitedId) {
+                  List<String> invitedId,
+                  String location) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         //location
+        this.location = location;
         this.creator = creator;
         this.invitedId = invitedId;
         //chat object
@@ -58,7 +63,7 @@ public class Event implements Parcelable{
     */
 
     public Event(Parcel in){
-        String[] data = new String[5];
+        String[] data = new String[PARAMETERS];
         in.readStringArray(data);
         for(int i = 0 ; i < data.length ; i++)
             System.out.println(i + ":" + data[i]);
@@ -68,6 +73,7 @@ public class Event implements Parcelable{
         this.description = data[3];
         this.creator = data[4];
         this.invitedId = new ArrayList<String>();
+        this.location = data[5];
     }
 
     public String getStartDate(){
@@ -134,7 +140,7 @@ public class Event implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator});
+        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator,location});
     }
 
 
@@ -161,5 +167,13 @@ public class Event implements Parcelable{
 
     public void setAcceptedId(List acceptedId) {
         this.acceptedId = acceptedId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
