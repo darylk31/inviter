@@ -1,14 +1,25 @@
 package invite.hfad.com.inviter;
 
+import android.*;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,6 +67,7 @@ public class CreateEvent extends AppCompatActivity {
     private String endDateData;
     private String endTimeData;
     private int PLACE_PICKER_REQUEST = 1;
+    private int LOCATION_PERMISSION = 11;
     private TextView tvLocation;
 
     @Override
@@ -151,64 +163,66 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                    startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+                    if (ContextCompat.checkSelfPermission(CreateEvent.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(CreateEvent.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                LOCATION_PERMISSION);}
+                    else {
+                        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                        startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+                    }
+            } catch(
+            GooglePlayServicesRepairableException e)
+            {e.printStackTrace();
+            } catch(
+            GooglePlayServicesNotAvailableException e)
+            {e.printStackTrace();}
+        }
+    });}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults){
+        if (requestCode == LOCATION_PERMISSION){
+            if (grantResults.length != 0){
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
             }
-        });
+        }}
 
-
-
-        /*
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                this.getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
-                .build();
-        autocompleteFragment.setFilter(typeFilter);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                //Log.i(TAG, "Place: " + place.getName());//get place details here
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                //Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-        */
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == PLACE_PICKER_REQUEST) {
+
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 tvLocation.setText(place.getAddress());
+                tvLocation.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvLocation.setSelected(true);
+                }}, 2000);
             }
         }
     }
 
 
-
-
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
-        if(etTitle.getText().toString().equals("")) {
+        if (etTitle.getText().toString().equals("")) {
             Intent intent = new Intent(CreateEvent.this, UserAreaActivity.class);
             startActivity(intent);
-        }
-        else {
+        } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateEvent.this);
             builder.setTitle("Discard");
             builder.setMessage("All event information will be discarded, are you sure?");
@@ -229,4 +243,6 @@ public class CreateEvent extends AppCompatActivity {
             alert.show();
         }
     }
+
+
 }
