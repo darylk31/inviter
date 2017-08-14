@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.Event;
@@ -123,17 +124,14 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 TextView eventday = (TextView) cardView.findViewById(R.id.inbox_event_day);
                 TextView eventMonth = (TextView) cardView.findViewById(R.id.inbox_event_month);
                 try{
-                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(eventlist.get(pos).getStartDate());
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(date);
-                    eventMonth.setText(new SimpleDateFormat("MMMM").format(date));
-                    eventday.setText(new SimpleDateFormat("dd").format(date));
-                    System.out.println("dateMonth: " + new SimpleDateFormat("MMMM").format(date) + " dateDay" + new SimpleDateFormat("dd").format(date));
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(eventlist.get(pos).getStartDate());
+                    eventMonth.setText(new SimpleDateFormat("MMM", Locale.ENGLISH).format(date));
+                    eventday.setText(new SimpleDateFormat("dd", Locale.ENGLISH).format(date));
                 }catch (ParseException e){
                     e.printStackTrace();
                 }
                 TextView invitedby = (TextView) cardView.findViewById(R.id.inbox_event_inviteby);
-                invitedby.setText(invitedbylist.get(pos));
+                invitedby.setText("Invitation from: " + invitedbylist.get(pos));
 
                 final Button eventaccept = (Button) cardView.findViewById(R.id.event_accept_button);
                 final Button eventdecline = (Button) cardView.findViewById(R.id.event_decline_button);

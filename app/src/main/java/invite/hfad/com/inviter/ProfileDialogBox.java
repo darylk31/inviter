@@ -48,12 +48,19 @@ public class ProfileDialogBox extends Dialog implements android.view.View.OnClic
                 if (dataSnapshot.exists()){
                     Usernames username = dataSnapshot.getValue(Usernames.class);
                     profile_displayname.setText(username.getDisplayname());
-                    /*
+                    if (username.getPhotoUrl() == null){
+                        Glide.with(getContext())
+                                .load(R.drawable.profile_image)
+                                .into(profile_picture);
+                    }
+
                     //Need to add default profile pictures
-                    Glide.with(getOwnerActivity())
-                            .load(username.getPhotoUrl())
-                            .into(profile_picture);
-                            */
+                    else {
+                        Glide.with(getContext())
+                                .load(username.getPhotoUrl())
+                                .into(profile_picture);
+                    }
+
                 }
             }
 
