@@ -47,23 +47,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         event_name.setText(event_names[position]);
         //TODO: get time.
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        try {
-            event_time.setText("hours: ");
-            Date date = format.parse(event_times[position]);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            int hours = cal.get(Calendar.HOUR_OF_DAY);
-            int hoursConversion = hours; //used to check for am or pm
-            int minutes = cal.get(Calendar.MINUTE);
-            hours = hours % 12;
-            if(hours == 0)
-                hours = 12;
-            System.out.println("HOURS:" + hours);
-            String timeText = String.format("%02d:%02d %s", hours, minutes, hoursConversion < 12 ? "AM" : "PM");
-            event_time.setText(timeText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            try {
+                Date date = format.parse(event_times[position]);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int hours = cal.get(Calendar.HOUR_OF_DAY);
+                int hoursConversion = hours; //used to check for am or pm
+                int minutes = cal.get(Calendar.MINUTE);
+                hours = hours % 12;
+                if (hours == 0)
+                    hours = 12;
+                System.out.println("HOURS:" + hours);
+                String timeText = String.format("%02d:%02d %s", hours, minutes, hoursConversion < 12 ? "AM" : "PM");
+                event_time.setText(timeText);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

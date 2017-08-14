@@ -40,7 +40,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     String[] uid;
     String[] username;
     String[] displayname;
-    String[] profile;
     Context context;
 
 
@@ -110,10 +109,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         String[] uid = new String[getItemCount()];
         String[] username = new String[getItemCount()];
         String[] display = new String[getItemCount()];
-        String[] profile = new String[getItemCount()];
         for (int i = 0; i < getItemCount(); i++) {
             cursor.moveToPosition(i);
-            profile[i] = cursor.getString(3);
             display[i] = cursor.getString(2);
             username[i] = cursor.getString(1);
             uid[i] = cursor.getString(0);
@@ -121,7 +118,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         this.uid = uid;
         this.username = username;
         this.displayname = display;
-        this.profile = profile;
     }
 }
 

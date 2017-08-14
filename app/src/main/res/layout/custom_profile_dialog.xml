@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/profile_dialog_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile_dialog_header">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linear_profile_image"
@@ -16,12 +16,13 @@
             android:layout_height="136dp">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                          android:id="@+id/profile_image"
-                                                          android:layout_width="match_parent"
-                                                          android:layout_height="match_parent"
-                                                          android:layout_alignParentLeft="true"
-                                                          app:civ_border_color="#FF000000"
-                                                          app:civ_border_width="1dp"/>
+                android:id="@+id/profile_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="5dp"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="1dp" />
         </LinearLayout>
 
 
@@ -40,13 +41,13 @@
                 android:layout_height="wrap_content"
                 android:text="Username"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="24sp"/>
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/profile_displayname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Display"/>
+                android:text="Display" />
 
         </LinearLayout>
     </LinearLayout>
@@ -61,17 +62,17 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/messenger_button_text"/>
+            android:text="@string/messenger_button_text" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/messenger_send_button_text"/>
+            android:text="@string/messenger_send_button_text" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/remove_button_text"/>
+            android:text="@string/remove_button_text" />
 
 
     </LinearLayout>
