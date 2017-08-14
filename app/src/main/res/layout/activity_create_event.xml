@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/scrollView1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:fillViewport="true" >
@@ -9,11 +10,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="invite.hfad.com.inviter.CreateEvent">
+
     <LinearLayout
+        android:id="@+id/create_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="vertical"
         android:weightSum="20">
 
@@ -22,8 +27,11 @@
             android:layout_height="0dp"
             android:id="@+id/etTitle"
             android:hint="@string/Event_Title"
-            android:textSize="35sp"
-            android:layout_weight="3"
+            android:textSize="25sp"
+            android:ellipsize="start"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:layout_weight="2"
             />
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,20 +77,26 @@
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:src="@drawable/ic_place_black_24dp" />
 
             <TextView
                 android:id="@+id/tvLocation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="7dp"
-                android:layout_marginStart="7dp"
+                android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/imageView2"
                 android:layout_toRightOf="@+id/imageView2"
                 android:clickable="true"
                 android:hint="Add location..."
-                android:textSize="18sp" />
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:singleLine="true"
+                android:textSize="16dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true" />
 
         </RelativeLayout>
 
@@ -96,22 +110,38 @@
             android:ems="10"
             android:gravity="bottom"
             android:hint="Description" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/create_layout2"
+        android:layout_below="@id/create_layout1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Additional Settings"/>
+
     </LinearLayout>
 
 
 
 
     <android.support.design.widget.FloatingActionButton
-        android:src="@drawable/ic_send_black_24dp"
-        app:backgroundTint="@color/colorPrimary"
+        android:id="@+id/bEventSelectContacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/bEventSelectContacts"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="15dp"
         android:padding="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:src="@drawable/ic_send_black_24dp"
+        app:backgroundTint="@color/colorPrimary" />
 </RelativeLayout>
 f</ScrollView>
