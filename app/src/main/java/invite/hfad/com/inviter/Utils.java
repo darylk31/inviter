@@ -15,6 +15,7 @@ public class Utils {
     public static final String USERNAMES = "Usernames";
     public static final String CHAT = "Chat";
     public static final String EVENT = "Events";
+    public static final String PIN = "Pin";
 
     //USER TABLE STUFF
     public static final String USER_PHOTO_URL = "photoUrl";

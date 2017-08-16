@@ -1,24 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="invite.hfad.com.inviter.PinFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pin_eventchat_recycler_view_frag"
+                tools:context="invite.hfad.com.inviter.EventChatFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/pin_button"
-            android:text="@string/pin_message_text"
-            android:background="@android:color/transparent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/event_chat_toolbar">
+
+        <RelativeLayout
+            android:id="@+id/chatroom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:layout_below="@id/pin_button"
-            android:text="@string/remove_button_text"
-            android:background="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-</FrameLayout>
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pinMessageRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/pinMessageText"
+                android:text="@string/no_pin_message"
+                android:textSize="18dp"
+                android:textStyle="italic"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

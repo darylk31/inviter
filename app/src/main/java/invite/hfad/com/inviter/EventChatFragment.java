@@ -53,7 +53,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EventChatFragment extends Fragment {
 
-    String id;
+    //Event id
+    private String id;
 
     //Chat
     private static final String ANONYMOUS = "Anonymous";
@@ -99,7 +100,10 @@ public class EventChatFragment extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                final DialogFragment pinDialog = new PinFragment();
+                DialogFragment pinDialog = new PinFragment();
+                Bundle args = new Bundle();
+                args.putString("id",id);
+                pinDialog.setArguments(args);
                 android.app.FragmentManager fm = getActivity().getFragmentManager();
                 pinDialog.show(fm,"dialog");
                 return true;
@@ -127,20 +131,6 @@ public class EventChatFragment extends Fragment {
         inflater.inflate(R.menu.menu_eventpage, menu);
 
     }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.pin_messages:
-                System.out.println("does it work");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
     @Override
     public void onStart(){
         populateFragment();
@@ -254,11 +244,11 @@ public class EventChatFragment extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         if(friendlyMessage.getId() != null) {
-                            Toast.makeText(getActivity(), friendlyMessage.getId(), Toast.LENGTH_LONG).show();
                             DialogFragment chatDialogFragment = new ChatDialogFragment();
                             Bundle args = new Bundle();
                             args.putString("message",friendlyMessage.getText());
-                            args.putString("id",friendlyMessage.getId());
+                            args.putString("message_id",friendlyMessage.getId());
+                            args.putString("id",id);
                             chatDialogFragment.setArguments(args);
                             android.app.FragmentManager fm = getActivity().getFragmentManager();
                             chatDialogFragment.show(fm,"dialog");
@@ -312,11 +302,11 @@ public class EventChatFragment extends Fragment {
         });
         //Send Chat text
         mSendButton = (Button) rootView.findViewById(R.id.sendButton);
-        final String friendlyMessageId = mFirebaseDatabaseReference.push().getKey();
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).push().getKey();
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
                         mUsername, mPhotoUrl,timeStamp, null);

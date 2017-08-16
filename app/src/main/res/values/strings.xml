@@ -60,4 +60,6 @@
     <string name="title_activity_make_event">MakeEvent</string>
     <string name="pin_message_text">Pin Message</string>
     <string name="copy_button">Copy</string>
+    <string name="no_pin_message">There are no pinned messages</string>
+    <string name="remove_pin_button_text">Unpinned</string>
 </resources>
