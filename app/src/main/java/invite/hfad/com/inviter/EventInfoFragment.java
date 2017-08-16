@@ -124,10 +124,8 @@ public class EventInfoFragment extends Fragment {
                 EventMembersFragment eventMembersFragment = new EventMembersFragment();
                 eventMembersFragment.setArguments(args);
                 FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.show(eventMembersFragment);
-                //ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
-                //ft.addToBackStack("member");
+                FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
+                ft.addToBackStack("member");
                 ft.commit();
             }
         });
