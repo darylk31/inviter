@@ -150,9 +150,6 @@ public class CreateEvent extends AppCompatActivity {
                 String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
-                if(location == null) {
-                    location = "";
-                }
                 Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), new ArrayList<String>(),location);
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
@@ -209,7 +206,11 @@ public class CreateEvent extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                tvLocation.setText(place.getAddress());
+                if (place.getName() != null){
+                tvLocation.setText(place.getName() + " @ " + place.getAddress());}
+                else {
+                    tvLocation.setText(place.getAddress());
+                }
                 location = tvLocation.getText().toString();
                 tvLocation.postDelayed(new Runnable() {
                     @Override

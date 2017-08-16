@@ -37,10 +37,9 @@ public class Event implements Parcelable{
         this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
-        //location
-        this.location = location;
         this.creator = creator;
         this.invitedId = invitedId;
+        this.location = location;
         //chat object
     }
 /*
