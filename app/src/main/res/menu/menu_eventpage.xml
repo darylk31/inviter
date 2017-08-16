@@ -5,8 +5,8 @@
 
     <item
         android:id="@+id/pin_messages"
-        android:title="test?"
-        android:icon="@drawable/ic_send_black_24dp"
+        android:title="pin"
+        android:icon="@drawable/pin"
         app:showAsAction="always"
         />
 </menu>

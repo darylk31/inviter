@@ -32,13 +32,13 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "DAY TEXT, "
                 + "ENDDAY TEXT,"
                 + "TITLE TEXT, "
-                + "DESCRIPTION TEXT);");
+                + "DESCRIPTION TEXT, "
+                + "LOCATION TEXT);");
 
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "UID TEXT PRIMARY KEY, "
                 + "USERNAME TEXT, "
-                + "DISPLAY TEXT, "
-                + "PHOTO TEXT);");
+                + "DISPLAY TEXT;");
     }
 
     @Override
@@ -78,6 +78,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         eventValues.put("ENDDAY", event.getEndDate());
         eventValues.put("TITLE", event.getEvent_name());
         eventValues.put("DESCRIPTION", event.getDescription());
+        eventValues.put("LOCATION", event.getLocation());
         db.insert("EVENTS",null, eventValues);
 
     }
