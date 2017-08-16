@@ -47,7 +47,7 @@ public class EventInfoFragment extends Fragment {
     private String id;
     private String event_string;
     private View view;
-
+    private TextView event_location;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class EventInfoFragment extends Fragment {
             //TODO: Select just time.
             TextView event_time = (TextView) view.findViewById(R.id.tv_eventpagetime);
             event_time.setText(cursor.getString(2));
-            TextView event_location = (TextView) view.findViewById(R.id.tv_eventpageloc);
+            event_location = (TextView) view.findViewById(R.id.tv_eventpageloc);
             event_location.setText(cursor.getString(6));
             TextView event_description = (TextView) view.findViewById(R.id.tv_eventpagedescrip);
             event_description.setText(cursor.getString(5));
@@ -97,6 +97,21 @@ public class EventInfoFragment extends Fragment {
         }
         onEventOptions();
         onEventInvite();
+
+        event_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(event_location.getText() != null){
+                    String map = "http://maps.google.co.in/maps?q=" + event_location.getText();
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(map)));
+                }
+
+
+
+            }
+        });
+
+
     }
 
     private void setEventPicture() {
