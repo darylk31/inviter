@@ -45,23 +45,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         TextView event_name = (TextView)cardView.findViewById(R.id.calendar_nameTV);
         TextView event_time = (TextView)cardView.findViewById(R.id.calendar_timeTV);
         event_name.setText(event_names[position]);
-        //TODO: get time.
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             try {
                 Date date = format.parse(event_times[position]);
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(date);
-                int hours = cal.get(Calendar.HOUR_OF_DAY);
-                int hoursConversion = hours; //used to check for am or pm
-                int minutes = cal.get(Calendar.MINUTE);
-                hours = hours % 12;
-                if (hours == 0)
-                    hours = 12;
-                System.out.println("HOURS:" + hours);
-                String timeText = String.format("%02d:%02d %s", hours, minutes, hoursConversion < 12 ? "AM" : "PM");
-                event_time.setText(timeText);
+                String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
+                event_time.setText(output_time);
             } catch (ParseException e) {
-                e.printStackTrace();
+                event_time.setText("All Day");
             }
 
         cardView.setOnClickListener(new View.OnClickListener() {

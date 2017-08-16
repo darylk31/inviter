@@ -68,9 +68,16 @@
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:textSize="20dp" />
+
                 <TextView
+                    android:id="@+id/event_time"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14dp"
+                    android:textStyle="italic" />
 
 
             </LinearLayout>

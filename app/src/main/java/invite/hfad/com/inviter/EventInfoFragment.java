@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,8 @@ public class EventInfoFragment extends Fragment {
     private String event_string;
     private View view;
     private TextView event_location;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,6 +114,24 @@ public class EventInfoFragment extends Fragment {
 
             }
         });
+
+        TextView tv_members = (TextView) getView().findViewById(R.id.tv_eventinfomembers);
+        tv_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putString("event_id", id);
+                EventMembersFragment eventMembersFragment = new EventMembersFragment();
+                eventMembersFragment.setArguments(args);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
+                ft.addToBackStack("member");
+                ft.commit();
+            }
+        });
+
+
 
 
     }

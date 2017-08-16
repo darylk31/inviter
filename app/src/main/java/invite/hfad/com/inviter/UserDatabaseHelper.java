@@ -135,7 +135,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         friendValues.put("UID", user.getUid());
         friendValues.put("USERNAME", user.getUsername());
         friendValues.put("DISPLAY", user.getDisplayname());
-        friendValues.put("PHOTO", user.getPhotoUrl());
         db.insert("FRIENDS", null, friendValues);
     }
 

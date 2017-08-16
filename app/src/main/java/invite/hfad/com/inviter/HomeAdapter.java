@@ -29,6 +29,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     private String[] event_days;
     private String[] event_ids;
     private Cursor cursor;
+    private Date date;
     private SQLiteDatabase event_db;
 
 
@@ -42,30 +43,29 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         }
     }
 
-    public HomeAdapter(Context context, Boolean newEvents){
-            try {
-                SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
-                SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-                if (newEvents) {
-                    Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY >= date('now', 'localtime') ORDER BY date(DAY) ASC", null);
-                    this.event_db = event_db;
-                    this.cursor = cursor;
-                    storeEvents();
-                    cursor.close();
-                    event_db.close();
-                }
-                else {
-                    Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY < date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
-                    this.event_db = event_db;
-                    this.cursor = cursor;
-                    storeEvents();
-                    cursor.close();
-                    event_db.close();
-                }
-
-            } catch (SQLiteException e) {
+    public HomeAdapter(Context context, Boolean newEvents) {
+        try {
+            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(context);
+            SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+            if (newEvents) {
+                Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE DAY >= date('now', 'localtime') ORDER BY date(DAY) ASC", null);
+                this.event_db = event_db;
+                this.cursor = cursor;
+                storeEvents();
+                cursor.close();
+                event_db.close();
+            } else {
+                Cursor cursor = event_db.rawQuery("SELECT * FROM " + "EVENTS " + "WHERE DAY < date('now','localtime') " + "ORDER BY date(" + "DAY" + ") ASC", null);
+                this.event_db = event_db;
+                this.cursor = cursor;
+                storeEvents();
+                cursor.close();
+                event_db.close();
             }
+
+        } catch (SQLiteException e) {
         }
+    }
 
 
     @Override
@@ -80,42 +80,50 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         TextView event_name_text = (TextView) cardView.findViewById(R.id.event_name);
         TextView event_month_text = (TextView) cardView.findViewById(R.id.event_month);
         TextView event_day_text = (TextView) cardView.findViewById(R.id.event_day);
-            event_name_text.setText(event_names[position]);
-            String event_day = event_days[position];
-            String output_day = "";
-            String output_month = "";
+        TextView event_time_text = (TextView) cardView.findViewById(R.id.event_time);
+        event_name_text.setText(event_names[position]);
+        String event_day = event_days[position];
+        String output_day = "";
+        String output_month = "";
+        String output_time = "";
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
+            output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+            output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+            output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
+        } catch (ParseException e) {
             try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
                 output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
                 output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (ParseException e1) {
+                e1.printStackTrace();
             }
-            event_day_text.setText(output_day);
-            event_month_text.setText(output_month);
+        }
+
+        event_day_text.setText(output_day);
+        event_month_text.setText(output_month);
+        event_time_text.setText(output_time);
         /*
         //...only if unread messages
         ImageView notification = (ImageView)cardView.findViewById(R.id.notification);
         notification.setImageResource(R.drawable.chat_24dp);
         */
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), EventViewPager.class);
-                    intent.putExtra("event_id", event_ids[position]);
-                    v.getContext().startActivity(intent);
-                }
-            });
-        }
-
-
-
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), EventViewPager.class);
+                intent.putExtra("event_id", event_ids[position]);
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
 
 
     @Override
     public int getItemCount() {
-        if (cursor == null){
+        if (cursor == null) {
             return 0;
         }
         return cursor.getCount();
@@ -123,17 +131,17 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
 
     public void storeEvents() {
-            String[] names = new String[getItemCount()];
-            String[] dates = new String[getItemCount()];
-            String[] ids = new String[getItemCount()];
-            for (int i = 0; i < getItemCount(); i++) {
-                cursor.moveToPosition(i);
-                names[i] = cursor.getString(4);
-                dates[i] = cursor.getString(2);
-                ids[i] = cursor.getString(0);
-            }
-            this.event_names = names;
-            this.event_days = dates;
-            this.event_ids = ids;
+        String[] names = new String[getItemCount()];
+        String[] dates = new String[getItemCount()];
+        String[] ids = new String[getItemCount()];
+        for (int i = 0; i < getItemCount(); i++) {
+            cursor.moveToPosition(i);
+            names[i] = cursor.getString(4);
+            dates[i] = cursor.getString(2);
+            ids[i] = cursor.getString(0);
         }
+        this.event_names = names;
+        this.event_days = dates;
+        this.event_ids = ids;
+    }
 }
