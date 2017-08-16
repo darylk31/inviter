@@ -67,7 +67,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".CreateEvent"
-                  android:windowSoftInputMode="adjustNothing">
+                  android:windowSoftInputMode="adjustPan">
         </activity>
     </application>
 
