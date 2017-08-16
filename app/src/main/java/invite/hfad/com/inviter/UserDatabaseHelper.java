@@ -38,7 +38,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "UID TEXT PRIMARY KEY, "
                 + "USERNAME TEXT, "
-                + "DISPLAY TEXT;");
+                + "DISPLAY TEXT);");
     }
 
     @Override
