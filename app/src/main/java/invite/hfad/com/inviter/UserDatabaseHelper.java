@@ -52,7 +52,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion){
+    private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < newVersion) {
             db.execSQL("CREATE TABLE EVENTS ("
                     + "EID TEXT PRIMARY KEY, "
@@ -69,7 +69,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
 
     public static void insert_event(
-            SQLiteDatabase db, Event event){
+            SQLiteDatabase db, Event event) {
 
         ContentValues eventValues = new ContentValues();
         eventValues.put("EID", event.getEventId());
@@ -79,25 +79,28 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         eventValues.put("TITLE", event.getEvent_name());
         eventValues.put("DESCRIPTION", event.getDescription());
         eventValues.put("LOCATION", event.getLocation());
-        db.insert("EVENTS",null, eventValues);
+        db.insert("EVENTS", null, eventValues);
 
     }
 
     public static void delete_event(SQLiteDatabase db,
-                                    String id){
+                                    String id) {
         db.execSQL("DELETE FROM EVENTS WHERE EID LIKE '" + id + "';");
     }
 
-    public static void update_event(SQLiteDatabase db, String id, Event event){
+    public static void update_event(SQLiteDatabase db, String id, Event event) {
         ContentValues eventValues = new ContentValues();
         eventValues.put("DAY", event.getStartDate());
         eventValues.put("ENDDAY", event.getEndDate());
         eventValues.put("TITLE", event.getEvent_name());
         eventValues.put("DESCRIPTION", event.getDescription());
+        eventValues.put("LOCATION", event.getLocation());
         db.update("EVENTS", eventValues, "EID='" + id + "'", null);
     }
 
-    public static void updateContacts(final SQLiteDatabase db, Context context) {
+
+
+    public static void updateContacts(final SQLiteDatabase db) {
         db.execSQL("DELETE FROM FRIENDS;");
         FirebaseAuth auth = FirebaseAuth.getInstance();
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -109,7 +112,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                         mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()) {
+                                if (dataSnapshot.exists()) {
                                     User user = dataSnapshot.getValue(User.class);
                                     insert_friend(db, user);
                                 }
@@ -130,7 +133,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static void insert_friend(SQLiteDatabase db,
-                                     User user){
+                                     User user) {
         ContentValues friendValues = new ContentValues();
         friendValues.put("UID", user.getUid());
         friendValues.put("USERNAME", user.getUsername());

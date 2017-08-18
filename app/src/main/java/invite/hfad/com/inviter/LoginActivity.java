@@ -4,6 +4,8 @@ package invite.hfad.com.inviter;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -92,11 +94,57 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences("UserPref", 0).edit();
                     editor.putString("userID", userId);
                     editor.commit();
-                    // TODO: Pull every FUKING thing from firebase.
 
-                    Intent intent = new Intent(LoginActivity.this,UserAreaActivity.class);
-                    startActivity(intent);
-                    finish();
+                    final UserDatabaseHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                    final SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                    progressDialog.setMessage("Retrieving account details...");
+
+                    final long[] childrenCount = {0};
+                    final int[] eventCount = {0};
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                System.out.println("Login accessed events table.");
+                                childrenCount[0] = dataSnapshot.getChildrenCount();
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    mDatabase.child("Events").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                System.out.println("Login accessed children.");
+                                                Event event = dataSnapshot.getValue(Event.class);
+                                                databaseHelper.insert_event(db, event);
+                                                eventCount[0]++;
+                                                System.out.println("Login Count Event:" + eventCount[0] + "Children:" + childrenCount[0]);
+
+                                                if (eventCount[0] == childrenCount[0]) {
+                                                    db.close();
+                                                    progressDialog.dismiss();
+                                                    Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                        }
+                                    });
+                                }
+                            }
+                            else {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
                 }
             }
 

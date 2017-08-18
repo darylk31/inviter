@@ -140,17 +140,6 @@ public class EventInfoFragment extends Fragment {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("events/" + id + ".jpg");
 
-        /*
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Glide.with(EventInfoFragment.this)
-                            .load(uri)
-                            .into(EventPictureView);
-                }
-            });
-            */
-
         storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {

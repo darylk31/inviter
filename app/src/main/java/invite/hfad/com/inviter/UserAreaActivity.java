@@ -150,6 +150,11 @@ public class UserAreaActivity extends AppCompatActivity {
                     case R.id.nav_signout:
                         auth.signOut();
                         pref.edit().clear().commit();
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                        db.delete("EVENTS", null, null);
+                        db.delete("FRIENDS", null, null);
+                        db.close();
                         startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                         finish();
                         return true;
@@ -193,7 +198,7 @@ public class UserAreaActivity extends AppCompatActivity {
                         System.out.println("Contacts Scheduled Call");
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        UserDatabaseHelper.updateContacts(db, getApplicationContext());
+                        UserDatabaseHelper.updateContacts(db);
                         System.out.println("Contacts updated");
                     }
                 }, 0, 3, TimeUnit.DAYS);
