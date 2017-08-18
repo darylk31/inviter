@@ -115,7 +115,7 @@ public class EventInfoFragment extends Fragment {
             }
         });
 
-        TextView tv_members = (TextView) getView().findViewById(R.id.tv_eventinfomembers);
+        TextView tv_members = (TextView) view.findViewById(R.id.tv_eventinfomembers);
         tv_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

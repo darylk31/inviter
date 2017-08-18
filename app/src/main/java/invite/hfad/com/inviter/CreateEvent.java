@@ -100,6 +100,8 @@ public class CreateEvent extends AppCompatActivity {
 
     private void onStartDateSelect() {
         startCalendarView.setSelectedDate(Calendar.getInstance());
+        String currentDateTimeString = new SimpleDateFormat("yyyy-MM-dd").getDateTimeInstance().format(new Date());
+        startDateData = currentDateTimeString;
         String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(new Date());
         dateTextDisplay.setText(output);
         startCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
