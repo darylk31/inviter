@@ -14,10 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -80,7 +77,7 @@ public class PinMessageDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 mFirebseDatabaseReference = Utils.getDatabase().getReference();
-                mFirebseDatabaseReference.child(Utils.EVENT).child(event_id).child(Utils.PIN).child(message_id).removeValue();
+                mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.PIN).child(message_id).removeValue();
                 getDialog().dismiss();
                 Toast.makeText(getActivity(),"Message unpinned",Toast.LENGTH_SHORT).show();
             }

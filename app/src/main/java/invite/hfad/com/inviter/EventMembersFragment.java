@@ -1,9 +1,5 @@
 package invite.hfad.com.inviter;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,13 +36,23 @@ public class EventMembersFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference().child("Events").child(id);
+        final DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference().child(Utils.EVENT_DATABASE).child(id);
         event_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);
                 creator = event.getCreator();
-                invitedId = event.getInvitedId();
+                event_ref.child(Utils.INVITEDID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                            invitedId.add(dataSnapshot.getKey());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
                 displayNames = new String[invitedId.size()];
                 displayPictures = new String[invitedId.size()];
                 userNames = new String[invitedId.size()];

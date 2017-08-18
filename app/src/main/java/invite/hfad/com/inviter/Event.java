@@ -18,8 +18,6 @@ public class Event implements Parcelable{
     private String description;
     private String eventId;
     private String location;
-    private List<String> invitedId;
-    private List<String> acceptedId;
     private String creator;
 
     private final int PARAMETERS = 6;
@@ -31,35 +29,15 @@ public class Event implements Parcelable{
                   String event_name,
                   String description,
                   String creator,
-                  List<String> invitedId,
                   String location) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         this.creator = creator;
-        this.invitedId = invitedId;
         this.location = location;
         //chat object
     }
-/*
-    public Event (String startDate,
-                  String endDate,
-                  String event_name,
-                  String description,
-                  String creator,
-                  List<String> invitedId) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.event_name = event_name;
-        this.description = description;
-        //location
-        this.creator = creator;
-        this.invitedId = invitedId;
-        //chat object
-
-    }
-    */
 
     public Event(Parcel in){
         String[] data = new String[PARAMETERS];
@@ -71,7 +49,6 @@ public class Event implements Parcelable{
         this.event_name = data[2];
         this.description = data[3];
         this.creator = data[4];
-        this.invitedId = new ArrayList<String>();
         this.location = data[5];
     }
 
@@ -106,14 +83,6 @@ public class Event implements Parcelable{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<String> getInvitedId() {
-        return invitedId;
-    }
-
-    public void setInvitedId(List<String> invitedId) {
-        this.invitedId = invitedId;
     }
 
     public String getCreator() {
@@ -158,14 +127,6 @@ public class Event implements Parcelable{
     public String toString(){
         String a = "startDate:" + startDate + "endDate: " + endDate + " event_name:" + event_name + " description:" + description + " creator:" + creator;
         return a;
-    }
-
-    public List getAcceptedId() {
-        return acceptedId;
-    }
-
-    public void setAcceptedId(List acceptedId) {
-        this.acceptedId = acceptedId;
     }
 
     public String getLocation() {

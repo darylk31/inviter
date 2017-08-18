@@ -30,7 +30,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -183,7 +182,7 @@ public class EventChatFragment extends Fragment {
                 FriendlyMessage.class,
                 R.layout.item_message,
                 EventChatFragment.MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT)) {
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT)) {
 
             @Override
             protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
@@ -306,11 +305,11 @@ public class EventChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).push().getKey();
+                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
                         mUsername, mPhotoUrl,timeStamp, null);
-                mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
         });

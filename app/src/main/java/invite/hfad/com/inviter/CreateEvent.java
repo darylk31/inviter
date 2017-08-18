@@ -80,7 +80,6 @@ public class CreateEvent extends AppCompatActivity {
         onStartDateSelect();
         onStartTimeClick();
         onButtonClick();
-
     }
 
     @Override
@@ -99,9 +98,10 @@ public class CreateEvent extends AppCompatActivity {
     }
 
     private void onStartDateSelect() {
-        startCalendarView.setSelectedDate(Calendar.getInstance());
-        String currentDateTimeString = new SimpleDateFormat("yyyy-MM-dd").getDateTimeInstance().format(new Date());
-        startDateData = currentDateTimeString;
+        Calendar c = Calendar.getInstance();
+        startCalendarView.setSelectedDate(c);
+        String converted_date =  new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
+        startDateData = converted_date;
         String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(new Date());
         dateTextDisplay.setText(output);
         startCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -152,7 +152,7 @@ public class CreateEvent extends AppCompatActivity {
                 String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), new ArrayList<String>(),location);
+                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location);
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);

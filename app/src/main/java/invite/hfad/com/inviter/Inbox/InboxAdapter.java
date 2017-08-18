@@ -1,6 +1,5 @@
 package invite.hfad.com.inviter.Inbox;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
@@ -13,24 +12,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.Event;
-import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -140,7 +132,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition() - friendrequests;
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Event").child(eventlist.get(pos).getEventId())
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId())
                                 .setValue(eventlist.get(pos).getEventId());
 
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(v.getContext());

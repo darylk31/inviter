@@ -77,12 +77,12 @@ public class ChatDialogFragment extends DialogFragment{
             @Override
             public void onClick(View view) {
                 mFirebseDatabaseReference = Utils.getDatabase().getReference();
-                mFirebseDatabaseReference.child(Utils.EVENT).child(event_id).child(Utils.CHAT).child(message_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.CHAT).child(message_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
                             FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                            mFirebseDatabaseReference.child(Utils.EVENT).child(event_id).child(Utils.PIN).child(message_id).setValue(friendlyMessage);
+                            mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.PIN).child(message_id).setValue(friendlyMessage);
                             Toast.makeText(getActivity(),"Message Pinned",Toast.LENGTH_SHORT).show();
                             getDialog().dismiss();
                         }

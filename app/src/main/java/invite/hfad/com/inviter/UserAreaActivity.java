@@ -443,31 +443,13 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     private void addRequestListener() {
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child(Utils.USER_ADD_REQUEST).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!dataSnapshot.exists())
                     return;
-                String contact = dataSnapshot.getKey();
-                Contact ctest = new Contact(contact, true);
-                if (ctest.getIsContact()) {
-                    return;
-                }
-                mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_request").child(contact).setValue(contact);
-                mDatabase.child("Users").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            User user = dataSnapshot.getValue(User.class);
-                            addRequestNotification(user);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-                System.out.println("what is datasnapshot " + dataSnapshot.getKey());
+                String contact_display_name = dataSnapshot.getValue().toString();
+                addRequestNotification(contact_display_name);
             }
 
             @Override
@@ -488,7 +470,7 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void addRequestNotification(User user) {
+    private void addRequestNotification(String contact_display_name) {
         System.out.println("Notification entrance");
         if (user == null)
             return;
@@ -496,7 +478,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
-                        .setContentText(user.getUsername() + "would like to add you!");
+                        .setContentText(contact_display_name + "would like to add you!");
         // Sets an unique ID for the addRequestNotification
         int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 // Gets an instance of the NotificationManager service

@@ -49,19 +49,21 @@ public class EventSelectContacts extends AppCompatActivity {
     }
 
     public void onButtonClick(View view){
-        event.setInvitedId(adapter.getArrayList());
         final String newKey = mDatabase.push().getKey();
         event.setEventId(newKey);
+        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).setValue(event);
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.EVENT_DATABASE).child(newKey).setValue(newKey);
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox
         //If not TODO::
         for(final String id: adapter.getArrayList()){
-            mDatabase.child("Users").child(id).child("Contacts").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
-                        mDatabase.child("Users").child(id).child("Inbox").child("Event_Request").child(newKey).setValue(auth.getCurrentUser().getDisplayName());
+                        mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(newKey).setValue(auth.getCurrentUser().getDisplayName());
+                        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.INVITEDID).child(id).setValue(false);
                     }//If they're not on each others contacts
                     else{
                         System.out.println(id + "IS NOT YOUR FKEN FRIEND CUNT");
@@ -73,9 +75,6 @@ public class EventSelectContacts extends AppCompatActivity {
                 }
             });
         }
-        mDatabase.child("Events").child(newKey).setValue(event);
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Event").child(newKey).setValue(newKey);
-
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         db = databaseHelper.getWritableDatabase();
         UserDatabaseHelper.insert_event(db, event);

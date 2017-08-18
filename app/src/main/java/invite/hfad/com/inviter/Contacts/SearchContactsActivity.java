@@ -8,6 +8,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.util.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -108,15 +109,17 @@ public class SearchContactsActivity extends AppCompatActivity {
         //TODO:
         //If they're on my contacts they don't show up
         usernameList = new ArrayList<Usernames>();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
 
         mDatabase.child(Utils.USERNAMES).child(query).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     firebaseUsername = dataSnapshot.getValue(Usernames.class);
-                    System.out.println(firebaseUsername.getUid());
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Contacts").child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    //If the user searched is myself, then don't show anything
+                    if(firebaseUsername.getUid().equals(auth.getCurrentUser().getUid()))
+                        return;
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.CONTACTS).child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(!dataSnapshot.exists()){

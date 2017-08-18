@@ -1,23 +1,16 @@
 package invite.hfad.com.inviter;
 
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,7 +138,7 @@ public class PinFragment extends DialogFragment {
                 FriendlyMessage.class,
                 R.layout.item_message,
                 EventChatFragment.MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.PIN)) {
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.PIN)) {
 
             @Override
             protected void populateViewHolder(final EventChatFragment.MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
@@ -242,7 +235,7 @@ public class PinFragment extends DialogFragment {
             }
         });
 
-        mFirebaseDatabaseReference.child(Utils.EVENT).child(id).child(Utils.PIN).addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.PIN).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){

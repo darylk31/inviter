@@ -14,14 +14,18 @@ public class Utils {
     public static final String CONTACTS = "Contacts";
     public static final String USERNAMES = "Usernames";
     public static final String CHAT = "Chat";
-    public static final String EVENT = "Events";
+    public static final String EVENT_DATABASE = "Events";
     public static final String PIN = "Pin";
 
     //USER TABLE STUFF
     public static final String USER_PHOTO_URL = "photoUrl";
     public static final String USER_USERNAME = "username";
+    public static final String USER_EVENTS = "Events";
+    public static final String USER_ADD_REQUEST = "Add_Request";
+
 
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
+    public static final String INVITEDID = "Invited_Id";
 
     private static FirebaseDatabase mDatabase;
 
