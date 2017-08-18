@@ -1,0 +1,42 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="invite.hfad.com.inviter.EventOptionsDialogFragment">
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/edit_event"
+            android:text="@string/edit_event_button"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/leave_event"
+            android:layout_below="@id/edit_event"
+            android:text="@string/leave_event_button"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/edit_admin"
+            android:layout_below="@+id/leave_event"
+            android:text="@string/edit_admin_button"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/delete_event"
+            android:layout_below="@id/edit_admin"
+            android:text="@string/delete_event_button"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</FrameLayout>

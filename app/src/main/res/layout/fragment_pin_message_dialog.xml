@@ -4,6 +4,7 @@
              android:layout_height="match_parent"
              tools:context="invite.hfad.com.inviter.PinMessageDialogFragment">
 
+
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"

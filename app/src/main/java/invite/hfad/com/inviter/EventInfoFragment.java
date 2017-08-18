@@ -208,6 +208,19 @@ public class EventInfoFragment extends Fragment {
     public void onEventOptions() {
         getView().findViewById(R.id.tv_eventinfooptions).setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) {
+                EventOptionsDialogFragment optionsDialogFragment = new EventOptionsDialogFragment();
+                Bundle args = new Bundle();
+                args.putString("id",id);
+                optionsDialogFragment.setArguments(args);
+                android.app.FragmentManager fm = getActivity().getFragmentManager();
+                optionsDialogFragment.show(fm,"dialog");
+            }
+        });
+
+        /*
+        getView().findViewById(R.id.tv_eventinfooptions).setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setItems(R.array.EventInfo_Options, new DialogInterface.OnClickListener() {
@@ -215,7 +228,7 @@ public class EventInfoFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                Intent edit_intent = new Intent(getContext(), MakeEventActivity.class);
+                                Intent edit_intent = new Intent(getContext(), CreateEvent.class);
                                 edit_intent.putExtra("Edit Id", id);
                                 startActivity(edit_intent);
                                 break;
@@ -279,6 +292,7 @@ public class EventInfoFragment extends Fragment {
             }
         });
 
+*/
 
     }
 

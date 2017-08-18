@@ -62,4 +62,8 @@
     <string name="copy_button">Copy</string>
     <string name="no_pin_message">There are no pinned messages</string>
     <string name="remove_pin_button_text">Unpinned</string>
+    <string name="edit_event_button">Edit...</string>
+    <string name="leave_event_button">Leave Event</string>
+    <string name="edit_admin_button">Manage Admin</string>
+    <string name="delete_event_button">Delete Event</string>
 </resources>
