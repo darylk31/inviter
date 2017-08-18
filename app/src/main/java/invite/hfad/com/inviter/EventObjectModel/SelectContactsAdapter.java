@@ -36,7 +36,6 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
     String[] uid;
     String[] username;
     String[] displayname;
-    String[] profile;
     Context context;
     ArrayList<String> invited;
     TextView selected_list;
