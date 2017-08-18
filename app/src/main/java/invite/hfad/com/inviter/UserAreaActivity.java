@@ -443,7 +443,8 @@ public class UserAreaActivity extends AppCompatActivity {
     }
 
     private void addRequestListener() {
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child(Utils.USER_ADD_REQUEST).addChildEventListener(new ChildEventListener() {
+        //Friend Request Listener
+        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!dataSnapshot.exists())
@@ -468,17 +469,52 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(!dataSnapshot.exists())
+                    return;
+                mDatabase.child(Utils.EVENT_DATABASE).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                        Event e = dataSnapshot.getValue(Event.class);
+                            eventRequestNotification(e);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
-    private void addRequestNotification(String contact_display_name) {
-        System.out.println("Notification entrance");
+    private void eventRequestNotification(Event e){
         if (user == null)
             return;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
-                        .setContentText(contact_display_name + "would like to add you!");
+                        .setContentText(e.getCreator() + " invites you to " + e.getEvent_name());
         // Sets an unique ID for the addRequestNotification
         int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 // Gets an instance of the NotificationManager service
@@ -486,7 +522,23 @@ public class UserAreaActivity extends AppCompatActivity {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 // Builds the addRequestNotification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
-        System.out.println("addRequestNotification shown");
+    }
+
+    private void addRequestNotification(String contact_display_name) {
+        if (user == null)
+            return;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
+                        .setContentTitle(this.getString(R.string.app_name))
+                        .setContentText(contact_display_name + " would like to add you!");
+        // Sets an unique ID for the addRequestNotification
+        int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+// Gets an instance of the NotificationManager service
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the addRequestNotification and issues it.
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
 
