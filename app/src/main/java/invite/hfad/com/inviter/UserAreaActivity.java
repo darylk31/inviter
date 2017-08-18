@@ -512,7 +512,7 @@ public class UserAreaActivity extends AppCompatActivity {
             return;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
+                        .setSmallIcon(R.drawable.ic_twitter_bird_white_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(e.getCreator() + " invites you to " + e.getEvent_name());
         // Sets an unique ID for the addRequestNotification
@@ -529,7 +529,7 @@ public class UserAreaActivity extends AppCompatActivity {
             return;
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_priority_high_black_24dp)
+                        .setSmallIcon(R.drawable.ic_twitter_bird_white_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(contact_display_name + " would like to add you!");
         // Sets an unique ID for the addRequestNotification
