@@ -113,7 +113,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //CountInboxItems
         countInboxItems();
-            addRequestListener();
+        addRequestListener();
 
         //Set drawer header
         setDrawer_username();
@@ -247,16 +247,18 @@ public class UserAreaActivity extends AppCompatActivity {
         if (resultCode == RESULT_CANCELED) {
         }
         if (resultCode == RESULT_OK) {
+            final ProgressDialog dialog = new ProgressDialog(UserAreaActivity.this);
+            dialog.setMessage("Uploading image...");
+            dialog.show();
             Uri selectedimg = data.getData();
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            UploadTask task = storageRef.child("profile/" + user.getUid() + ".jpg").putFile(selectedimg);
-            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            UploadTask uploadtask = storageRef.child("profile/" + user.getUid() + ".jpg").putFile(selectedimg);
+            uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @SuppressWarnings("VisibleForTests")
                 @Override
                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                    final ProgressDialog dialog = new ProgressDialog(UserAreaActivity.this);
-                    dialog.setMessage("Uploading image...");
-                    dialog.show();
+
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setPhotoUri(taskSnapshot.getDownloadUrl())
                             .build();
@@ -265,28 +267,31 @@ public class UserAreaActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        Glide.with(getApplicationContext())
+                                                .load(taskSnapshot.getDownloadUrl().toString())
+                                                .into(profilePictureView);
+                                        //Update photoUrl of user database
+                                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                                        //Grab username from user database and update username table
+                                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    mDatabase.child(Utils.USERNAMES).child(dataSnapshot.getValue().toString()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
                                         Toast.makeText(getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
-                                        setDisplayPicture();
+                                        dialog.dismiss();
                                     }
-                                    dialog.dismiss();
                                 }
                             });
-                    //Update photoUrl of user database
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
-                    //Grab username from user database and update username table
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                mDatabase.child(Utils.USERNAMES).child(dataSnapshot.getValue().toString()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
             });
         }
@@ -478,13 +483,13 @@ public class UserAreaActivity extends AppCompatActivity {
         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(!dataSnapshot.exists())
+                if (!dataSnapshot.exists())
                     return;
                 mDatabase.child(Utils.EVENT_DATABASE).child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                        Event e = dataSnapshot.getValue(Event.class);
+                        if (dataSnapshot.exists()) {
+                            Event e = dataSnapshot.getValue(Event.class);
                             eventRequestNotification(e);
                         }
                     }
@@ -513,7 +518,7 @@ public class UserAreaActivity extends AppCompatActivity {
         });
     }
 
-    private void eventRequestNotification(Event e){
+    private void eventRequestNotification(Event e) {
         if (user == null)
             return;
         NotificationCompat.Builder mBuilder =
