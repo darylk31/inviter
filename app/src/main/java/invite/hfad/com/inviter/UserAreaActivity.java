@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -112,7 +113,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //CountInboxItems
         countInboxItems();
-        addRequestListener();
+            addRequestListener();
 
         //Set drawer header
         setDrawer_username();
@@ -527,11 +528,13 @@ public class UserAreaActivity extends AppCompatActivity {
     private void addRequestNotification(String contact_display_name) {
         if (user == null)
             return;
+        Intent myIntent = new Intent(UserAreaActivity.this, InboxActivity.class);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_twitter_bird_white_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(contact_display_name + " would like to add you!");
+
         // Sets an unique ID for the addRequestNotification
         int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 // Gets an instance of the NotificationManager service
