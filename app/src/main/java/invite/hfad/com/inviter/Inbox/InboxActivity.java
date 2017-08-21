@@ -106,30 +106,25 @@ public class InboxActivity extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if(dataSnapshot.exists()){
                                             Event event = dataSnapshot.getValue(Event.class);
-                                            //event.getEndDate(); check if event is already over.
+                                            //TODO:: Delete if event is expired
                                             eventlist.add(event);
                                         }
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
                                         recycler.setAdapter(adapter);
                                     }
-
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
                                     }
                                 });
-
                             }
-
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

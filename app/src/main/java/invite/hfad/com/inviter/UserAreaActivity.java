@@ -432,16 +432,13 @@ public class UserAreaActivity extends AppCompatActivity {
                 inboxCounter = 0;
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     for (DataSnapshot dsChild : ds.getChildren()) {
-                        //inboxCounter = (int)dsChild.getChildrenCount();
                         inboxCounter++;
-                        System.out.println("Inboxcounter was called with key :" + dsChild.getKey());
                     }
                 }
                 if (inboxCounter > 0) {
                     SpannableString spanString = new SpannableString("Inbox (" + inboxCounter + ")");
                     spanString.setSpan(new ForegroundColorSpan(Color.RED), 0, spanString.length(), 0);
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle(spanString);
-
                 } else {
                     navigationView.getMenu().findItem(R.id.nav_inbox).setTitle("Inbox");
                 }

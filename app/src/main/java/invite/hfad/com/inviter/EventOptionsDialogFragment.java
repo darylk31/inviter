@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -60,16 +61,60 @@ public class EventOptionsDialogFragment extends DialogFragment {
         edit_admin = (Button) rootView.findViewById(R.id.edit_admin);
         leave_event = (Button) rootView.findViewById(R.id.leave_event);
         delete_event = (Button) rootView.findViewById(R.id.delete_event);
+        ButtonRoleView();
+        edit_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"1",Toast.LENGTH_SHORT).show();
+            }
+        });
+        edit_admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"2",Toast.LENGTH_SHORT).show();
+            }
+        });
+        leave_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"3",Toast.LENGTH_SHORT).show();
+            }
+        });
+        delete_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"4",Toast.LENGTH_SHORT).show();
+            }
+        });
 
+
+    }
+
+    private void ButtonRoleView(){
+        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ADMIN).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if(snapshot.exists()) {
+                        String event_creator = dataSnapshot.getKey();
+                        if (auth.getCurrentUser().getDisplayName().equals(event_creator)) {
+                            edit_event.setVisibility(View.VISIBLE);
+                            delete_event.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
                     String event_creator = dataSnapshot.getValue(String.class);
                     if(auth.getCurrentUser().getDisplayName().equals(event_creator)) {
-                        edit_event.setVisibility(View.VISIBLE);
                         edit_admin.setVisibility(View.VISIBLE);
-                        delete_event.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -78,7 +123,6 @@ public class EventOptionsDialogFragment extends DialogFragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
     }
 
 }

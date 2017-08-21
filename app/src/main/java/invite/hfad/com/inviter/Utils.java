@@ -27,6 +27,7 @@ public class Utils {
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";
     public static final String EVENT_ADMIN = "Admins";
+    public static final String EVENT_ATTENDEE = "Attendee";
 
     private static FirebaseDatabase mDatabase;
 

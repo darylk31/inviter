@@ -132,14 +132,15 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition() - friendrequests;
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId())
-                                .setValue(eventlist.get(pos).getEventId());
+                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid())
+                                .setValue(true);
 
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(v.getContext());
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.insert_event(db, eventlist.get(pos));
 
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request")
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(true);
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         Toast.makeText(v.getContext(), eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);
