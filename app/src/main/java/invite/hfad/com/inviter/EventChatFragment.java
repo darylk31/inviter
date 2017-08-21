@@ -37,9 +37,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -75,6 +80,7 @@ public class EventChatFragment extends Fragment {
     private ImageView mAddMessageImageView;
     private View rootView;
     private Toolbar toolbar;
+    private TextView noChatText;
 
     public EventChatFragment() {
         // Required empty public constructor
@@ -108,6 +114,7 @@ public class EventChatFragment extends Fragment {
                 return true;
             }
         });
+        noChatText = (TextView) view.findViewById(R.id.tvNoChat);
         return view;
     }
 
@@ -186,6 +193,7 @@ public class EventChatFragment extends Fragment {
 
             @Override
             protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
+                checkForMessageText();
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -324,6 +332,24 @@ public class EventChatFragment extends Fragment {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_IMAGE);
+            }
+        });
+        checkForMessageText();
+    }
+
+    private void checkForMessageText(){
+        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()){
+                    noChatText.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.GONE);
+                } else {
+                    noChatText.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }

@@ -77,7 +77,6 @@ public class PinFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         rootView = inflater.inflate(R.layout.fragment_pin, container, false);
         mMessageRecyclerView = (RecyclerView) rootView.findViewById(R.id.pinMessageRecyclerView);
@@ -91,13 +90,11 @@ public class PinFragment extends DialogFragment {
     @Override
     public void onResume(){
         super.onResume();
-        System.out.println("resumed called");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        System.out.println("paused");
     }
 
 
