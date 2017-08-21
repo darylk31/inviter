@@ -18,6 +18,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,20 +76,20 @@ public class EventInfoFragment extends Fragment {
             this.event_string = cursor.getString(4);
             event_name.setText(event_string);
             TextView event_date = (TextView) view.findViewById(R.id.tv_eventpagedate);
+            TextView event_time = (TextView) view.findViewById(R.id.tv_eventpagetime);
             String event_day = cursor.getString(2);
             //TODO: Select just date.
             try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
                 String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
                 String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
                 String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+                String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
                 event_date.setText(output_month + " " + output_day + ", " + output_year);
+                event_time.setText(output_time);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            //TODO: Select just time.
-            TextView event_time = (TextView) view.findViewById(R.id.tv_eventpagetime);
-            event_time.setText(cursor.getString(2));
             event_location = (TextView) view.findViewById(R.id.tv_eventpageloc);
             event_location.setText(cursor.getString(6));
             TextView event_description = (TextView) view.findViewById(R.id.tv_eventpagedescrip);
@@ -124,15 +127,13 @@ public class EventInfoFragment extends Fragment {
                 EventMembersFragment eventMembersFragment = new EventMembersFragment();
                 eventMembersFragment.setArguments(args);
                 FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
-                ft.addToBackStack("member");
-                ft.commit();
+                //FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
+                //ft.addToBackStack("member");
+                //ft.commit();
             }
         });
 
-
-
-
+        arrowAnimation();
     }
 
     private void setEventPicture() {
@@ -222,5 +223,31 @@ public class EventInfoFragment extends Fragment {
 
     private void onEventInvite() {
         getView().findViewById(R.id.tv_eventinfoinvite);
+    }
+
+    private void arrowAnimation(){
+        final ImageView arrows = (ImageView) view.findViewById(R.id.eventinfo_arrows);
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setStartOffset(500);
+        fadeOut.setDuration(1000);
+        fadeOut.setRepeatCount(1);
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                arrows.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        arrows.setAnimation(fadeOut);
     }
 }

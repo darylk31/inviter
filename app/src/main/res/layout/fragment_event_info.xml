@@ -6,10 +6,19 @@
     android:orientation="vertical"
     android:visibility="visible">
 
-    <FrameLayout
-        android:id="@+id/eventinfo_container"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/eventinfo_arrows"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/double_arrow" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +94,8 @@
                     android:layout_below="@+id/tv_eventpagedate"
                     android:layout_marginBottom="5dp"
                     android:textColor="#530909"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:textStyle="italic" />
 
             </RelativeLayout>
 
@@ -142,6 +152,8 @@
                     android:hint="Description"
                     android:isScrollContainer="true"
                     android:textSize="18dp" />
+
+
             </RelativeLayout>
 
             <View
@@ -172,16 +184,6 @@
                     android:layout_centerVertical="true"
                     android:text="Group members"
                     android:textSize="20dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:scaleX="0.8"
-                    android:scaleY="0.8"
-                    android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
 
             </RelativeLayout>
 
@@ -220,7 +222,8 @@
             </LinearLayout>
 
         </LinearLayout>
-    </FrameLayout>
+
+    </RelativeLayout>
 
 
 </LinearLayout>

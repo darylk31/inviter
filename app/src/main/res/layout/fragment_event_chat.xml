@@ -77,17 +77,19 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"/>
+
             <TextView
                 android:id="@+id/tvNoChat"
-                android:text="@string/no_chat_message"
-                android:textSize="18dp"
-                android:textStyle="italic"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:text="@string/no_chat_message"
+                android:textAlignment="center"
+                android:textSize="18dp"
+                android:textStyle="italic"
+                android:visibility="gone" />
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
 
