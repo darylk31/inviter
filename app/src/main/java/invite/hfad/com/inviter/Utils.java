@@ -28,6 +28,10 @@ public class Utils {
     public static final String INVITEDID = "Invited_Id";
     public static final String EVENT_ADMIN = "Admins";
     public static final String EVENT_ATTENDEE = "Attendee";
+    public static final String EVENT_STARTDATE = "startDate";
+    public static final String EVENT_TITLE = "event_name";
+    public static final String EVENT_DESCRIPTION = "description";
+    public static final String EVENT_LOCATION = "location";
 
     private static FirebaseDatabase mDatabase;
 

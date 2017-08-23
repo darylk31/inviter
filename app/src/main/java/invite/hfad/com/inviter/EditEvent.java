@@ -65,7 +65,7 @@ public class EditEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         event = getIntent().getExtras().getParcelable("event");
-        System.out.println(event.toString());
+        mDatabase = Utils.getDatabase().getReference();
         setContentView(R.layout.activity_create_event);
         getSupportActionBar().hide();
         getViews();
@@ -158,13 +158,22 @@ public class EditEvent extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = titleDisplay.getText().toString().trim();
-                String description = descriptionDisplay.getText().toString().trim();
-                String date = startDateData + " " + startTimeData;
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location);
-                Intent intent = new Intent(EditEvent.this, EventSelectContacts.class);
-                intent.putExtra("myEvent", (Parcelable) event);
-                startActivity(intent);
+                event.setEvent_name(titleDisplay.getText().toString().trim());
+                event.setDescription(descriptionDisplay.getText().toString().trim());
+                event.setStartDate(startDateData + " " + startTimeData);
+                if(event.getStartDate() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_STARTDATE).setValue(event.getStartDate());
+
+                if(event.getEvent_name() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_TITLE).setValue(event.getEvent_name());
+
+                if(event.getDescription() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_DESCRIPTION).setValue(event.getDescription());
+
+                if(event.getLocation() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LOCATION).setValue(event.getLocation());
+
+                finish();
             }
         });
     }
@@ -217,9 +226,12 @@ public class EditEvent extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 if (place.getName() != null){
-                tvLocation.setText(place.getName() + " @ " + place.getAddress());}
+                    tvLocation.setText(place.getName() + " @ " + place.getAddress());
+                    event.setLocation(tvLocation.getText().toString());
+                }
                 else {
                     tvLocation.setText(place.getAddress());
+                    event.setLocation(tvLocation.getText().toString());
                 }
                 location = tvLocation.getText().toString();
                 tvLocation.postDelayed(new Runnable() {

@@ -77,10 +77,8 @@ public class EventOptionsDialogFragment extends DialogFragment {
                             Intent intent = new Intent(rootView.getContext(),EditEvent.class);
                             intent.putExtra("event",(Parcelable) event);
                             startActivity(intent);
-
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }

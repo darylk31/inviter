@@ -20,7 +20,7 @@ public class Event implements Parcelable{
     private String location;
     private String creator;
 
-    private final int PARAMETERS = 6;
+    private final int PARAMETERS = 7;
 
     public Event(){};
 
@@ -50,6 +50,7 @@ public class Event implements Parcelable{
         this.description = data[3];
         this.creator = data[4];
         this.location = data[5];
+        this.eventId = data[6];
     }
 
     public String getStartDate(){
@@ -108,7 +109,7 @@ public class Event implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator,location});
+        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator,location,eventId});
     }
 
 
