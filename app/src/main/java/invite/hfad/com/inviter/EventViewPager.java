@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -112,14 +113,18 @@ public class EventViewPager extends AppCompatActivity {
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.delete_event(db, id);
                         db.close();
+                        Toast.makeText(EventViewPager.this,"Sorry this event has been deleted",Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(EventViewPager.this, UserAreaActivity.class));
+                        finish();
 
                     }
-                    Event event = dataSnapshot.getValue(Event.class);
-                    SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
-                    SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                    UserDatabaseHelper.update_event(db, id, event);
-                    db.close();
+                    else {
+                        Event event = dataSnapshot.getValue(Event.class);
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                        UserDatabaseHelper.update_event(db, id, event);
+                        db.close();
+                    }
             }
 
             @Override

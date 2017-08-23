@@ -111,6 +111,7 @@ public class EventInfoFragment extends Fragment {
         }
         onEventOptions();
         onEventInvite();
+        onInviteOptions();
 
         event_location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,9 +120,6 @@ public class EventInfoFragment extends Fragment {
                     String map = "http://maps.google.co.in/maps?q=" + event_location.getText();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(map)));
                 }
-
-
-
             }
         });
 
@@ -141,7 +139,6 @@ public class EventInfoFragment extends Fragment {
             }
         });
         */
-
         arrowAnimation();
     }
 
@@ -149,7 +146,6 @@ public class EventInfoFragment extends Fragment {
         final ImageView EventPictureView = (ImageView) view.findViewById(R.id.event_image);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("events/" + id + ".jpg");
-
         storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
@@ -165,7 +161,6 @@ public class EventInfoFragment extends Fragment {
                             .into(EventPictureView);
             }
         });
-
 
         EventPictureView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +222,15 @@ public class EventInfoFragment extends Fragment {
                 optionsDialogFragment.show(fm,"dialog");
             }
         });
+    }
 
+    private void onInviteOptions(){
+        getView().findViewById(R.id.tv_eventinfoinvite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private void onEventInvite() {

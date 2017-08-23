@@ -3,8 +3,8 @@ package invite.hfad.com.inviter.EventObjectModel;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,10 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
-import invite.hfad.com.inviter.Utils;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.Utils;
 
-public class EventSelectContacts extends AppCompatActivity {
+public class EditEventSelectContacts extends AppCompatActivity {
 
     private Event event;
     private SelectContactsAdapter adapter;
@@ -51,6 +51,7 @@ public class EventSelectContacts extends AppCompatActivity {
         event.setEventId(newKey);
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).setValue(event);
         //Set yourself as an admin
+        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ADMIN).child(auth.getCurrentUser().getUid()).setValue(true);
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid()).setValue(true);
         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(newKey).setValue(newKey);
         //Iterate through arraylist
@@ -69,7 +70,6 @@ public class EventSelectContacts extends AppCompatActivity {
                         System.out.println(id + "IS NOT YOUR FKEN FRIEND CUNT");
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                 }

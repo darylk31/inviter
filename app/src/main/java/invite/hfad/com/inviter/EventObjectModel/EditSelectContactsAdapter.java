@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import invite.hfad.com.inviter.Contacts.ContactsActivity;
-import invite.hfad.com.inviter.Contacts.FriendsAdapter;
-import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 
@@ -29,7 +26,7 @@ import invite.hfad.com.inviter.UserDatabaseHelper;
  * Created by Daryl on 6/14/2017.
  */
 
-public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAdapter.ViewHolder> {
+public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectContactsAdapter.ViewHolder> {
 
     Cursor cursor;
     SQLiteDatabase db;
@@ -43,7 +40,7 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
 
 
 
-    public SelectContactsAdapter(Context context, TextView list){
+    public EditSelectContactsAdapter(Context context, TextView list){
         try {
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
@@ -83,13 +80,13 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
     }
 
     @Override
-    public SelectContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EditSelectContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.selectfriends_list_item, parent, false);
         return new ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(final SelectContactsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final EditSelectContactsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
         final ImageView selected = (ImageView) cardView.findViewById(R.id.ivSelected);
         selected.setVisibility(View.INVISIBLE);

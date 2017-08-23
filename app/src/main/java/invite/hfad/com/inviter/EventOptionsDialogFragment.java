@@ -154,12 +154,14 @@ public class EventOptionsDialogFragment extends DialogFragment {
 
     private void ButtonRoleView(){
 
-        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ADMIN).child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    edit_event.setVisibility(View.VISIBLE);
-                    delete_event.setVisibility(View.VISIBLE);
+                    if(dataSnapshot.getValue(boolean.class)) {
+                        edit_event.setVisibility(View.VISIBLE);
+                        delete_event.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }
