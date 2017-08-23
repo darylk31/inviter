@@ -98,7 +98,7 @@ public class InboxActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()){
                             tv_empty.setVisibility(View.INVISIBLE);
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()){
                                 String invitedby = snapshot.getValue(String.class);
                                 invitedbylist.add(invitedby);
                                 mDatabase.child(Utils.EVENT_DATABASE).child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,6 +108,8 @@ public class InboxActivity extends AppCompatActivity {
                                             Event event = dataSnapshot.getValue(Event.class);
                                             //TODO:: Delete if event is expired
                                             eventlist.add(event);
+                                        } else{
+                                            mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENT_REQUEST).child(snapshot.getKey()).removeValue();
                                         }
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
                                         recycler.setAdapter(adapter);

@@ -364,7 +364,6 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private void setDisplayPicture() {
         profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
-
         if (user.getPhotoUrl() == null) {
             Glide.with(this)
                     .load(R.drawable.profile_image)

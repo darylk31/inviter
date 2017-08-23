@@ -1,8 +1,12 @@
 package invite.hfad.com.inviter;
 
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +32,6 @@ public class EventOptionsDialogFragment extends DialogFragment {
     FirebaseAuth auth;
     String event_id;
     private View rootView;
-    Event event;
 
     Button edit_event;
     Button edit_admin;
@@ -66,6 +69,22 @@ public class EventOptionsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(),"1",Toast.LENGTH_SHORT).show();
+                mDatabase.child(Utils.EVENT_DATABASE).child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            Event event = dataSnapshot.getValue(Event.class);
+                            Intent intent = new Intent(rootView.getContext(),EditEvent.class);
+                            intent.putExtra("event",(Parcelable) event);
+                            startActivity(intent);
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
         });
         edit_admin.setOnClickListener(new View.OnClickListener() {
@@ -77,13 +96,52 @@ public class EventOptionsDialogFragment extends DialogFragment {
         leave_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"3",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder =  new AlertDialog.Builder(rootView.getContext());
+                builder.setTitle("Leave Event")
+                        .setMessage("Are you sure you wish to leave this event?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid()).removeValue();
+                                mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(event_id).removeValue();
+                                Toast.makeText(rootView.getContext(),"Event Left",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
         delete_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"4",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder =  new AlertDialog.Builder(rootView.getContext());
+                builder.setTitle("Delete Event")
+                .setMessage("Are you sure you wish to delete this event?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                mDatabase.child(Utils.EVENT_DATABASE).child(event_id).removeValue();
+                                Toast.makeText(rootView.getContext(),"Sucessfully delete events",Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
 
@@ -91,18 +149,15 @@ public class EventOptionsDialogFragment extends DialogFragment {
     }
 
     private void ButtonRoleView(){
-        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ADMIN).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ADMIN).child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if(snapshot.exists()) {
-                        String event_creator = dataSnapshot.getKey();
-                        if (auth.getCurrentUser().getDisplayName().equals(event_creator)) {
-                            edit_event.setVisibility(View.VISIBLE);
-                            delete_event.setVisibility(View.VISIBLE);
-                        }
-                    }
+                if(dataSnapshot.exists()) {
+                    edit_event.setVisibility(View.VISIBLE);
+                    delete_event.setVisibility(View.VISIBLE);
                 }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

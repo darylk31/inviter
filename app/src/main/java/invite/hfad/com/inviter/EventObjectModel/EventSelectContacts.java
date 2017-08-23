@@ -43,9 +43,7 @@ public class EventSelectContacts extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         adapter = new SelectContactsAdapter(getApplicationContext(), selected_list);
         recyclerView.setAdapter(adapter);
-
         event = getIntent().getParcelableExtra("myEvent");
-        System.out.println("EventSelectContacts Event:" + event.toString());
     }
 
     public void onButtonClick(View view){
