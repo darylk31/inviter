@@ -78,17 +78,24 @@ public class EventInfoFragment extends Fragment {
             TextView event_date = (TextView) view.findViewById(R.id.tv_eventpagedate);
             TextView event_time = (TextView) view.findViewById(R.id.tv_eventpagetime);
             String event_day = cursor.getString(2);
-            //TODO: Select just date.
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
                 String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
                 String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
                 String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
-                String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
                 event_date.setText(output_month + " " + output_day + ", " + output_year);
+                String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
                 event_time.setText(output_time);
             } catch (ParseException e) {
-                e.printStackTrace();
+                try {
+                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                    String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                    String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+                    String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+                    event_date.setText(output_month + " " + output_day + ", " + output_year);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
             }
             event_location = (TextView) view.findViewById(R.id.tv_eventpageloc);
             event_location.setText(cursor.getString(6));
@@ -118,6 +125,7 @@ public class EventInfoFragment extends Fragment {
             }
         });
 
+        /*
         TextView tv_members = (TextView) view.findViewById(R.id.tv_eventinfomembers);
         tv_members.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,11 +135,12 @@ public class EventInfoFragment extends Fragment {
                 EventMembersFragment eventMembersFragment = new EventMembersFragment();
                 eventMembersFragment.setArguments(args);
                 FragmentManager fm = getFragmentManager();
-                //FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
-                //ft.addToBackStack("member");
-                //ft.commit();
+                FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
+                ft.addToBackStack("member");
+                ft.commit();
             }
         });
+        */
 
         arrowAnimation();
     }
@@ -230,7 +239,7 @@ public class EventInfoFragment extends Fragment {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateInterpolator());
         fadeOut.setStartOffset(500);
-        fadeOut.setDuration(1000);
+        fadeOut.setDuration(700);
         fadeOut.setRepeatCount(1);
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override

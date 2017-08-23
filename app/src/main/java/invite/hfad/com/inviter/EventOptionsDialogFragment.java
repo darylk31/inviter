@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -130,6 +132,10 @@ public class EventOptionsDialogFragment extends DialogFragment {
                                 // continue with delete
                                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).removeValue();
                                 Toast.makeText(rootView.getContext(),"Sucessfully delete events",Toast.LENGTH_SHORT).show();
+                                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
+                                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                UserDatabaseHelper.delete_event(db, event_id);
+                                db.close();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
