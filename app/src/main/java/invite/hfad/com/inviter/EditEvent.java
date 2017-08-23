@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -173,9 +175,16 @@ public class EditEvent extends AppCompatActivity {
                 if(event.getLocation() != null)
                     mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LOCATION).setValue(event.getLocation());
 
+                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                UserDatabaseHelper.update_event(db, event.getEventId(), event);
+                db.close();
+
                 finish();
             }
         });
+
+
     }
 
     public void setUpGoogleLocation() {
