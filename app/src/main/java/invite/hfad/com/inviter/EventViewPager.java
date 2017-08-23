@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.Fragment;
@@ -106,10 +107,19 @@ public class EventViewPager extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()){
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                        UserDatabaseHelper.delete_event(db, id);
+                        db.close();
+                        startActivity(new Intent(EventViewPager.this, UserAreaActivity.class));
+
+                    }
                     Event event = dataSnapshot.getValue(Event.class);
                     SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                     SQLiteDatabase db = databaseHelper.getWritableDatabase();
                     UserDatabaseHelper.update_event(db, id, event);
+                    db.close();
             }
 
             @Override
