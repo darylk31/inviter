@@ -14,17 +14,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class EventMembersFragment extends Fragment {
 
     private String id;
-    private List<String> invitedId;
-    private String[] displayNames;
-    private String[] displayPictures;
-    private String[] userNames;
     private String creator;
+    private RecyclerView attendee_recycler;
+    private RecyclerView pending_recycler;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,58 +36,98 @@ public class EventMembersFragment extends Fragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
-        final DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference().child(Utils.EVENT_DATABASE).child(id);
-        event_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        attendee_recycler = (RecyclerView) getView().findViewById(R.id.eventAttendees_recycler);
+        pending_recycler = (RecyclerView) getView().findViewById(R.id.eventPending_recycler);
+        attendee_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        pending_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final ArrayList<String> adminId = new ArrayList<>();
+        final ArrayList<String> acceptedId = new ArrayList<>();
+        final ArrayList<String> pendingId = new ArrayList<>();
+        DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference attendee = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE);
+        attendee.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                creator = event.getCreator();
-                event_ref.child(Utils.INVITEDID).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists())
-                            invitedId.add(dataSnapshot.getKey());
+                if (dataSnapshot.exists())
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.getValue(boolean.class)) {
+                            adminId.add(snapshot.getKey());
+                        } else
+                            acceptedId.add(snapshot.getKey());
                     }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-                displayNames = new String[invitedId.size()];
-                displayPictures = new String[invitedId.size()];
-                userNames = new String[invitedId.size()];
-                for (int i = 0; i < invitedId.size(); i++) {
-                    String userId = invitedId.get(i);
-                    DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
-                    final int finalI = i;
-                    users_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User user = dataSnapshot.getValue(User.class);
-                            displayNames[finalI] = user.getDisplayname();
-                            displayPictures[finalI] = user.getPhotoUrl();
-                            userNames[finalI] = user.getUsername();
-
-                            RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.eventMembers_recycler);
-                            EventMembersAdapter adapter = new EventMembersAdapter(userNames, displayNames, displayPictures, creator, getContext());
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            recyclerView.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
+                populateAttendee(adminId, acceptedId);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
+        DatabaseReference pending = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.INVITEDID);
+        pending.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        pendingId.add(snapshot.getKey());
+                    }
+                populatePending(pendingId);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
+
+    private void populateAttendee(ArrayList<String> admin_array, ArrayList<String> attendee_array){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        final int admin_size = admin_array.size();
+        admin_array.addAll(attendee_array);
+        final ArrayList<User> allAttendee_Users = new ArrayList<>();
+        for (int i = 0; i < admin_array.size(); i++) {
+            databaseReference.child(Utils.USER).child(admin_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        User user = dataSnapshot.getValue(User.class);
+                        allAttendee_Users.add(user);
+                    }
+                    EventMembersAdapter adapter = new EventMembersAdapter(allAttendee_Users, admin_size, getContext());
+                    attendee_recycler.setAdapter(adapter);
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+    }
+
+
+    private void populatePending(ArrayList<String> pending_array) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<User> allPending_Users = new ArrayList<>();
+        for (int i = 0; i < pending_array.size(); i++) {
+            databaseReference.child(Utils.USER).child(pending_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        User user = dataSnapshot.getValue(User.class);
+                        allPending_Users.add(user);
+                    }
+                    EventPendingAdapter adapter = new EventPendingAdapter(allPending_Users, getContext());
+                    pending_recycler.setAdapter(adapter);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+    }}
 }
+
+

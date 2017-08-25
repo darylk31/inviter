@@ -126,7 +126,8 @@ public class EventChatFragment extends Fragment {
         Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
         cursor.moveToLast();
         toolbar.setTitle(cursor.getString(0));
-        System.out.println(cursor);
+        cursor.close();
+        db.close();
         super.onActivityCreated(savedInstanceState);
     }
 
