@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -517,6 +518,17 @@ public class UserAreaActivity extends AppCompatActivity {
     private void eventRequestNotification(Event e) {
         if (user == null)
             return;
+        //Create a back stack based on the intent
+        Intent resultIntent = new Intent(this,InboxActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //Adds the backstack
+        stackBuilder.addParentStack(InboxActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        //Gets a pending Intent containnig the entire backstack
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_twitter_bird_white_24dp)
@@ -524,22 +536,32 @@ public class UserAreaActivity extends AppCompatActivity {
                         .setContentText(e.getCreator() + " invites you to " + e.getEvent_name());
         // Sets an unique ID for the addRequestNotification
         int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
-// Gets an instance of the NotificationManager service
+        mBuilder.setContentIntent(resultPendingIntent);
+        // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-// Builds the addRequestNotification and issues it.
+        // Builds the addRequestNotification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     private void addRequestNotification(String contact_display_name) {
         if (user == null)
             return;
-        Intent myIntent = new Intent(UserAreaActivity.this, InboxActivity.class);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_twitter_bird_white_24dp)
                         .setContentTitle(this.getString(R.string.app_name))
                         .setContentText(contact_display_name + " would like to add you!");
+
+        //Create a back stack based on the intent
+        Intent resultIntent = new Intent(this,InboxActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //Adds the backstack
+        stackBuilder.addParentStack(InboxActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        //Gets a pending Intent containnig the entire backstack
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Sets an unique ID for the addRequestNotification
         int mNotificationId = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);

@@ -25,7 +25,11 @@
             android:summary = "name_database"
             android:dialogTitle = "Enter your name"
             />
-
+        <EditTextPreference
+            android:key="pref_key_password"
+            android:title = "Password"
+            android:dialogTitle = "Enter password"
+            />
     </PreferenceCategory>
 
     //Settings

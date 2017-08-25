@@ -49,7 +49,12 @@
         <activity android:name=".Contacts.ContactsActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".Inbox.InboxActivity"
-            android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+                  android:parentActivityName=".UserAreaActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UserAreaActivity"/>
+        </activity>
         <activity
             android:name=".UserAreaActivity"
             android:screenOrientation="portrait"
