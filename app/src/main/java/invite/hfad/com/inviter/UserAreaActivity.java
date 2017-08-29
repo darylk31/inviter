@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,7 +40,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -61,6 +59,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import invite.hfad.com.inviter.Contacts.ContactsActivity;
+import invite.hfad.com.inviter.EventObjectModel.CreateEvent;
 import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class UserAreaActivity extends AppCompatActivity {
@@ -102,12 +101,12 @@ public class UserAreaActivity extends AppCompatActivity {
             }
         };
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         this.pref = getSharedPreferences("UserPref", 0);
         this.userID = pref.getString("userID", null);
 
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userRef = Utils.getDatabase().getReference();
         userRef.keepSynced(true);
 
         navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
@@ -272,9 +271,9 @@ public class UserAreaActivity extends AppCompatActivity {
                                                 .load(taskSnapshot.getDownloadUrl().toString())
                                                 .into(profilePictureView);
                                         //Update photoUrl of user database
-                                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                                        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
                                         //Grab username from user database and update username table
-                                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.exists()) {
@@ -426,7 +425,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
 
     private void countInboxItems() {
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").addValueEventListener(new ValueEventListener() {
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 inboxCounter = 0;
@@ -452,7 +451,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private void addRequestListener() {
         //Friend Request Listener
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).addChildEventListener(new ChildEventListener() {
+        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!dataSnapshot.exists())
@@ -477,7 +476,7 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST).addChildEventListener(new ChildEventListener() {
+        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (!dataSnapshot.exists())

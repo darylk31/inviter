@@ -103,13 +103,13 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     public static void updateContacts(final SQLiteDatabase db) {
         db.execSQL("DELETE FROM FRIENDS;");
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference mDatabase = Utils.getDatabase().getReference();
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Contacts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        mDatabase.child(Utils.USER).child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {

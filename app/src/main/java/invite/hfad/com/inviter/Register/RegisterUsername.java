@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.Utils;
 
 public class RegisterUsername extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class RegisterUsername extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
     }
 
     public void onNextButton(View v){
@@ -47,7 +48,7 @@ public class RegisterUsername extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    mDatabase.child("Usernames").child(username.getText().toString().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(username.getText().toString().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!(dataSnapshot.exists())) {

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import invite.hfad.com.inviter.R;
-import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.Utils;
 
 public class RegisterEmail extends AppCompatActivity {
     private EditText email;
@@ -31,7 +30,7 @@ public class RegisterEmail extends AppCompatActivity {
         bundle = getIntent().getExtras();
         this.email = (EditText) findViewById(R.id.etEmailAddress);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
     }
 
     public void onNextButton(View v) {
@@ -47,7 +46,7 @@ public class RegisterEmail extends AppCompatActivity {
                 if (connected) {
                     String emailString = email.getText().toString();
                     emailString = emailString.substring(0,emailString.indexOf('.'));
-                    mDatabase.child("Email-Address").child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {

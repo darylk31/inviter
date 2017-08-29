@@ -13,7 +13,6 @@ public class User {
     private String lastname;
     private String photoUrl;
     private String email;
-    private String password;
     private String displayname;
     private String uid;
     private Map<String,Boolean> contacts;
@@ -25,14 +24,13 @@ public class User {
     }
 
 
-    public User(String uid, String userName,String firstname, String lastname, String email, String password) {
+    public User(String uid, String userName, String displayname, String firstname, String lastname, String email) {
         this.uid = uid;
         this.username = userName;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.password = password;
-        this.displayname = userName;
+        this.displayname = displayname;
         this.photoUrl = defaultURL;
     }
 
@@ -52,10 +50,6 @@ public class User {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -73,9 +67,6 @@ public class User {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getDisplayname() {
         return displayname;

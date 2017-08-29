@@ -12,12 +12,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.view.ViewGroup;
 import android.support.v7.widget.CardView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import invite.hfad.com.inviter.EventObjectModel.EventViewPager;
 
 /**
  * Created by Daryl on 9/21/2016.

@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,10 +14,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 
 public class EventMembersFragment extends Fragment {
@@ -46,7 +47,7 @@ public class EventMembersFragment extends Fragment {
         final ArrayList<String> adminId = new ArrayList<>();
         final ArrayList<String> acceptedId = new ArrayList<>();
         final ArrayList<String> pendingId = new ArrayList<>();
-        DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference event_ref = Utils.getDatabase().getReference();
         DatabaseReference attendee = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE);
         attendee.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -84,7 +85,7 @@ public class EventMembersFragment extends Fragment {
     }
 
     private void populateAttendee(ArrayList<String> admin_array, ArrayList<String> attendee_array){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = Utils.getDatabase().getReference();
         final int admin_size = admin_array.size();
         admin_array.addAll(attendee_array);
         final ArrayList<User> allAttendee_Users = new ArrayList<>();
@@ -108,7 +109,7 @@ public class EventMembersFragment extends Fragment {
 
 
     private void populatePending(ArrayList<String> pending_array) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = Utils.getDatabase().getReference();
         final ArrayList<User> allPending_Users = new ArrayList<>();
         for (int i = 0; i < pending_array.size(); i++) {
             databaseReference.child(Utils.USER).child(pending_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {

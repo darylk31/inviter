@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 
 import android.app.AlertDialog;
@@ -22,6 +22,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.Utils;
 
 
 /**
@@ -102,8 +108,8 @@ public class EventOptionsDialogFragment extends DialogFragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // continue with delete
-                                mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid()).removeValue();
-                                mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(event_id).removeValue();
+                                mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).removeValue();
+                                mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(event_id).removeValue();
                                 Toast.makeText(rootView.getContext(),"Event Left",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
                                 startActivity(intent);
@@ -154,7 +160,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
 
     private void ButtonRoleView(){
 
-        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {

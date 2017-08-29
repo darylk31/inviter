@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,11 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import invite.hfad.com.inviter.Register.RegisterConfirm;
 import invite.hfad.com.inviter.Register.RegisterName;
-import invite.hfad.com.inviter.Register.RegisterUsername;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,14 +34,16 @@ public class LoginActivity extends AppCompatActivity {
     private String password;
     private FirebaseAuth auth;
     private ProgressDialog progressDialog;
+    private DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = FirebaseAuth.getInstance();
-        Utils.getDatabase();
+        mDatabase = Utils.getDatabase().getReference();
         if (auth.getCurrentUser() != null){
+            System.out.println("LOOKAT ME" + auth.getCurrentUser().getDisplayName());
             startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
             finish();
         }
@@ -62,20 +58,17 @@ public class LoginActivity extends AppCompatActivity {
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             performLogin(email,password);
         } else{
-            DatabaseReference mDatabase = Utils.getDatabase().getReference();
-            mDatabase.child(Utils.USERNAMES).child(email)
+            mDatabase.child(Utils.USER).child(email)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot != null){
-                                Usernames usernames = dataSnapshot.getValue(Usernames.class);
-                                performLogin(usernames.getEmail(),password);
+                                User user = dataSnapshot.getValue(User.class);
+                                performLogin(user.getEmail(),password);
                             }
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
                         }
                     });
         }
@@ -90,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 else {
-                    String userId = auth.getCurrentUser().getUid();
+                    String userId = auth.getCurrentUser().getDisplayName();
                     SharedPreferences.Editor editor = getSharedPreferences("UserPref", 0).edit();
                     editor.putString("userID", userId);
                     editor.commit();
@@ -101,9 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     final long[] childrenCount = {0};
                     final int[] eventCount = {0};
-                    FirebaseAuth auth = FirebaseAuth.getInstance();
-                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {

@@ -42,11 +42,12 @@ public class InboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inbox);
         getSupportActionBar().setTitle("Inbox");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mDatabase = Utils.getDatabase().getReference();
         recycler = (RecyclerView) findViewById(R.id.inbox_recycler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(layoutManager);
         auth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
         tv_empty = (TextView)findViewById(R.id.tv_emptyInbox);
 
         friendlist = new ArrayList<>();
@@ -57,15 +58,14 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     public void searchinbox() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             tv_empty.setVisibility(View.INVISIBLE);
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                mDatabase.child("Users").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.child(Utils.USER).child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
@@ -92,7 +92,7 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     public void searchevents(){
-        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request").
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child("Event_Request").
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,7 +109,7 @@ public class InboxActivity extends AppCompatActivity {
                                             //TODO:: Delete if event is expired
                                             eventlist.add(event);
                                         } else{
-                                            mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENT_REQUEST).child(snapshot.getKey()).removeValue();
+                                            mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENT_REQUEST).child(snapshot.getKey()).removeValue();
                                         }
                                         InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
                                         recycler.setAdapter(adapter);

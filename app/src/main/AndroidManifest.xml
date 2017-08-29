@@ -45,7 +45,7 @@
 
         <activity android:name=".MakeEventActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".EventPage"/>
+        <activity android:name=".EventObjectModel.EventPage"/>
         <activity android:name=".Contacts.ContactsActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".Inbox.InboxActivity"
@@ -68,14 +68,14 @@
             android:name=".EventObjectModel.EventSelectContacts"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".EventViewPager"
+            android:name=".EventObjectModel.EventViewPager"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CreateEvent"
+            android:name=".EventObjectModel.CreateEvent"
                   android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
-            android:name=".EditEvent"
+            android:name=".EventObjectModel.EditEvent"
             android:windowSoftInputMode="adjustPan">
         </activity>
     </application>

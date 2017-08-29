@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="invite.hfad.com.inviter.PinMessageDialogFragment">
+             tools:context="invite.hfad.com.inviter.DialogBox.PinMessageDialogFragment">
 
 
     <!-- TODO: Update blank fragment layout -->

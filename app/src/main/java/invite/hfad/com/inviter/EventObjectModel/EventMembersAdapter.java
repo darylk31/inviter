@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -13,53 +13,67 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
 
 /**
- * Created by Daryl on 8/22/2017.
+ * Created by Daryl on 8/15/2017.
  */
 
-public class EventPendingAdapter extends RecyclerView.Adapter<EventPendingAdapter.ViewHolder> {
+public class EventMembersAdapter extends RecyclerView.Adapter<EventMembersAdapter.ViewHolder> {
 
-    private ArrayList<User> userArrayList;
+
+    private ArrayList<User> user_list;
+    private int admin_num;
     private Context context;
 
-    public EventPendingAdapter(ArrayList<User> userArrayList, Context context){
-        this.userArrayList = userArrayList;
+
+
+    public EventMembersAdapter(ArrayList<User> user_list,
+                               int admin_num,
+                               Context context){
+        this.user_list = user_list;
+        this.admin_num = admin_num;
         this.context = context;
     }
 
     @Override
-    public EventPendingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventMembersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.member_list_item, parent, false);
-        return new EventPendingAdapter.ViewHolder(cv);
+        return new ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(EventPendingAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(EventMembersAdapter.ViewHolder holder, final int position) {
         final CardView cardView = holder.cardView;
         TextView displayname = (TextView) cardView.findViewById(R.id.tv_eventMembersName);
         CircleImageView imageView = (CircleImageView) cardView.findViewById(R.id.civ_eventMembers);
-        displayname.setText(userArrayList.get(position).getDisplayname() + " (Pending)");
+        if (position < admin_num) {
+            displayname.setText(user_list.get(position).getDisplayname() + " (Admin)");}
+        else {
+            displayname.setText(user_list.get(position).getDisplayname());}
 
         Glide.with(context)
-                .load(userArrayList.get(position).getPhotoUrl())
+                .load(user_list.get(position).getPhotoUrl())
                 .into(imageView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventViewPager) context, userArrayList.get(position).getUsername());
+                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventViewPager) context, user_list.get(position).getUsername());
                 profileDialogBox.show();
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return userArrayList.size();
+        return user_list.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         private CardView cardView;
 
         public ViewHolder(CardView v) {

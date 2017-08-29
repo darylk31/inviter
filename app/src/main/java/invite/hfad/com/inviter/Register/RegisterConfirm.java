@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +27,7 @@ import invite.hfad.com.inviter.EmailAddress;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
-import invite.hfad.com.inviter.Usernames;
+import invite.hfad.com.inviter.Utils;
 
 
 public class RegisterConfirm extends AppCompatActivity {
@@ -62,7 +61,7 @@ public class RegisterConfirm extends AppCompatActivity {
         bundle = getIntent().getExtras();
         getDisplayInformation();
         setDisplayInformation();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
 
     }
 
@@ -104,12 +103,12 @@ public class RegisterConfirm extends AppCompatActivity {
             public void onDataChange(DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    mDatabase.child("Usernames").child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {
                                 final String emailString = email.substring(0, email.indexOf('.'));
-                                mDatabase.child("Email-Address").child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (!(dataSnapshot.exists())) {
@@ -135,7 +134,6 @@ public class RegisterConfirm extends AppCompatActivity {
                     Toast.makeText(RegisterConfirm.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 System.err.println("Listener was cancelled");
@@ -157,29 +155,15 @@ public class RegisterConfirm extends AppCompatActivity {
                             mAuth.signOut();
                         } else {
                             String uid = mAuth.getCurrentUser().getUid();
-
-                            User firebaseUser = new User(uid,username, firstname, lastname, email, password);
-                            Usernames firebaseUsernames = new Usernames(uid,username, email);
+                            User firebaseUser = new User(uid,username,username, firstname, lastname, email);
                             EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
                             setUserProfile(firebaseUser);
                             mAuth.signOut();
-                            mDatabase.child("Users").child(uid).setValue(firebaseUser);
-                            mDatabase.child("Email-Address").child(emailString.toLowerCase()).setValue(firebaseEmailAddress);
-                            mDatabase.child("Usernames").child(username.toLowerCase()).setValue(firebaseUsernames);
-                            Thread thread = new Thread(){
-                                @Override
-                                public void run() {
-                                    try {
-                                        Thread.sleep(2500); // As I am using LENGTH_SHORT in Toast
-                                        startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
-                                        finish();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
+                            mDatabase.child(Utils.USER).child(username).setValue(firebaseUser);
+                            mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).setValue(firebaseEmailAddress);
                             Toast.makeText(RegisterConfirm.this, "Registration Complete.", Toast.LENGTH_SHORT).show();
-                            thread.start();
+                            startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
+                            finish();
                         }
                     }
                 });

@@ -13,15 +13,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import invite.hfad.com.inviter.Contact;
-import invite.hfad.com.inviter.ProfileDialogBox;
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
-import invite.hfad.com.inviter.Usernames;
+import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 /**
  * Created by Daryl on 5/9/2017.
@@ -29,8 +28,8 @@ import invite.hfad.com.inviter.Usernames;
 
 public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAdapter.ViewHolder> {
 
-    private Usernames firebaseUsername;
-    private ArrayList<Usernames> usernameList;
+    private User firebaseUsername;
+    private ArrayList<User> usernameList;
 
 
     private DatabaseReference mDatabase;
@@ -48,10 +47,10 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
         }
     }
 
-    public SearchUsernameAdapter(Context context, ArrayList<Usernames> usernameList){
+    public SearchUsernameAdapter(Context context, ArrayList<User> usernameList){
         this.mContext = context;
         auth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
         this.usernameList = usernameList;
         if(firebaseUsername == null)
             return;
@@ -111,13 +110,13 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
         });
     }
 
-    private void addFirebaseUser(final Usernames addUsername){
-      mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void addFirebaseUser(final User addUsername){
+      mDatabase.child(Utils.USER).child(addUsername.getUsername()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(addUsername.getUid()).setValue(addUsername.getDisplayname());
-                    mDatabase.child("Users").child(addUsername.getUid()).child("Inbox").child("Add_Request").child(auth.getCurrentUser().getUid()).setValue(auth.getCurrentUser().getDisplayName());
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(addUsername.getUsername()).setValue(addUsername.getUsername());
+                    mDatabase.child(Utils.USER).child(addUsername.getUsername()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(auth.getCurrentUser().getDisplayName());
                 }
             }
             @Override

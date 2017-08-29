@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 import java.util.Date;
 

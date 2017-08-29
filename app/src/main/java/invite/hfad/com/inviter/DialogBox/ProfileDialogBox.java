@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.DialogBox;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,12 +11,12 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 /**
  * Created by Jimmy on 6/3/2017.
@@ -41,12 +41,12 @@ public class ProfileDialogBox extends Dialog implements android.view.View.OnClic
         profile_username.setText(username);
         final TextView profile_displayname = (TextView)findViewById(R.id.profile_displayname);
         final CircleImageView profile_picture = (CircleImageView)findViewById(R.id.profile_image);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
         mDatabase.child("Usernames").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
-                    Usernames username = dataSnapshot.getValue(Usernames.class);
+                    User username = dataSnapshot.getValue(User.class);
                     profile_displayname.setText(username.getDisplayname());
                     if (username.getPhotoUrl() == null){
                         Glide.with(getContext())

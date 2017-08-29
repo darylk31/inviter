@@ -1,59 +1,46 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Parcelable;
-import android.provider.Settings;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import invite.hfad.com.inviter.EventObjectModel.EventSelectContacts;
+import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.Utils;
 
-public class CreateEvent extends AppCompatActivity {
+public class EditEvent extends AppCompatActivity {
 
     private MaterialCalendarView startCalendarView;
     private TextView dateTextDisplay;
@@ -71,12 +58,19 @@ public class CreateEvent extends AppCompatActivity {
     private int LOCATION_PERMISSION = 11;
     private TextView tvLocation;
 
+    private Event event;
+
+    DatabaseReference mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        event = getIntent().getExtras().getParcelable("event");
+        mDatabase = Utils.getDatabase().getReference();
         setContentView(R.layout.activity_create_event);
         getSupportActionBar().hide();
         getViews();
+        setUpFields();
         onStartDateSelect();
         onStartTimeClick();
         onButtonClick();
@@ -95,14 +89,30 @@ public class CreateEvent extends AppCompatActivity {
         titleDisplay = (EditText) findViewById(R.id.etTitle);
         descriptionDisplay = (EditText) findViewById(R.id.etDescription);
         button = (FloatingActionButton) findViewById(R.id.bEventSelectContacts);
+        tvLocation = (TextView) findViewById(R.id.tvLocation);
+    }
+
+    private void setUpFields(){
+        if(event.getEvent_name() != null)
+            titleDisplay.setText(event.getEvent_name());
+        if(event.getDescription() != null)
+            descriptionDisplay.setText(event.getDescription());
+        if(event.getLocation() != null)
+            tvLocation.setText(event.getLocation());
+        //Figure out time
     }
 
     private void onStartDateSelect() {
-        Calendar c = Calendar.getInstance();
-        startCalendarView.setSelectedDate(c);
-        String converted_date =  new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(new Date());
+        Date eventDate = new Date();
+        try {
+            eventDate = new SimpleDateFormat("yyyy-MM-dd").parse(event.getStartDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        startCalendarView.setSelectedDate(eventDate);
+        String converted_date =  new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(eventDate);
         startDateData = converted_date;
-        String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(new Date());
+        String output = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.ENGLISH).format(eventDate);
         dateTextDisplay.setText(output);
         startCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -128,7 +138,7 @@ public class CreateEvent extends AppCompatActivity {
                 int mHour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int mMinute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(CreateEvent.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(EditEvent.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         int hour = hourOfDay % 12;
@@ -149,31 +159,46 @@ public class CreateEvent extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = titleDisplay.getText().toString().trim();
-                String description = descriptionDisplay.getText().toString().trim();
-                String date = startDateData + " " + startTimeData;
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location);
-                Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
-                intent.putExtra("myEvent", (Parcelable) event);
-                startActivity(intent);
+                event.setEvent_name(titleDisplay.getText().toString().trim());
+                event.setDescription(descriptionDisplay.getText().toString().trim());
+                event.setStartDate(startDateData + " " + startTimeData);
+                if(event.getStartDate() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_STARTDATE).setValue(event.getStartDate());
+
+                if(event.getEvent_name() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_TITLE).setValue(event.getEvent_name());
+
+                if(event.getDescription() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_DESCRIPTION).setValue(event.getDescription());
+
+                if(event.getLocation() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LOCATION).setValue(event.getLocation());
+
+                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                UserDatabaseHelper.update_event(db, event.getEventId(), event);
+                db.close();
+
+                finish();
             }
         });
+
+
     }
 
     public void setUpGoogleLocation() {
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    if (ContextCompat.checkSelfPermission(CreateEvent.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    if (ContextCompat.checkSelfPermission(EditEvent.this, Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(CreateEvent.this,
+                        ActivityCompat.requestPermissions(EditEvent.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 LOCATION_PERMISSION);}
                     else {
                         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                        startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+                        startActivityForResult(builder.build(EditEvent.this), PLACE_PICKER_REQUEST);
                     }
             } catch(
             GooglePlayServicesRepairableException e)
@@ -191,7 +216,7 @@ public class CreateEvent extends AppCompatActivity {
             if (grantResults.length != 0){
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
             try {
-                startActivityForResult(builder.build(CreateEvent.this), PLACE_PICKER_REQUEST);
+                startActivityForResult(builder.build(EditEvent.this), PLACE_PICKER_REQUEST);
             } catch (GooglePlayServicesRepairableException e) {
                 e.printStackTrace();
             } catch (GooglePlayServicesNotAvailableException e) {
@@ -209,9 +234,12 @@ public class CreateEvent extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 if (place.getName() != null){
-                tvLocation.setText(place.getName() + " @ " + place.getAddress());}
+                    tvLocation.setText(place.getName() + " @ " + place.getAddress());
+                    event.setLocation(tvLocation.getText().toString());
+                }
                 else {
                     tvLocation.setText(place.getAddress());
+                    event.setLocation(tvLocation.getText().toString());
                 }
                 location = tvLocation.getText().toString();
                 tvLocation.postDelayed(new Runnable() {
@@ -228,16 +256,16 @@ public class CreateEvent extends AppCompatActivity {
     public void onBackPressed() {
         final EditText etTitle = (EditText) findViewById(R.id.etTitle);
         if (etTitle.getText().toString().equals("")) {
-            Intent intent = new Intent(CreateEvent.this, UserAreaActivity.class);
+            Intent intent = new Intent(EditEvent.this, UserAreaActivity.class);
             startActivity(intent);
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CreateEvent.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditEvent.this);
             builder.setTitle("Discard");
             builder.setMessage("All event information will be discarded, are you sure?");
             builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(CreateEvent.this, UserAreaActivity.class);
+                    Intent intent = new Intent(EditEvent.this, UserAreaActivity.class);
                     startActivity(intent);
                 }
             });

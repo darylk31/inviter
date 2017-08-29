@@ -8,18 +8,16 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.util.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import invite.hfad.com.inviter.R;
-import invite.hfad.com.inviter.Usernames;
+import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.Utils;
 
 public class SearchContactsActivity extends AppCompatActivity {
@@ -30,11 +28,11 @@ public class SearchContactsActivity extends AppCompatActivity {
     private RecyclerView search_friends_recycler;
     private SearchFriendsAdapter friendsAdapter;
 
-    private Usernames usernameMatch;
+    private User usernameMatch;
 
-    private Usernames firebaseUsername;
-    private ArrayList<Usernames> usernameList;
-    private ArrayList<Usernames> contactList;
+    private User firebaseUsername;
+    private ArrayList<User> usernameList;
+    private ArrayList<User> contactList;
 
 
     private DatabaseReference mDatabase;
@@ -108,24 +106,23 @@ public class SearchContactsActivity extends AppCompatActivity {
 
         //TODO:
         //If they're on my contacts they don't show up
-        usernameList = new ArrayList<Usernames>();
+        usernameList = new ArrayList<User>();
         mDatabase = Utils.getDatabase().getReference();
 
-        mDatabase.child(Utils.USERNAMES).child(query).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Utils.USER).child(query).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    firebaseUsername = dataSnapshot.getValue(Usernames.class);
+                    firebaseUsername = dataSnapshot.getValue(User.class);
                     //If the user searched is myself, then don't show anything
-                    if(firebaseUsername.getUid().equals(auth.getCurrentUser().getUid()))
+                    if(firebaseUsername.getUsername().equals(auth.getCurrentUser().getDisplayName()))
                         return;
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.CONTACTS).child(firebaseUsername.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(firebaseUsername.getUsername()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(!dataSnapshot.exists()){
                                 usernameList.add(firebaseUsername);
                                 System.out.println(usernameList.get(0).getDisplayname());
-                                System.out.println("VISIBLE");
                                 usernameSearchLayoutWrapper.setVisibility(View.VISIBLE);
                             }
                             search_recycler.setAdapter(adapter);

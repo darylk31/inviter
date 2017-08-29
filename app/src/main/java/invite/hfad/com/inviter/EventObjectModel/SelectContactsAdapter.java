@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import invite.hfad.com.inviter.Contacts.ContactsActivity;
-import invite.hfad.com.inviter.Contacts.FriendsAdapter;
-import invite.hfad.com.inviter.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 
@@ -98,14 +95,14 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
             public void onClick(View v) {
                 if (selected.getVisibility() == View.INVISIBLE){
                     selected.setVisibility(View.VISIBLE);
-                    invited.add(uid[holder.getAdapterPosition()]);
-                    selected_names.add(displayname[holder.getAdapterPosition()]);
+                    invited.add(username[holder.getAdapterPosition()]);
+                    selected_names.add(username[holder.getAdapterPosition()]);
                     selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
                 }
                 else {
                     selected.setVisibility(View.INVISIBLE);
-                    invited.remove(uid[holder.getAdapterPosition()]);
-                    selected_names.remove(displayname[holder.getAdapterPosition()]);
+                    invited.remove(username[holder.getAdapterPosition()]);
+                    selected_names.remove(username[holder.getAdapterPosition()]);
                     if (selected_names.isEmpty()){
                         selected_list.setText("Just Me");
                     }

@@ -1,10 +1,11 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.DialogBox;
 
 
+import android.app.DialogFragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.Utils;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -24,13 +25,13 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatDialogFragment extends DialogFragment{
+public class PinMessageDialogFragment extends DialogFragment {
 
     private String message;
     private String event_id;
     private String message_id;
 
-    private Button pin_button;
+    private Button unpin_button;
     private Button copy_button;
     private Button remove_button;
 
@@ -38,15 +39,17 @@ public class ChatDialogFragment extends DialogFragment{
 
     private DatabaseReference mFirebseDatabaseReference;
 
-    public ChatDialogFragment() {
+    private DialogInterface.OnDismissListener onDismissListener;
+
+    public PinMessageDialogFragment() {
         // Required empty public constructor
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        message = getArguments().getString("message");
         event_id = getArguments().getString("id");
         message_id = getArguments().getString("message_id");
+        //setOnDismissListener(this);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class ChatDialogFragment extends DialogFragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        rootView = inflater.inflate(R.layout.fragment_chat_dialog, container, false);
+        rootView = inflater.inflate(R.layout.fragment_pin_message_dialog, container, false);
         ButtonClickListener();
         return rootView;
     }
@@ -62,7 +65,7 @@ public class ChatDialogFragment extends DialogFragment{
 
     private void ButtonClickListener(){
         copy_button =(Button) rootView.findViewById(R.id.copy_button);
-        pin_button = (Button) rootView.findViewById(R.id.pin_button);
+        unpin_button = (Button) rootView.findViewById(R.id.unpin_button);
         copy_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,27 +76,29 @@ public class ChatDialogFragment extends DialogFragment{
                 Toast.makeText(getActivity(), "Copied Message", Toast.LENGTH_SHORT).show();
             }
         });
-        pin_button.setOnClickListener(new View.OnClickListener() {
+        unpin_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mFirebseDatabaseReference = Utils.getDatabase().getReference();
-                mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.CHAT).child(message_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                            mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.PIN).child(message_id).setValue(friendlyMessage);
-                            Toast.makeText(getActivity(),"Message Pinned",Toast.LENGTH_SHORT).show();
-                            getDialog().dismiss();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.PIN).child(message_id).removeValue();
+                getDialog().dismiss();
+                Toast.makeText(getActivity(),"Message unpinned",Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
+
 
 }

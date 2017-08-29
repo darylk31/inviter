@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import invite.hfad.com.inviter.Contact;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
@@ -51,7 +49,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
     public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist, ArrayList<String> invitedbylist) {
         auth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = Utils.getDatabase().getReference();
         this.friendlist = friendlist;
         friendrequests = friendlist.size();
         this.eventlist = eventlist;
@@ -90,9 +88,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition();
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
                         //Add them onto my contacts
-                        Contact myContact = new Contact(friendlist.get(pos).getUid(),true);
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Contacts").child(friendlist.get(pos).getUid()).setValue(myContact);
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(friendlist.get(pos).getUsername()).setValue(true);
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUsername()).removeValue();
                         removefriendrequest(pos);
                     }
                 });
@@ -102,8 +99,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
                         Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
-                        mDatabase.child("Users").child(auth.getCurrentUser().getUid()).child("Inbox").child("Add_Request").child(friendlist.get(pos).getUid()).removeValue();
-                        mDatabase.child("Users").child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getUid()).removeValue();
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUid()).removeValue();
+                        mDatabase.child(Utils.USER).child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getDisplayName()).removeValue();
                         removefriendrequest(pos);
                     }
                 });
@@ -134,10 +131,10 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition() - friendrequests;
 
                         //Add to attendee list
-                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getUid())
+                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName())
                                 .setValue(true);
                         //Remove off invited id list
-                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getUid()).removeValue();
+                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 
                         //Writes to SQL
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(v.getContext());
@@ -145,9 +142,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         UserDatabaseHelper.insert_event(db, eventlist.get(pos));
 
                         //Adds to Users events
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(true);
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(true);
                         //Removes off users inbox
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         
                         Toast.makeText(v.getContext(), eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
@@ -159,7 +156,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition() - friendrequests;
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child("Inbox").child("Event_Request")
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child("Event_Request")
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         Toast.makeText(v.getContext(), " Event request declined.", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);

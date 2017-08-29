@@ -4,7 +4,7 @@
              android:layout_height="match_parent"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:id="@+id/eventchat_recycler_view_frag"
-             tools:context="invite.hfad.com.inviter.EventChatFragment">
+             tools:context="invite.hfad.com.inviter.EventObjectModel.EventChatFragment">
     <android.support.v7.widget.Toolbar
         android:id="@+id/event_chat_toolbar"
         android:layout_width="match_parent"

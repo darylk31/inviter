@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pin_eventchat_recycler_view_frag"
-                tools:context="invite.hfad.com.inviter.EventChatFragment">
+                tools:context="invite.hfad.com.inviter.EventObjectModel.EventChatFragment">
 
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

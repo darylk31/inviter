@@ -3,10 +3,6 @@ package invite.hfad.com.inviter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Created by Daryl on 9/14/2016.
  */

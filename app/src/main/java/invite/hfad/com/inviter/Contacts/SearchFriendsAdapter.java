@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import invite.hfad.com.inviter.ProfileDialogBox;
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 

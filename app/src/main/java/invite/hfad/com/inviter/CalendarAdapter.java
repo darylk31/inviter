@@ -12,9 +12,10 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import invite.hfad.com.inviter.EventObjectModel.EventViewPager;
 
 /**
  * Created by Daryl on 8/1/2017.

@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,9 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import invite.hfad.com.inviter.Contacts.ContactsActivity;
-import invite.hfad.com.inviter.Contacts.FriendsFragment;
-import invite.hfad.com.inviter.Contacts.PhoneContactsFragment;
+import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.UserDatabaseHelper;
 
 public class EventViewPager extends AppCompatActivity {
 

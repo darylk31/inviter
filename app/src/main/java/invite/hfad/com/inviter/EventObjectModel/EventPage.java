@@ -1,17 +1,13 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
-import android.app.DialogFragment;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,14 +28,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,12 +39,15 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import invite.hfad.com.inviter.FriendlyMessage;
+import invite.hfad.com.inviter.LoginActivity;
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.Utils;
 
 
-public class EventChatFragment extends Fragment {
-
-    //Event id
-    private String id;
+public class EventPage extends Activity {
+    String id;
+    Toolbar toolbar;
 
     //Chat
     private static final String ANONYMOUS = "Anonymous";
@@ -71,79 +60,25 @@ public class EventChatFragment extends Fragment {
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private DatabaseReference mFirebaseDatabaseReference;
-    private FirebaseRecyclerAdapter<FriendlyMessage, EventChatFragment.MessageViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseAdapter;
     private EditText mMessageEditText;
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 60;
     private static final int REQUEST_INVITE = 1;
     private static final int REQUEST_IMAGE = 2;
     private Button mSendButton;
     private ImageView mAddMessageImageView;
-    private View rootView;
-    private Toolbar toolbar;
-    private TextView noChatText;
-
-    public EventChatFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setHasOptionsMenu(true);
+        setContentView(R.layout.activity_event_page);
+        this.id = getIntent().getStringExtra("event_id");
+        populateChat();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        id = getArguments().getString("event_id");
-        this.setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_event_chat, container, false);
-        toolbar = (Toolbar) view.findViewById(R.id.event_chat_toolbar);
-        toolbar.inflateMenu(R.menu.menu_eventpage);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                DialogFragment pinDialog = new PinFragment();
-                Bundle args = new Bundle();
-                args.putString("id",id);
-                pinDialog.setArguments(args);
-                android.app.FragmentManager fm = getActivity().getFragmentManager();
-                pinDialog.show(fm,"dialog");
-                return true;
-            }
-        });
-        noChatText = (TextView) view.findViewById(R.id.tvNoChat);
-        return view;
+    public void onSendMessage(View view) {
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState){
-        rootView = getView();
-        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
-        cursor.moveToLast();
-        toolbar.setTitle(cursor.getString(0));
-        cursor.close();
-        db.close();
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        System.out.println("createOptionsMenu");
-        super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.menu_eventpage, menu);
-
-    }
-    @Override
-    public void onStart(){
-        populateFragment();
-        super.onStart();
-    }
-
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView messageTextView;
@@ -151,7 +86,6 @@ public class EventChatFragment extends Fragment {
         public TextView messengerTextView;
         public CircleImageView messengerImageView;
         public TextView messageTimeStamp;
-        private String id;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -161,40 +95,44 @@ public class EventChatFragment extends Fragment {
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
             messageTimeStamp = (TextView) itemView.findViewById(R.id.messageTimeStamp);
         }
-
     }
 
-    private void populateFragment(){
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //Set default username as anonymous
+
+    private void populateChat() {
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // Set default username is anonymous.
         mUsername = ANONYMOUS;
-        //Initalize Firebase Auth
+        // Initalize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-        //TODO:: Check if user is logged in?
-        mUsername = mFirebaseUser.getDisplayName();
-        if (mFirebaseUser.getPhotoUrl() != null) {
-            System.out.println("NO FUTURE");
-            mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+        // If User is not logged
+        if (mFirebaseUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        } else {
+            mUsername = mFirebaseUser.getDisplayName();
+            if (mFirebaseUser.getPhotoUrl() != null) {
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+            }
         }
-        //Initalize ProgressBar and RecyclerView
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        mMessageRecyclerView = (RecyclerView) rootView.findViewById(R.id.messageRecyclerView);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        // Initalize ProgressBar and RecyclerView
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
+        mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        //New child entires
+        // New child entires
         mFirebaseDatabaseReference = Utils.getDatabase().getReference();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, EventChatFragment.MessageViewHolder>(
+        System.out.println(id);
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(
                 FriendlyMessage.class,
                 R.layout.item_message,
-                EventChatFragment.MessageViewHolder.class,
+                MessageViewHolder.class,
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT)) {
 
             @Override
-            protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
-                checkForMessageText();
+            protected void populateViewHolder(final MessageViewHolder viewHolder, FriendlyMessage friendlyMessage, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
@@ -230,10 +168,10 @@ public class EventChatFragment extends Fragment {
                 }
                 viewHolder.messengerTextView.setText(friendlyMessage.getName());
                 if (friendlyMessage.getPhotoUrl() == null) {
-                    viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
+                    viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(EventPage.this,
                             R.drawable.ic_account_circle_black_36dp));
                 } else {
-                    Glide.with(EventChatFragment.this)
+                    Glide.with(EventPage.this)
                             .load(friendlyMessage.getPhotoUrl())
                             .into(viewHolder.messengerImageView);
                 }
@@ -248,22 +186,6 @@ public class EventChatFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        if(friendlyMessage.getId() != null) {
-                            DialogFragment chatDialogFragment = new ChatDialogFragment();
-                            Bundle args = new Bundle();
-                            args.putString("message",friendlyMessage.getText());
-                            args.putString("message_id",friendlyMessage.getId());
-                            args.putString("id",id);
-                            chatDialogFragment.setArguments(args);
-                            android.app.FragmentManager fm = getActivity().getFragmentManager();
-                            chatDialogFragment.show(fm,"dialog");
-                        }
-                        return true;
-                    }
-                });
             }
         };
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -285,7 +207,7 @@ public class EventChatFragment extends Fragment {
         });
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-        mMessageEditText = (EditText) rootView.findViewById(R.id.messageEditText);
+        mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mMessageEditText.setFilters(new InputFilter[]{
                 new InputFilter.LengthFilter(mSharedPreferences
                         .getInt(Utils.FRIENDLY_MSG_LENGTH, DEFAULT_MSG_LENGTH_LIMIT))
@@ -309,22 +231,22 @@ public class EventChatFragment extends Fragment {
             }
         });
         //Send Chat text
-        mSendButton = (Button) rootView.findViewById(R.id.sendButton);
+        /*
+        mSendButton = (Button) findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(),
                         mUsername, mPhotoUrl,timeStamp, null);
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
         });
         //Send Images
         mAddMessageImageView = (ImageView)
-                rootView.findViewById(R.id.addMessageImageView);
+                findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -335,23 +257,7 @@ public class EventChatFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_IMAGE);
             }
         });
-        checkForMessageText();
+    */
     }
 
-    private void checkForMessageText(){
-        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){
-                    noChatText.setVisibility(View.VISIBLE);
-                    mProgressBar.setVisibility(View.GONE);
-                } else {
-                    noChatText.setVisibility(View.INVISIBLE);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
 }
