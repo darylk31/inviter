@@ -1,13 +1,17 @@
 package invite.hfad.com.inviter;
 
+import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import invite.hfad.com.inviter.Contacts.FriendsFragment;
 import invite.hfad.com.inviter.Contacts.PhoneContactsFragment;
+import invite.hfad.com.inviter.Contacts.SearchContactsActivity;
 
 public class EventMembersActivity extends AppCompatActivity {
 
@@ -35,6 +40,8 @@ public class EventMembersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         viewPager = (ViewPager) findViewById(R.id.eventMembers_viewpager);
         setupViewPager();
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setupViewPager(){
@@ -50,6 +57,20 @@ public class EventMembersActivity extends AppCompatActivity {
         adapter.addFragment(membersFragment, "Members");
         adapter.addFragment(pendingFragment, "Pending");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(this, EventViewPager.class)
+                        .putExtra("event_id", id)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                );
+                finish();
+                break;
+        }
+        return true;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
