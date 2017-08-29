@@ -47,7 +47,7 @@ public class EventMembersAdapter extends RecyclerView.Adapter<EventMembersAdapte
         final CardView cardView = holder.cardView;
         TextView displayname = (TextView) cardView.findViewById(R.id.tv_eventMembersName);
         CircleImageView imageView = (CircleImageView) cardView.findViewById(R.id.civ_eventMembers);
-        if (position < admin_num - 1) {
+        if (position <= admin_num - 1) {
             displayname.setText(user_list.get(position).getDisplayname() + " (Admin)");}
         else {
             displayname.setText(user_list.get(position).getDisplayname());}
