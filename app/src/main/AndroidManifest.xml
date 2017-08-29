@@ -78,6 +78,7 @@
             android:name=".EventObjectModel.EditEvent"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity android:name=".EventObjectModel.EventMembersActivity"/>
     </application>
 
 </manifest>

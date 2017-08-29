@@ -1,4 +1,4 @@
-package invite.hfad.com.inviter;
+package invite.hfad.com.inviter.EventObjectModel;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,6 +17,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 
 public class EventPendingFragment extends Fragment {

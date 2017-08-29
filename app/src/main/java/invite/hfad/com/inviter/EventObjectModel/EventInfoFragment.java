@@ -124,6 +124,7 @@ public class EventInfoFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EventMembersActivity.class);
                 intent.putExtra("event_id", id);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
