@@ -25,7 +25,8 @@ public class EventMembersFragment extends Fragment {
     private String id;
     private String creator;
     private RecyclerView attendee_recycler;
-    private RecyclerView pending_recycler;
+
+
 
 
     @Override
@@ -39,13 +40,11 @@ public class EventMembersFragment extends Fragment {
     public void onStart() {
         super.onStart();
         attendee_recycler = (RecyclerView) getView().findViewById(R.id.eventAttendees_recycler);
-        pending_recycler = (RecyclerView) getView().findViewById(R.id.eventPending_recycler);
         attendee_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        pending_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+
 
         final ArrayList<String> adminId = new ArrayList<>();
         final ArrayList<String> acceptedId = new ArrayList<>();
-        final ArrayList<String> pendingId = new ArrayList<>();
         DatabaseReference event_ref = FirebaseDatabase.getInstance().getReference();
         DatabaseReference attendee = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE);
         attendee.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -66,21 +65,6 @@ public class EventMembersFragment extends Fragment {
             }
         });
 
-        DatabaseReference pending = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.INVITEDID);
-        pending.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        pendingId.add(snapshot.getKey());
-                    }
-                populatePending(pendingId);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
     }
 
     private void populateAttendee(ArrayList<String> admin_array, ArrayList<String> attendee_array){
@@ -105,29 +89,6 @@ public class EventMembersFragment extends Fragment {
             });
         }
     }
-
-
-    private void populatePending(ArrayList<String> pending_array) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        final ArrayList<User> allPending_Users = new ArrayList<>();
-        for (int i = 0; i < pending_array.size(); i++) {
-            databaseReference.child(Utils.USER).child(pending_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        User user = dataSnapshot.getValue(User.class);
-                        allPending_Users.add(user);
-                    }
-                    EventPendingAdapter adapter = new EventPendingAdapter(allPending_Users, getContext());
-                    pending_recycler.setAdapter(adapter);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-    }}
 }
 
 

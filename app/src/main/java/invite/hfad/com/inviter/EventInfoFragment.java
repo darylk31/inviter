@@ -123,22 +123,16 @@ public class EventInfoFragment extends Fragment {
             }
         });
 
-        /*
+
         TextView tv_members = (TextView) view.findViewById(R.id.tv_eventinfomembers);
         tv_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle args = new Bundle();
-                args.putString("event_id", id);
-                EventMembersFragment eventMembersFragment = new EventMembersFragment();
-                eventMembersFragment.setArguments(args);
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();ft.replace(R.id.eventinfo_container, eventMembersFragment, "member");
-                ft.addToBackStack("member");
-                ft.commit();
+                Intent intent = new Intent(getActivity(), EventMembersActivity.class);
+                intent.putExtra("event_id", id);
             }
         });
-        */
+
         arrowAnimation();
     }
 
