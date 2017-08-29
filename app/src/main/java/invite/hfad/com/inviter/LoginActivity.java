@@ -51,14 +51,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLogin(View v){
-
         showProcessDialog();
         if(!validateForm())
             return;
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             performLogin(email,password);
         } else{
-            mDatabase.child(Utils.USER).child(email)
+            mDatabase.child(Utils.USERNAMES).child(email)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -94,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     final long[] childrenCount = {0};
                     final int[] eventCount = {0};
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
