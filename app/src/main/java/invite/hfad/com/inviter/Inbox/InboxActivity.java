@@ -58,7 +58,7 @@ public class InboxActivity extends AppCompatActivity {
     }
 
     public void searchinbox() {
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

@@ -131,8 +131,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition() - friendrequests;
 
                         //Add to attendee list
+                        //Set value to false defaulty not an admin
                         mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName())
-                                .setValue(true);
+                                .setValue(false);
                         //Remove off invited id list
                         mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 

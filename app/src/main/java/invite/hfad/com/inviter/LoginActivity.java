@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         mDatabase = Utils.getDatabase().getReference();
         if (auth.getCurrentUser() != null){
-            System.out.println("LOOKAT ME" + auth.getCurrentUser().getDisplayName());
             startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
             finish();
         }
@@ -57,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             performLogin(email,password);
         } else{
-            mDatabase.child(Utils.USERNAMES).child(email)
+            mDatabase.child(Utils.USER).child(email)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,14 +92,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     final long[] childrenCount = {0};
                     final int[] eventCount = {0};
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getUid()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 System.out.println("Login accessed events table.");
                                 childrenCount[0] = dataSnapshot.getChildrenCount();
-                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                    mDatabase.child("Events").child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    mDatabase.child(Utils.EVENT_DATABASE).child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.exists()) {
@@ -116,9 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                                                     Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
                                                     startActivity(intent);
                                                 }
+                                            } else{
+                                                //If event doesn't exist anymore delete off my firebase table
+                                                mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(snapshot.getKey()).removeValue();
                                             }
                                         }
-
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
                                         }

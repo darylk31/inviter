@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,7 @@ import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.Utils;
 
 public class EventViewPager extends AppCompatActivity {
 
@@ -105,7 +108,7 @@ public class EventViewPager extends AppCompatActivity {
 
     private void updateEvent(){
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Events").child(id);
+        final DatabaseReference ref = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -115,9 +118,9 @@ public class EventViewPager extends AppCompatActivity {
                         UserDatabaseHelper.delete_event(db, id);
                         db.close();
                         Toast.makeText(EventViewPager.this,"Sorry this event has been deleted",Toast.LENGTH_SHORT).show();
+                        ref.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(id).removeValue();
                         startActivity(new Intent(EventViewPager.this, UserAreaActivity.class));
                         finish();
-
                     }
                     else {
                         Event event = dataSnapshot.getValue(Event.class);
