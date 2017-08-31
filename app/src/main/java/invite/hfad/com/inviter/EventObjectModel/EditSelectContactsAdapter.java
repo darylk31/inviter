@@ -30,7 +30,6 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
 
     Cursor cursor;
     SQLiteDatabase db;
-    String[] uid;
     String[] username;
     String[] displayname;
     Context context;
@@ -45,7 +44,7 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS ORDER BY USERNAME;", null);
+            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY USERNAME;", null);
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
@@ -95,13 +94,13 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
             public void onClick(View v) {
                 if (selected.getVisibility() == View.INVISIBLE){
                     selected.setVisibility(View.VISIBLE);
-                    invited.add(uid[holder.getAdapterPosition()]);
+                    invited.add(username[holder.getAdapterPosition()]);
                     selected_names.add(displayname[holder.getAdapterPosition()]);
                     selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
                 }
                 else {
                     selected.setVisibility(View.INVISIBLE);
-                    invited.remove(uid[holder.getAdapterPosition()]);
+                    invited.remove(username[holder.getAdapterPosition()]);
                     selected_names.remove(displayname[holder.getAdapterPosition()]);
                     if (selected_names.isEmpty()){
                         selected_list.setText("Just Me");
@@ -128,16 +127,13 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
 
 
     private void storeFriends(){
-        String[] uid = new String[getItemCount()];
         String[] username = new String[getItemCount()];
         String[] display = new String[getItemCount()];
         for (int i = 0; i < getItemCount(); i++) {
             cursor.moveToPosition(i);
-            display[i] = cursor.getString(2);
-            username[i] = cursor.getString(1);
-            uid[i] = cursor.getString(0);
+            display[i] = cursor.getString(1);
+            username[i] = cursor.getString(0);
         }
-        this.uid = uid;
         this.username = username;
         this.displayname = display;
     }

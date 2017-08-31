@@ -219,6 +219,7 @@ public class EventInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+
             }
         });
     }

@@ -43,7 +43,6 @@ public class EventMembersFragment extends Fragment {
 
         final ArrayList<String> adminId = new ArrayList<>();
         final ArrayList<String> acceptedId = new ArrayList<>();
-        final ArrayList<String> pendingId = new ArrayList<>();
         DatabaseReference event_ref = Utils.getDatabase().getReference();
         DatabaseReference attendee = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE);
         attendee.addListenerForSingleValueEvent(new ValueEventListener() {

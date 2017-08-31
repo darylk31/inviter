@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,9 +25,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     Cursor cursor;
     SQLiteDatabase db;
-    String[] uid;
     String[] username;
     String[] displayname;
+    int[] accept;
     Context context;
 
 
@@ -77,10 +78,15 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 dialogBox.show();
             }
         });
+        if (accept[position] == 0){
+            TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
+            uname.setText(username[position] + " (Pending)");
+        }
+        else {
         TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
         dname.setText(displayname[position]);
         TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
-        uname.setText(username[position]);
+        uname.setText(username[position]);}
     }
 
     @Override
@@ -93,18 +99,18 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
 
     private void storeFriends(){
-        String[] uid = new String[getItemCount()];
         String[] username = new String[getItemCount()];
         String[] display = new String[getItemCount()];
+        int[] accept = new int[getItemCount()];
         for (int i = 0; i < getItemCount(); i++) {
             cursor.moveToPosition(i);
-            display[i] = cursor.getString(2);
-            username[i] = cursor.getString(1);
-            uid[i] = cursor.getString(0);
+            accept[i] = cursor.getInt(2);
+            display[i] = cursor.getString(1);
+            username[i] = cursor.getString(0);
         }
-        this.uid = uid;
         this.username = username;
         this.displayname = display;
+        this.accept = accept;
     }
 }
 

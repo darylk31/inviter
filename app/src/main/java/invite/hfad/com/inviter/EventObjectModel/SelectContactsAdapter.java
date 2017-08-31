@@ -30,7 +30,6 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
 
     Cursor cursor;
     SQLiteDatabase db;
-    String[] uid;
     String[] username;
     String[] displayname;
     Context context;
@@ -45,7 +44,7 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS ORDER BY USERNAME;", null);
+            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY USERNAME;", null);
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
@@ -128,16 +127,13 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
 
 
     private void storeFriends(){
-        String[] uid = new String[getItemCount()];
         String[] username = new String[getItemCount()];
         String[] display = new String[getItemCount()];
         for (int i = 0; i < getItemCount(); i++) {
             cursor.moveToPosition(i);
-            display[i] = cursor.getString(2);
-            username[i] = cursor.getString(1);
-            uid[i] = cursor.getString(0);
+            display[i] = cursor.getString(1);
+            username[i] = cursor.getString(0);
         }
-        this.uid = uid;
         this.username = username;
         this.displayname = display;
     }

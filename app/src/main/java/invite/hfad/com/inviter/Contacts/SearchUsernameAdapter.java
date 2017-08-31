@@ -1,6 +1,8 @@
 package invite.hfad.com.inviter.Contacts;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.UserDatabaseHelper;
 import invite.hfad.com.inviter.Utils;
 
 /**
@@ -80,6 +83,11 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
                 addSearchContactButton.setText("Added");
                 addSearchContactButton.setEnabled(false);
                 addFirebaseUser(usernameList.get(i));
+
+                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(mContext);
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                UserDatabaseHelper.insert_friend(db,usernameList.get(i), 0 );
+                db.close();
             }
         });
         TextView display_name = (TextView) cardView.findViewById(R.id.tvSearchDisplayName);

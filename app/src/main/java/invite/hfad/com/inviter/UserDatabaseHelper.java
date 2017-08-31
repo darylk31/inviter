@@ -36,9 +36,9 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "LOCATION TEXT);");
 
         db.execSQL("CREATE TABLE FRIENDS ("
-                + "UID TEXT PRIMARY KEY, "
-                + "USERNAME TEXT, "
-                + "DISPLAY TEXT);");
+                + "USERNAME TEXT PRIMARY KEY, "
+                + "DISPLAY TEXT, "
+                + "ACCEPT INTEGER);");
     }
 
     @Override
@@ -108,13 +108,17 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        mDatabase.child(Utils.USER).child(snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    for (final DataSnapshot contact_snapshot : dataSnapshot.getChildren()) {
+                        mDatabase.child(Utils.USER).child(contact_snapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
                                     User user = dataSnapshot.getValue(User.class);
-                                    insert_friend(db, user);
+                                    if (contact_snapshot.getValue(boolean.class)) {
+                                        insert_friend(db, user, 1);
+                                    } else {
+                                        insert_friend(db, user, 0);
+                                    }
                                 }
                             }
 
@@ -133,17 +137,17 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public static void insert_friend(SQLiteDatabase db,
-                                     User user) {
+                                     User user, int accept) {
         ContentValues friendValues = new ContentValues();
-        friendValues.put("UID", user.getUid());
         friendValues.put("USERNAME", user.getUsername());
         friendValues.put("DISPLAY", user.getDisplayname());
+        friendValues.put("ACCEPT", accept);
         db.insert("FRIENDS", null, friendValues);
     }
 
     public static void delete_friend(SQLiteDatabase db,
-                                     String uid) {
-        db.delete("FRIENDS", "uid=" + uid, null);
+                                     String username) {
+        db.delete("FRIENDS", "USERNAME=" + username, null);
     }
 
 
