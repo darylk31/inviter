@@ -90,10 +90,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         //Add them onto my contacts
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(friendlist.get(pos).getUsername()).setValue(true);
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUsername()).removeValue();
+                        //Set invited user contact to true
+                        mDatabase.child(Utils.USER).child(friendlist.get(pos).getUsername()).child(Utils.CONTACTS).child(auth.getCurrentUser().getDisplayName()).setValue(true);
                         removefriendrequest(pos);
                     }
                 });
-
                 frienddecline.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

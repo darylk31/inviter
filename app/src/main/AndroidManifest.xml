@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="invite.hfad.com.inviter">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="invite.hfad.com.inviter">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -11,12 +11,12 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        tools:replace="android:supportsRtl"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:supportsRtl">
         <activity
             android:name=".LoginActivity"
             android:theme="@style/LoginActivityTheme">
@@ -34,8 +34,9 @@
         <activity android:name=".ForgotPasswordActivity"/>
         <activity
             android:name=".SettingActivity"
-            android:screenOrientation="portrait"
-            android:label="Preferences"/>
+            android:label="Preferences"
+            android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -43,14 +44,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBjyx5LbOyMoAjY6_sfVJ-Sy6nJM6g--9s"/>
 
-        <activity android:name=".MakeEventActivity"
+        <activity
+            android:name=".MakeEventActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".EventObjectModel.EventPage"/>
-        <activity android:name=".Contacts.ContactsActivity"
+        <activity
+            android:name=".Contacts.ContactsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Inbox.InboxActivity"
-                  android:screenOrientation="portrait"
-                  android:parentActivityName=".UserAreaActivity">
+        <activity
+            android:name=".Inbox.InboxActivity"
+            android:parentActivityName=".UserAreaActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UserAreaActivity"/>
@@ -69,16 +73,18 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".EventObjectModel.EventViewPager"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".EventObjectModel.CreateEvent"
-                  android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name=".EventObjectModel.EditEvent"
             android:windowSoftInputMode="adjustPan">
         </activity>
         <activity android:name=".EventObjectModel.EventMembersActivity"/>
+        <activity android:name=".Register.RegisterPhoneNumber">
+        </activity>
     </application>
 
 </manifest>

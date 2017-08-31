@@ -77,7 +77,6 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
                 //in this case we add the user to our contacts
                 //set the value to true
                 //add the ourselves to the user set to false
-                System.out.println(usernameList.get(i).getUsername());
                 addSearchContactButton.setText("Added");
                 addSearchContactButton.setEnabled(false);
                 addFirebaseUser(usernameList.get(i));
@@ -115,8 +114,8 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(addUsername.getUsername()).setValue(addUsername.getUsername());
-                    mDatabase.child(Utils.USER).child(addUsername.getUsername()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(auth.getCurrentUser().getDisplayName());
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(addUsername.getUsername()).setValue(false);
+                    mDatabase.child(Utils.USER).child(addUsername.getUsername()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(auth.getCurrentUser().getDisplayName());
                 }
             }
             @Override
