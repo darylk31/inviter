@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -51,6 +53,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -251,9 +258,11 @@ public class UserAreaActivity extends AppCompatActivity {
             dialog.setMessage("Uploading image...");
             dialog.show();
             Uri selectedimg = data.getData();
+            byte[] bytearray = ImageConverter.compress_image(getContentResolver(), selectedimg);
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            UploadTask uploadtask = storageRef.child("profile/" + user.getUid() + ".jpg").putFile(selectedimg);
+            UploadTask uploadtask = storageRef.child("profile/" + user.getUid() + ".jpg").putBytes(bytearray);
             uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @SuppressWarnings("VisibleForTests")
                 @Override
@@ -570,6 +579,5 @@ public class UserAreaActivity extends AppCompatActivity {
 // Builds the addRequestNotification and issues it.
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
-
 
 }

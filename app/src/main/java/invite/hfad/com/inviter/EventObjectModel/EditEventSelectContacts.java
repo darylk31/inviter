@@ -29,7 +29,7 @@ import invite.hfad.com.inviter.Utils;
 
 public class EditEventSelectContacts extends AppCompatActivity {
 
-    
+
     private EditSelectContactsAdapter adapter;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
