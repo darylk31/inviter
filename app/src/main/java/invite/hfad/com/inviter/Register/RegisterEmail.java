@@ -50,7 +50,7 @@ public class RegisterEmail extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {
-                                Intent intent = new Intent(RegisterEmail.this, RegisterPassword.class);
+                                Intent intent = new Intent(RegisterEmail.this, RegisterPhoneNumber.class);
                                 intent.putExtra("firstname", bundle.getString("firstname"));
                                 intent.putExtra("lastname", bundle.getString("lastname"));
                                 intent.putExtra("username",bundle.getString("username"));
