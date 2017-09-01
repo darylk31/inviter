@@ -25,10 +25,9 @@ public class SearchFriendsAdapter extends RecyclerView.Adapter<SearchFriendsAdap
     private Context context;
     private Cursor cursor;
     private SQLiteDatabase db;
-    String[] uid;
     String[] username;
     String[] displayname;
-    String[] profile;
+    int[] accept;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,9 +67,14 @@ public class SearchFriendsAdapter extends RecyclerView.Adapter<SearchFriendsAdap
             }
         });
         TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
-        dname.setText(displayname[position]);
         TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
-        uname.setText(username[position]);
+        if (accept[position] == 0){
+            dname.setText(username[position] + " (Pending)");
+        }
+        else {
+            dname.setText(displayname[position]);
+            uname.setText(username[position]);
+        }
 
     }
 
@@ -83,21 +87,18 @@ public class SearchFriendsAdapter extends RecyclerView.Adapter<SearchFriendsAdap
     }
 
     private void storeFriends(){
-        String[] uid = new String[getItemCount()];
         String[] username = new String[getItemCount()];
+        int[] accept = new int[getItemCount()];
         String[] display = new String[getItemCount()];
-        String[] profile = new String[getItemCount()];
         for (int i = 0; i < getItemCount(); i++) {
             cursor.moveToPosition(i);
-            profile[i] = cursor.getString(3);
-            display[i] = cursor.getString(2);
-            username[i] = cursor.getString(1);
-            uid[i] = cursor.getString(0);
+            accept[i] = cursor.getInt(2);
+            display[i] = cursor.getString(1);
+            username[i] = cursor.getString(0);
         }
-        this.uid = uid;
         this.username = username;
         this.displayname = display;
-        this.profile = profile;
+        this.accept = accept;
     }
 
 

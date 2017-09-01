@@ -33,6 +33,7 @@ public class EventViewPager extends AppCompatActivity {
     String id;
     ViewPager viewPager;
     private static int pageNumber;
+    Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,6 @@ public class EventViewPager extends AppCompatActivity {
     }
 
     private void updateEvent(){
-
         final DatabaseReference ref = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -123,7 +123,7 @@ public class EventViewPager extends AppCompatActivity {
                         finish();
                     }
                     else {
-                        Event event = dataSnapshot.getValue(Event.class);
+                        event = dataSnapshot.getValue(Event.class);
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.update_event(db, id, event);
@@ -137,5 +137,9 @@ public class EventViewPager extends AppCompatActivity {
             }
         });
 
+    }
+
+    public Event getEvent(){
+        return event;
     }
 }

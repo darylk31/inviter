@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import invite.hfad.com.inviter.R;
@@ -30,16 +31,18 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
 
     Cursor cursor;
     SQLiteDatabase db;
-    String[] username;
-    String[] displayname;
+    LinkedList<String> username;
+    LinkedList<String> displayname;
     Context context;
     ArrayList<String> invited;
     TextView selected_list;
     ArrayList<String> selected_names;
+    ArrayList<String> remove_list;
 
 
 
-    public EditSelectContactsAdapter(Context context, TextView list){
+    public EditSelectContactsAdapter(Context context, TextView list, ArrayList<String> remove_list){
+        this.remove_list = remove_list;
         try {
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
@@ -89,19 +92,28 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
         final CardView cardView = holder.cardView;
         final ImageView selected = (ImageView) cardView.findViewById(R.id.ivSelected);
         selected.setVisibility(View.INVISIBLE);
+        final TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
+        final TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
+        dname.setText(displayname.get(position));
+        uname.setText(username.get(position));
+
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (selected.getVisibility() == View.INVISIBLE){
                     selected.setVisibility(View.VISIBLE);
-                    invited.add(username[holder.getAdapterPosition()]);
-                    selected_names.add(displayname[holder.getAdapterPosition()]);
+                    invited.add(uname.getText().toString());
+                    selected_names.add(dname.getText().toString());
+                    //invited.add(username.get(holder.getAdapterPosition()));
+                    //selected_names.add(displayname.get(holder.getAdapterPosition()));
                     selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
                 }
                 else {
                     selected.setVisibility(View.INVISIBLE);
-                    invited.remove(username[holder.getAdapterPosition()]);
-                    selected_names.remove(displayname[holder.getAdapterPosition()]);
+                    invited.remove(uname.getText().toString());
+                    selected_names.remove(dname.getText().toString());
+                    //invited.remove(username[holder.getAdapterPosition()]);
+                    //selected_names.remove(displayname[holder.getAdapterPosition()]);
                     if (selected_names.isEmpty()){
                         selected_list.setText("Just Me");
                     }
@@ -110,10 +122,6 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
                 }
             }
         });
-        TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
-        dname.setText(displayname[position]);
-        TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
-        uname.setText(username[position]);
 
     }
 
@@ -122,17 +130,23 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
         if (cursor == null)
         {return 0;}
         else
-            return cursor.getCount();
+            return username.size();
     }
 
 
-    private void storeFriends(){
-        String[] username = new String[getItemCount()];
-        String[] display = new String[getItemCount()];
-        for (int i = 0; i < getItemCount(); i++) {
-            cursor.moveToPosition(i);
-            display[i] = cursor.getString(1);
-            username[i] = cursor.getString(0);
+    private void storeFriends() {
+        LinkedList<String> username = new LinkedList<>();
+        LinkedList<String> display = new LinkedList<>();
+        cursor.moveToFirst();
+        while (cursor.moveToNext()) {
+            if (remove_list.contains(cursor.getString(0))) {
+                //already invited, do not need to display.
+                remove_list.remove(cursor.getString(0));
+            }
+            else {
+                display.add(cursor.getString(1));
+                username.add(cursor.getString(0));
+            }
         }
         this.username = username;
         this.displayname = display;
