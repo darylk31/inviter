@@ -29,14 +29,13 @@ import invite.hfad.com.inviter.Utils;
 
 public class EditEventSelectContacts extends AppCompatActivity {
 
-    private Event event;
+    
     private EditSelectContactsAdapter adapter;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
-    private SQLiteDatabase db;
     private TextView selected_list;
     private RecyclerView recyclerView;
-    private String id;
+    private String event_id;
 
 
     @Override
@@ -45,7 +44,7 @@ public class EditEventSelectContacts extends AppCompatActivity {
         mDatabase = Utils.getDatabase().getReference();
         auth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_event_select_contacts);
-        id = getIntent().getStringExtra("event_id");
+        event_id = getIntent().getStringExtra("event_id");
 
         selected_list = (TextView) findViewById(R.id.tvSelectedContacts);
         recyclerView = (RecyclerView)findViewById(R.id.selectfriends_recycler);
@@ -54,24 +53,13 @@ public class EditEventSelectContacts extends AppCompatActivity {
     }
 
     public void onButtonClick(View view){
-        final String newKey = mDatabase.push().getKey();
-        event.setEventId(newKey);
-        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).setValue(event);
-        //Set yourself as an admin
-        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ADMIN).child(auth.getCurrentUser().getDisplayName()).setValue(true);
-        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).setValue(newKey);
-        //Iterate through arraylist
-        //Check to see if they're on each others contacts
-        //If so add to new event id to event request inbox
-        //If not TODO::
         for(final String id: adapter.getArrayList()){
             mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
-                        mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(newKey).setValue(auth.getCurrentUser().getDisplayName());
-                        mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.INVITEDID).child(id).setValue(false);
+                        mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(event_id).setValue(auth.getCurrentUser().getDisplayName());
+                        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.INVITEDID).child(id).setValue(false);
                     }
                 }
                 @Override
@@ -85,7 +73,7 @@ public class EditEventSelectContacts extends AppCompatActivity {
         final ArrayList<String> attendee_list = new ArrayList<>();
         final long[] attendee_count = {0};
         DatabaseReference databaseReference = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE)
-                .child(id).child(Utils.EVENT_ATTENDEE);
+                .child(event_id).child(Utils.EVENT_ATTENDEE);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -111,7 +99,7 @@ public class EditEventSelectContacts extends AppCompatActivity {
         final ArrayList<String> pending_list = new ArrayList<>();
         final long[] pending_count = {0};
         DatabaseReference databaseReference = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE)
-                .child(id).child(Utils.INVITEDID);
+                .child(event_id).child(Utils.INVITEDID);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
