@@ -42,7 +42,7 @@ public class RegisterUsername extends AppCompatActivity {
             return;
         }
 
-        onlineDataBase = FirebaseDatabase.getInstance().getReference(".info/connected");
+        onlineDataBase = Utils.getDatabase().getReference(".info/connected");
         onlineDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

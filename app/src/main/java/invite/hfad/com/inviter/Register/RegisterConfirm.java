@@ -42,6 +42,7 @@ public class RegisterConfirm extends AppCompatActivity {
     private String email;
     private String username;
     private String password;
+    private String phoneNumber;
 
     private DatabaseReference onlineDatabase;
     private DatabaseReference mDatabase;
@@ -62,7 +63,6 @@ public class RegisterConfirm extends AppCompatActivity {
         getDisplayInformation();
         setDisplayInformation();
         mDatabase = Utils.getDatabase().getReference();
-
     }
 
     private void getDisplayInformation() {
@@ -75,6 +75,7 @@ public class RegisterConfirm extends AppCompatActivity {
         username = bundle.getString("username");
         email = bundle.getString("email-address");
         password = bundle.getString("password");
+        phoneNumber = bundle.getString("phone-number");
     }
 
     private void setDisplayInformation() {
@@ -156,9 +157,15 @@ public class RegisterConfirm extends AppCompatActivity {
                         } else {
                             String uid = mAuth.getCurrentUser().getUid();
                             User firebaseUser = new User(uid,username,username, firstname, lastname, email);
+                            if(phoneNumber != null){
+                                firebaseUser = new User(uid,username,username, firstname, lastname, email,phoneNumber);
+                            }
                             EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
                             setUserProfile(firebaseUser);
                             mAuth.signOut();
+                            if(phoneNumber != null){
+                                mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(phoneNumber).setValue(username);
+                            }
                             mDatabase.child(Utils.USER).child(username).setValue(firebaseUser);
                             mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).setValue(firebaseEmailAddress);
                             Toast.makeText(RegisterConfirm.this, "Registration Complete.", Toast.LENGTH_SHORT).show();

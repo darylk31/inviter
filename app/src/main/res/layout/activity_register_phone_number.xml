@@ -28,6 +28,21 @@
         android:hint="not sure"
         android:imeOptions="actionDone"
         android:singleLine="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etPhoneNumber"
+        android:text="Would you like to use your phone number to find contacts?"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next_text"
+        android:id="@+id/bSkip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/bNext"
+        android:layout_marginBottom="@dimen/space_from_bottom" />
 
     <Button
         android:layout_width="wrap_content"
@@ -36,8 +51,7 @@
         android:id="@+id/bNext"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/space_from_bottom"
-        android:onClick="onNextButton"/>
+        android:layout_marginBottom="@dimen/space_from_bottom"/>
 
 
 

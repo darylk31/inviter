@@ -14,6 +14,7 @@ public class User {
     private String photoUrl;
     private String email;
     private String displayname;
+    private String phoneNumber;
     private String uid;
     private Map<String,Boolean> contacts;
     private Map<String,String> inbox;
@@ -32,6 +33,17 @@ public class User {
         this.email = email;
         this.displayname = displayname;
         this.photoUrl = defaultURL;
+    }
+
+    public User(String uid, String userName, String displayname, String firstname, String lastname, String email, String phoneNumber) {
+        this.uid = uid;
+        this.username = userName;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.displayname = displayname;
+        this.photoUrl = defaultURL;
+        this.phoneNumber = phoneNumber;
     }
 
 
@@ -106,5 +118,13 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
