@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 
@@ -104,8 +106,7 @@ public class EventInfoFragment extends Fragment {
             toast.show();
         }
         onEventOptions();
-        onEventInvite();
-        onInviteOptions();
+        onInvite();
 
         event_location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,18 +215,22 @@ public class EventInfoFragment extends Fragment {
         });
     }
 
-    private void onInviteOptions(){
+    private void onInvite(){
         getView().findViewById(R.id.tv_eventinfoinvite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                /*
+                EventViewPager parent_viewpager = (EventViewPager)getActivity();
+                Event event = parent_viewpager.getEvent();
+                if (event != null){
+                startActivity(new Intent(getActivity(), EditEventSelectContacts.class).putExtra("Event", event;));}
+                else {
+                    Toast.makeText(getContext(), "Please check your connection.", Toast.LENGTH_SHORT).show();}
+                    */
+                startActivity(new Intent(getActivity(), EditEventSelectContacts.class).putExtra("event_id", id));
 
             }
         });
-    }
-
-    private void onEventInvite() {
-        getView().findViewById(R.id.tv_eventinfoinvite);
     }
 
     private void arrowAnimation(){

@@ -65,9 +65,6 @@ public class EventSelectContacts extends AppCompatActivity {
                     if(dataSnapshot.exists()){
                         mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(newKey).setValue(auth.getCurrentUser().getDisplayName());
                         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.INVITEDID).child(id).setValue(false);
-                    }//If they're not on each others contacts
-                    else{
-                        System.out.println(id + "IS NOT YOUR FKEN FRIEND CUNT");
                     }
                 }
 
