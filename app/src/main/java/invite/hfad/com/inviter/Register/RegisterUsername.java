@@ -42,7 +42,7 @@ public class RegisterUsername extends AppCompatActivity {
             return;
         }
 
-        onlineDataBase = Utils.getDatabase().getReference(".info/connected");
+        onlineDataBase = Utils.getDatabase().getReference().child(".info/connected");
         onlineDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

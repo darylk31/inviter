@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import invite.hfad.com.inviter.EmailAddress;
 import invite.hfad.com.inviter.LoginActivity;
 import invite.hfad.com.inviter.R;
@@ -36,6 +38,7 @@ public class RegisterConfirm extends AppCompatActivity {
     private TextView tvLastName;
     private TextView tvEmail;
     private TextView tvUsername;
+    private TextView tvPhoneNumber;
 
     private String firstname;
     private String lastname;
@@ -70,6 +73,7 @@ public class RegisterConfirm extends AppCompatActivity {
         tvLastName = (TextView) findViewById(R.id.tvLastNameInput);
         tvEmail = (TextView) findViewById(R.id.tvEmailInput);
         tvUsername = (TextView) findViewById(R.id.tvUsernameInput);
+        tvPhoneNumber = (TextView) findViewById(R.id.tvPhoneNumberInput);
         firstname = bundle.getString("firstname");
         lastname = bundle.getString("lastname");
         username = bundle.getString("username");
@@ -83,6 +87,10 @@ public class RegisterConfirm extends AppCompatActivity {
         tvLastName.setText(lastname);
         tvEmail.setText(email);
         tvUsername.setText(username);
+        if(phoneNumber != null){
+            tvPhoneNumber.setText(phoneNumber);
+        }
+
     }
 
 

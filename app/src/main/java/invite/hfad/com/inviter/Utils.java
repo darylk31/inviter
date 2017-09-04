@@ -35,6 +35,10 @@ public class Utils {
     public static final String EVENT_LOCATION = "location";
     public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
 
+    public static final String USER_DISPLAYNAME = "displayname";
+    public static final String USER_FIRSTNAME = "firstname";
+    public static final String USER_LASTNAME = "lastname";
+
     private static FirebaseDatabase mDatabase;
 
     public static FirebaseDatabase getDatabase() {

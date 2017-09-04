@@ -14,16 +14,27 @@
             android:title = "Email"
             android:summary = "Email_database"
             />
-        <Preference
+        <EditTextPreference
+            android:key="pref_key_first_name"
+            android:title = "First"
+            android:summary = "name_database"
+            android:dialogTitle = "Enter your first name"
+            />
+        <EditTextPreference
+            android:key="pref_key_last_name"
+            android:title = "Name"
+            android:summary = "name_database"
+            android:dialogTitle = "Enter your last name"
+            />
+        <EditTextPreference
+            android:key="pref_key_display_name"
+            android:title = "Display Name"
+            android:summary = "display_database"
+            />
+        <EditTextPreference
             android:key="pref_key_phonenumber"
             android:title = "Phone Number"
             android:summary = "phonenumber_database"
-            />
-        <EditTextPreference
-            android:key="pref_key_name"
-            android:title = "Name"
-            android:summary = "name_database"
-            android:dialogTitle = "Enter your name"
             />
         <EditTextPreference
             android:key="pref_key_password"

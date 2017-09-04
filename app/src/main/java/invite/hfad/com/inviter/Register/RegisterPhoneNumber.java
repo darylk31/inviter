@@ -8,6 +8,8 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bumptech.glide.util.Util;
@@ -16,12 +18,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.Utils;
 
 public class RegisterPhoneNumber extends AppCompatActivity {
 
-    private EditText phoneNumberText;
+    private TextView phoneNumberText;
     private Button nextButton;
     private Button skipButton;
     private Bundle bundle;
@@ -39,7 +43,7 @@ public class RegisterPhoneNumber extends AppCompatActivity {
     }
 
     private void getViews(){
-        phoneNumberText = (EditText) findViewById(R.id.etPhoneNumber);
+        phoneNumberText = (TextView) findViewById(R.id.etPhoneNumber);
         nextButton = (Button) findViewById(R.id.bNext);
         skipButton = (Button) findViewById(R.id.bSkip);
     }
@@ -59,7 +63,7 @@ public class RegisterPhoneNumber extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(!dataSnapshot.exists()){
-                                Intent intent = new Intent(RegisterPhoneNumber.this, RegisterPassword.class);
+                                Intent intent = new Intent(RegisterPhoneNumber.this, RegisterConfirm.class);
                                 intent.putExtra("firstname", bundle.getString("firstname"));
                                 intent.putExtra("lastname", bundle.getString("lastname"));
                                 intent.putExtra("email-address", bundle.getString("email-address"));
@@ -67,6 +71,8 @@ public class RegisterPhoneNumber extends AppCompatActivity {
                                 intent.putExtra("password",bundle.getString("password"));
                                 intent.putExtra("phone-number", phoneNumberText.getText().toString());
                                 startActivity(intent);
+                            } else{
+                                Toast.makeText(RegisterPhoneNumber.this,"Sorry phone number in use", Toast.LENGTH_SHORT).show();
                             }
                         }
 
