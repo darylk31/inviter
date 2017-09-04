@@ -43,7 +43,7 @@ public class RegisterPhoneNumber extends AppCompatActivity {
     }
 
     private void getViews(){
-        phoneNumberText = (TextView) findViewById(R.id.etPhoneNumber);
+        phoneNumberText = (TextView) findViewById(R.id.tvPhoneNumber);
         nextButton = (Button) findViewById(R.id.bNext);
         skipButton = (Button) findViewById(R.id.bSkip);
     }
