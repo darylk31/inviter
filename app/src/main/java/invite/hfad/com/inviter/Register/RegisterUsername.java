@@ -41,6 +41,10 @@ public class RegisterUsername extends AppCompatActivity {
             Toast.makeText(RegisterUsername.this,"Invalid username. \n Please enter length between 6 and 16 with only letters or numbers.",Toast.LENGTH_SHORT).show();
             return;
         }
+        if(!usernameStartWithLetter(username.getText().toString())){
+            Toast.makeText(RegisterUsername.this,"Username must start with a letter",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         onlineDataBase = Utils.getDatabase().getReference().child(".info/connected");
         onlineDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -76,6 +80,11 @@ public class RegisterUsername extends AppCompatActivity {
                 System.err.println("Listener was cancelled");
             }
         });
+    }
+
+    private boolean usernameStartWithLetter(String s) {
+        char c = s.charAt(0);
+        return Character.isLetter(c);
     }
 
 

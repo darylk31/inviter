@@ -82,8 +82,37 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     String userId = auth.getCurrentUser().getDisplayName();
-                    SharedPreferences.Editor editor = getSharedPreferences("UserPref", 0).edit();
+                    final SharedPreferences.Editor editor = getSharedPreferences(Utils.APP_PACKAGE, 0).edit();
                     editor.putString("userID", userId);
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_PHONENUMBER).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists())
+                            {
+                                mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()){
+                                            editor.putBoolean("phoneNumberOnline",true);
+                                        } else{
+                                            editor.putBoolean("phoneNumberOnline",false);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     editor.commit();
 
                     final UserDatabaseHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());

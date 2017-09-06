@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.SwitchPreference;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +27,7 @@ public class SettingFragment extends PreferenceFragment {
 
     Preference Username;
     Preference Email;
-    EditTextPreference Phone_Number;
+    SwitchPreference Phone_Number;
     EditTextPreference First_Name;
     EditTextPreference Last_Name;
     EditTextPreference Display_Name;
@@ -57,7 +59,7 @@ public class SettingFragment extends PreferenceFragment {
     private void getViews(){
         Username = (Preference) findPreference("pref_key_username");
         Email = (Preference) findPreference("pref_key_email");
-        Phone_Number = (EditTextPreference) findPreference("pref_key_phonenumber");
+        Phone_Number = (SwitchPreference) findPreference("pref_key_phonenumber");
         First_Name = (EditTextPreference) findPreference("pref_key_first_name");
         Last_Name = (EditTextPreference) findPreference("pref_key_last_name");
         Display_Name = (EditTextPreference) findPreference("pref_key_display_name");
@@ -72,8 +74,8 @@ public class SettingFragment extends PreferenceFragment {
         Last_Name.setSummary(user.getLastname());
         Last_Name.setText(user.getLastname());
         if(user.getPhoneNumber() != null){
-            Phone_Number.setSummary(user.getPhoneNumber());
-            Phone_Number.setText(user.getPhoneNumber());
+            SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Utils.APP_PACKAGE,Context.MODE_PRIVATE);
+            Phone_Number.setChecked(sharedPrefs.getBoolean("phoneNumberOnline",true));
         }
     }
 
@@ -111,13 +113,20 @@ public class SettingFragment extends PreferenceFragment {
         Phone_Number.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                preference.setSummary(o.toString());
+                if(!(Boolean) o){
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE,Context.MODE_PRIVATE).edit();
+                    editor.putBoolean("phoneNumberOnline", false);
+                    editor.commit();
+
+                } else {
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, Context.MODE_PRIVATE).edit();
+                    editor.putBoolean("phoneNumberOnline", true);
+                    editor.commit();
+                }
                 return false;
             }
         });
         
     }
-
-
 
 }

@@ -7,6 +7,9 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class Utils {
+
+    public static final String APP_PACKAGE = "invite.hfad.com.inviter";
+
     public static final String INBOX = "Inbox";
     public static final String FRIEND_REQUEST = "Friend_Request";
     public static final String EVENT_REQUEST = "Event_Request";
@@ -38,6 +41,7 @@ public class Utils {
     public static final String USER_DISPLAYNAME = "displayname";
     public static final String USER_FIRSTNAME = "firstname";
     public static final String USER_LASTNAME = "lastname";
+    public static final String USER_PHONENUMBER = "phonenumber";
 
     private static FirebaseDatabase mDatabase;
 

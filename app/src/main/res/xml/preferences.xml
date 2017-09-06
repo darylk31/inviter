@@ -16,13 +16,13 @@
             />
         <EditTextPreference
             android:key="pref_key_first_name"
-            android:title = "First"
+            android:title = "First Name"
             android:summary = "name_database"
             android:dialogTitle = "Enter your first name"
             />
         <EditTextPreference
             android:key="pref_key_last_name"
-            android:title = "Name"
+            android:title = "Last Name"
             android:summary = "name_database"
             android:dialogTitle = "Enter your last name"
             />
@@ -31,11 +31,19 @@
             android:title = "Display Name"
             android:summary = "display_database"
             />
-        <EditTextPreference
-            android:key="pref_key_phonenumber"
-            android:title = "Phone Number"
-            android:summary = "phonenumber_database"
-            />
+        <PreferenceScreen
+            android:key="pref_key_phonenumber_screen"
+            android:title = "Phone Number">
+            <PreferenceCategory
+                android:key="phoneNumber_catgeory"
+                android:title="Phone Number">
+                <SwitchPreference
+                    android:key="pref_key_phonenumber_toggle"
+                    android:title="Use phone number"
+                    android:summary="Use your phone number to allow users to find you"
+                />
+            </PreferenceCategory>
+        </PreferenceScreen>
         <EditTextPreference
             android:key="pref_key_password"
             android:title = "Password"
