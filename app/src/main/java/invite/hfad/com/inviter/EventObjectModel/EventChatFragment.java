@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -43,6 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -54,8 +56,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import invite.hfad.com.inviter.DialogBox.ChatDialogFragment;
 import invite.hfad.com.inviter.FriendlyMessage;
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 import invite.hfad.com.inviter.Utils;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class EventChatFragment extends Fragment {
@@ -84,6 +89,9 @@ public class EventChatFragment extends Fragment {
     private View rootView;
     private Toolbar toolbar;
     private TextView noChatText;
+
+    private SharedPreferences sharedPref;
+    User user;
 
     public EventChatFragment() {
         // Required empty public constructor
@@ -124,6 +132,10 @@ public class EventChatFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         rootView = getView();
+        Gson gson = new Gson();
+        sharedPref = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE);
+        String json = sharedPref.getString("userObject", "");
+        user = gson.fromJson(json, User.class);
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
@@ -231,7 +243,7 @@ public class EventChatFragment extends Fragment {
                     viewHolder.messageImageView.setVisibility(ImageView.VISIBLE);
                     viewHolder.messageTextView.setVisibility(TextView.GONE);
                 }
-                viewHolder.messengerTextView.setText(friendlyMessage.getName());
+                viewHolder.messengerTextView.setText(friendlyMessage.getDisplayname());
                 if (friendlyMessage.getPhotoUrl() == null) {
                     viewHolder.messageImageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
                             R.drawable.ic_account_circle_black_36dp));
@@ -250,6 +262,12 @@ public class EventChatFragment extends Fragment {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                }
+                //If it's my message
+                if (friendlyMessage.getDisplayname().equals(user.getDisplayname())) {
+                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.message_text_background));
+                    viewHolder.messageTextView.setTextColor(Color.WHITE);
+
                 }
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -320,7 +338,7 @@ public class EventChatFragment extends Fragment {
                 String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
-                        mUsername, mPhotoUrl,timeStamp, null);
+                        mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
             }
