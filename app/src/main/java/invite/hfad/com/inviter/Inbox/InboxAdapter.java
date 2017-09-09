@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter.Inbox;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
@@ -37,6 +38,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     private int eventrequests;
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
+    private Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
@@ -47,8 +49,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         }
     }
 
-    public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist, ArrayList<String> invitedbylist) {
+    public InboxAdapter(ArrayList<User> friendlist, ArrayList<Event> eventlist, ArrayList<String> invitedbylist, Context context) {
         auth = FirebaseAuth.getInstance();
+        this.context = context;
         mDatabase = Utils.getDatabase().getReference();
         this.friendlist = friendlist;
         friendrequests = friendlist.size();
@@ -86,7 +89,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, friendlist.get(pos).getUsername() + " is now added to your friends list!", Toast.LENGTH_SHORT).show();
                         //Add them onto my contacts
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(friendlist.get(pos).getUsername()).setValue(true);
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUsername()).removeValue();
@@ -99,7 +102,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
-                        Toast.makeText(v.getContext(), friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUid()).removeValue();
                         mDatabase.child(Utils.USER).child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getDisplayName()).removeValue();
                         removefriendrequest(pos);
@@ -139,7 +142,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 
                         //Writes to SQL
-                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(v.getContext());
+                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.insert_event(db, eventlist.get(pos));
 
@@ -149,7 +152,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         
-                        Toast.makeText(v.getContext(), eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);
                     }
                 });
@@ -160,7 +163,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition() - friendrequests;
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child("Event_Request")
                                 .child(eventlist.get(pos).getEventId()).removeValue();
-                        Toast.makeText(v.getContext(), " Event request declined.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, " Event request declined.", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);
                     }
                 });

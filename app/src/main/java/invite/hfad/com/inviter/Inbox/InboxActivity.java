@@ -70,7 +70,7 @@ public class InboxActivity extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
                                         friendlist.add(user);
-                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
+                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist,getApplicationContext());
                                         recycler.setAdapter(adapter);
                                     }
 
@@ -111,7 +111,7 @@ public class InboxActivity extends AppCompatActivity {
                                         } else{
                                             mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENT_REQUEST).child(snapshot.getKey()).removeValue();
                                         }
-                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist);
+                                        InboxAdapter adapter = new InboxAdapter(friendlist, eventlist, invitedbylist,getApplicationContext());
                                         recycler.setAdapter(adapter);
                                     }
                                     @Override
