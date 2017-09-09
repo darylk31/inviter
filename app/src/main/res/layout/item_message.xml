@@ -9,30 +9,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/messengerImageView"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/ic_account_circle_black_36dp"/>
+        <RelativeLayout
+            android:id="@+id/messengerImageViewWrapper"
+            android:layout_alignParentLeft="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <LinearLayout
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/messengerImageView"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_account_circle_black_36dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:id="@+id/messengerTextViewWrapper"
+            android:layout_toRightOf="@+id/messengerImageViewWrapper"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/messengerTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ImageView
@@ -47,12 +55,12 @@
                 android:id="@+id/messageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
+                android:layout_below="@id/messengerTextView"
                 android:padding="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
-        </LinearLayout>
+        </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

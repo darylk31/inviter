@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -267,6 +268,10 @@ public class EventChatFragment extends Fragment {
                 if (friendlyMessage.getDisplayname().equals(user.getDisplayname())) {
                     viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.message_text_background));
                     viewHolder.messageTextView.setTextColor(Color.WHITE);
+                    RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
+                    r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) viewHolder.messengerTextView.getLayoutParams();
+                    t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
 
                 }
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
