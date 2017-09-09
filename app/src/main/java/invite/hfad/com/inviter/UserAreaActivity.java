@@ -52,6 +52,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -250,61 +252,63 @@ public class UserAreaActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED) {
-        }
-        if (resultCode == RESULT_OK) {
-            final ProgressDialog dialog = new ProgressDialog(UserAreaActivity.this);
-            dialog.setMessage("Uploading image...");
-            dialog.show();
-            Uri selectedimg = data.getData();
-            byte[] bytearray = ImageConverter.compress_image(getContentResolver(), selectedimg);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE ) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                final ProgressDialog dialog = new ProgressDialog(UserAreaActivity.this);
+                dialog.setMessage("Uploading image...");
+                dialog.show();
+                Uri selectedimg = result.getUri();
+                byte[] bytearray = ImageConverter.compress_image(getContentResolver(), selectedimg);
 
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            UploadTask uploadtask = storageRef.child("profile/" + user.getUid() + ".jpg").putBytes(bytearray);
-            uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @SuppressWarnings("VisibleForTests")
-                @Override
-                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                UploadTask uploadtask = storageRef.child("profile/" + user.getUid() + ".jpg").putBytes(bytearray);
+                uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @SuppressWarnings("VisibleForTests")
+                    @Override
+                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
 
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setPhotoUri(taskSnapshot.getDownloadUrl())
-                            .build();
-                    user.updateProfile(profileUpdates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Glide.with(getApplicationContext())
-                                                .load(taskSnapshot.getDownloadUrl().toString())
-                                                .into(profilePictureView);
-                                        //Update photoUrl of user database
-                                        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
-                                        //Grab username from user database and update username table
-                                        mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.exists()) {
-                                                    mDatabase.child(Utils.USERNAMES).child(dataSnapshot.getValue().toString()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setPhotoUri(taskSnapshot.getDownloadUrl())
+                                .build();
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Glide.clear(profilePictureView);
+                                            Glide.with(getApplicationContext())
+                                                    .load(taskSnapshot.getDownloadUrl().toString())
+                                                    .into(profilePictureView);
+                                            //Update photoUrl of user database
+                                            mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                                            //Grab username from user database and update username table
+                                            mDatabase.child(Utils.USER).child(user.getDisplayName()).child(Utils.USER_USERNAME).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.exists()) {
+                                                        mDatabase.child(Utils.USERNAMES).child(dataSnapshot.getValue().toString()).child(Utils.USER_PHOTO_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
 
-                                            }
-                                        });
+                                                }
+                                            });
 
-                                        Toast.makeText(getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                        }
                                     }
-                                }
-                            });
-                }
-            });
+                                });
+                    }
+                });
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(getApplicationContext(), "Error uploading image, please try again.", Toast.LENGTH_SHORT).show();
+            }
         }
-        ;
     }
 
     private void setViewPager() {
@@ -373,6 +377,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
     private void setDisplayPicture() {
         profilePictureView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_image);
+
         if (user.getPhotoUrl() == null) {
             Glide.with(this)
                     .load(R.drawable.profile_image)
@@ -393,10 +398,17 @@ public class UserAreaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
+                                CropImage.activity()
+                                        .setGuidelines(CropImageView.Guidelines.ON)
+                                        .setAspectRatio(1,1)
+                                        .start(UserAreaActivity.this);
+
+                                /*
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
+                                */
                                 break;
                             case 1:
                                 UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()

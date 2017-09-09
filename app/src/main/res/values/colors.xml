@@ -6,4 +6,17 @@
     <color name="colorDull">#A9A9A9</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorJanuary">#99e6ff</color>
+    <color name="colorFebruary">#df9fbf</color>
+    <color name="colorMarch">#00cc66</color>
+    <color name="colorApril">#ff9966</color>
+    <color name="colorMay">#ffcc66</color>
+    <color name="colorJune">#1affd1</color>
+    <color name="colorJuly">#e6e600</color>
+    <color name="colorAugust">#ff99bb</color>
+    <color name="colorSeptember">#e67300</color>
+    <color name="colorOctober">#b30000</color>
+    <color name="colorNovember">#ffc61a</color>
+    <color name="colorDecember">#85e0e0</color>
+
 </resources>
