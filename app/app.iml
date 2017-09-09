@@ -97,13 +97,14 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-core-ui-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-base-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-26.0.2" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="constraint-layout-solver-1.1.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-26.0.2" level="project" />
-    <orderEntry type="library" exported="" name="transition-25.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-places-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="twitter-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-10.0.1" level="project" />
@@ -122,7 +123,6 @@
     <orderEntry type="library" exported="" name="android-image-cropper-2.5.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.6.1" level="project" />
-    <orderEntry type="library" exported="" name="design-25.1.0" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-ui-database-1.1.1" level="project" />
@@ -130,7 +130,6 @@
     <orderEntry type="library" exported="" name="play-services-tasks-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-10.0.1" level="project" />
     <orderEntry type="library" exported="" name="bolts-tasks-1.4.0" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-25.1.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-ui-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="exifinterface-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-database-connection-10.0.1" level="project" />
@@ -141,6 +140,7 @@
     <orderEntry type="library" exported="" name="palette-v7-25.1.0" level="project" />
     <orderEntry type="library" exported="" name="customtabs-25.1.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-storage-10.0.1" level="project" />
+    <orderEntry type="library" exported="" name="transition-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="material-calendarview-1.4.3" level="project" />
     <orderEntry type="library" exported="" name="support-compat-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-10.0.1" level="project" />
@@ -155,7 +155,7 @@
     <orderEntry type="library" exported="" name="okhttp-3.2.0" level="project" />
     <orderEntry type="library" exported="" name="tweet-composer-2.3.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" name="design-26.0.2" level="project" />
     <orderEntry type="library" exported="" name="twitter-core-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-25.1.0" level="project" />
   </component>
 </module>
