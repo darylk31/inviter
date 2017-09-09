@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
                 if(!task.isSuccessful()){
-                    Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
                 else {
@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
         password = etPassword.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
-            Toast.makeText(LoginActivity.this, "Wrong EmailAddress or password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Wrong Email Address or password", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         return valid;
@@ -216,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
             intent.addCategory(Intent.CATEGORY_HOME);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "Press Back again to Exit.",
+            Toast.makeText(getApplicationContext(), "Press Back again to Exit.",
                     Toast.LENGTH_SHORT).show();
             exit = true;
             new Handler().postDelayed(new Runnable() {

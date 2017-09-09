@@ -17,7 +17,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     //Reset Password button
     public void onResetPasswordButton(View view){
         Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
-        Toast toast = Toast.makeText(this,"Success", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(),"Success", Toast.LENGTH_LONG);
         toast.show();
         startActivity(intent);
     }

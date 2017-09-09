@@ -36,7 +36,7 @@ public class RegisterPassword extends AppCompatActivity {
 
     public void onNextButton(View v) {
         if (!isValidPassword(password.getText().toString(), confirmPassword.getText().toString())) {
-            Toast.makeText(RegisterPassword.this, "Invalid password. \n Please enter length between 6 and 16 with only letters or numbers.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Invalid password. \n Please enter length between 6 and 16 with only letters or numbers.", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(RegisterPassword.this, RegisterPhoneNumber.class);
             intent.putExtra("firstname", bundle.getString("firstname"));

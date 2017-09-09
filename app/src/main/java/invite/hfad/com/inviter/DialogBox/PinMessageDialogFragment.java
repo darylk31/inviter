@@ -73,7 +73,7 @@ public class PinMessageDialogFragment extends DialogFragment {
                 ClipData clip = ClipData.newPlainText("label", message);
                 clipboard.setPrimaryClip(clip);
                 getDialog().dismiss();
-                Toast.makeText(getActivity(), "Copied Message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Copied Message", Toast.LENGTH_SHORT).show();
             }
         });
         unpin_button.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,7 @@ public class PinMessageDialogFragment extends DialogFragment {
                 mFirebseDatabaseReference = Utils.getDatabase().getReference();
                 mFirebseDatabaseReference.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.PIN).child(message_id).removeValue();
                 getDialog().dismiss();
-                Toast.makeText(getActivity(),"Message unpinned",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(),"Message unpinned",Toast.LENGTH_SHORT).show();
             }
         });
     }

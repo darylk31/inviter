@@ -38,11 +38,11 @@ public class RegisterUsername extends AppCompatActivity {
 
     public void onNextButton(View v){
         if(!isValidUsername(username.getText().toString())) {
-            Toast.makeText(RegisterUsername.this,"Invalid username. \n Please enter length between 6 and 16 with only letters or numbers.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Invalid username. \n Please enter length between 6 and 16 with only letters or numbers.",Toast.LENGTH_SHORT).show();
             return;
         }
         if(!usernameStartWithLetter(username.getText().toString())){
-            Toast.makeText(RegisterUsername.this,"Username must start with a letter",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Username must start with a letter",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -62,7 +62,7 @@ public class RegisterUsername extends AppCompatActivity {
                                     intent.putExtra("username", username.getText().toString());
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(RegisterUsername.this, "Usernames already exists", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Usernames already exists", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override
@@ -71,7 +71,7 @@ public class RegisterUsername extends AppCompatActivity {
                         });
                 } //Not connected
                 else {
-                    Toast.makeText(RegisterUsername.this,"Please check your connection.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Please check your connection.",Toast.LENGTH_SHORT).show();
                 }
             }
 

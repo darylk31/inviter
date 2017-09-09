@@ -26,11 +26,11 @@ public class RegisterName extends AppCompatActivity {
 
     public void onNextButton(View v){
         if(firstName.getText().toString().matches("")){
-            Toast.makeText(RegisterName.this,"First name cannot be empty.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"First name cannot be empty.",Toast.LENGTH_SHORT).show();
             return;
         }
         if(lastName.getText().toString().matches("")){
-            Toast.makeText(RegisterName.this,"Last name cannot be empty.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Last name cannot be empty.",Toast.LENGTH_SHORT).show();
             return;
         }
         String firstname = firstName.getText().toString();

@@ -14,7 +14,7 @@ public class User {
     private String photoUrl;
     private String email;
     private String displayname;
-    private String phoneNumber;
+    private String phonenumber;
     private String uid;
     private Map<String,Boolean> contacts;
     private Map<String,String> inbox;
@@ -43,7 +43,7 @@ public class User {
         this.email = email;
         this.displayname = displayname;
         this.photoUrl = defaultURL;
-        this.phoneNumber = phoneNumber;
+        this.phonenumber = phoneNumber;
     }
 
 
@@ -121,10 +121,10 @@ public class User {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return phonenumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phonenumber = phoneNumber;
     }
 }

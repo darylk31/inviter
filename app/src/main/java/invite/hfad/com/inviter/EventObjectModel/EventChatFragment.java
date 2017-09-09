@@ -266,7 +266,7 @@ public class EventChatFragment extends Fragment {
                 }
                 //If it's my message
                 if (friendlyMessage.getDisplayname().equals(user.getDisplayname())) {
-                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.message_text_background));
+                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_design_1));
                     viewHolder.messageTextView.setTextColor(Color.WHITE);
                     RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
                     r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);

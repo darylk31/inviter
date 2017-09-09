@@ -72,7 +72,7 @@ public class RegisterPhoneNumber extends AppCompatActivity {
                                 intent.putExtra("phone-number", phoneNumberText.getText().toString());
                                 startActivity(intent);
                             } else{
-                                Toast.makeText(RegisterPhoneNumber.this,"Sorry phone number in use", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Sorry phone number in use", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -88,7 +88,7 @@ public class RegisterPhoneNumber extends AppCompatActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Intent intent = new Intent(RegisterPhoneNumber.this, RegisterPassword.class);
+                    Intent intent = new Intent(RegisterPhoneNumber.this, RegisterConfirm.class);
                     intent.putExtra("firstname", bundle.getString("firstname"));
                     intent.putExtra("lastname", bundle.getString("lastname"));
                     intent.putExtra("username",bundle.getString("username"));

@@ -35,10 +35,10 @@ public class RegisterEmail extends AppCompatActivity {
 
     public void onNextButton(View v) {
         if (!isValidEmail(email.getText().toString())) {
-            Toast.makeText(RegisterEmail.this, "Invalid email address.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Invalid email address.", Toast.LENGTH_SHORT).show();
             return;
         }
-        onlineDatabase = FirebaseDatabase.getInstance().getReference(".info/connected");
+        onlineDatabase = Utils.getDatabase().getReference(".info/connected");
         onlineDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -57,7 +57,7 @@ public class RegisterEmail extends AppCompatActivity {
                                 intent.putExtra("email-address", email.getText().toString());
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(RegisterEmail.this, "Email already in use.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Email already in use.", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -67,7 +67,7 @@ public class RegisterEmail extends AppCompatActivity {
                     });
                 } else {
                     {
-                        Toast.makeText(RegisterEmail.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please check your connection.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -124,7 +124,7 @@ public class RegisterConfirm extends AppCompatActivity {
                                             //Create user
                                             createUser(emailString);
                                         } else {
-                                            Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     @Override
@@ -132,7 +132,7 @@ public class RegisterConfirm extends AppCompatActivity {
                                     }
                                 });
                             } else {
-                                Toast.makeText(RegisterConfirm.this, "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
@@ -140,7 +140,7 @@ public class RegisterConfirm extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(RegisterConfirm.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please check your connection.", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -160,7 +160,7 @@ public class RegisterConfirm extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgressDialog();
                         if (!task.isSuccessful()) {
-                            Toast.makeText(RegisterConfirm.this, "An error occurred", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "An error occurred", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
                         } else {
                             String uid = mAuth.getCurrentUser().getUid();
@@ -176,7 +176,7 @@ public class RegisterConfirm extends AppCompatActivity {
                             }
                             mDatabase.child(Utils.USER).child(username).setValue(firebaseUser);
                             mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).setValue(firebaseEmailAddress);
-                            Toast.makeText(RegisterConfirm.this, "Registration Complete.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Registration Complete.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegisterConfirm.this, LoginActivity.class));
                             finish();
                         }

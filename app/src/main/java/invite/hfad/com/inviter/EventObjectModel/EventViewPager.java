@@ -117,7 +117,7 @@ public class EventViewPager extends AppCompatActivity {
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.delete_event(db, id);
                         db.close();
-                        Toast.makeText(EventViewPager.this,"Sorry this event has been deleted",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Sorry this event has been deleted",Toast.LENGTH_SHORT).show();
                         ref.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(id).removeValue();
                         startActivity(new Intent(EventViewPager.this, UserAreaActivity.class));
                         finish();
