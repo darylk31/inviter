@@ -36,7 +36,7 @@ public class ImageConverter {
         }
         else
         {
-            bmp.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         }
 
 
