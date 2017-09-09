@@ -137,7 +137,7 @@ public class EventChatFragment extends Fragment {
         sharedPref = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE);
         String json = sharedPref.getString("userObject", "");
         user = gson.fromJson(json, User.class);
-        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
+        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
         cursor.moveToLast();

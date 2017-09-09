@@ -64,7 +64,7 @@ public class EventInfoFragment extends Fragment {
         view = getView();
         setEventPicture();
         try {
-            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(this.getContext());
+            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
             SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
             Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
             cursor.moveToLast();
