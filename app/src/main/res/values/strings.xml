@@ -68,4 +68,5 @@
     <string name="delete_event_button">Delete Event</string>
     <string name="no_chat_message">There doesn\'t seem to be any conversations here.</string>
     <string name="skip_text">Skip</string>
+
 </resources>

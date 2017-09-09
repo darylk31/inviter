@@ -8,6 +8,8 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +17,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Jimmy on 9/6/2016.
@@ -31,6 +36,8 @@ public class SettingFragment extends PreferenceFragment {
     EditTextPreference First_Name;
     EditTextPreference Last_Name;
     EditTextPreference Display_Name;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -40,43 +47,33 @@ public class SettingFragment extends PreferenceFragment {
         firebaseUser = auth.getCurrentUser();
         getViews();
         //Grabs user object
-        mDatabase.child(Utils.USER).child(firebaseUser.getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    user = dataSnapshot.getValue(User.class);;
-                    setUpSettings();
-                    settingOnClick();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        Gson gson = new Gson();
+        sharedPref = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE);
+        editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, 0).edit();
+        String json = sharedPref.getString("userObject", "");
+        user = gson.fromJson(json, User.class);
+        setUpSettings();
+        settingOnClick();
     }
 
     private void getViews(){
         Username = (Preference) findPreference("pref_key_username");
         Email = (Preference) findPreference("pref_key_email");
-        Phone_Number = (SwitchPreference) findPreference("pref_key_phonenumber");
+        Phone_Number = (SwitchPreference) findPreference("pref_key_phonenumber_toggle");
         First_Name = (EditTextPreference) findPreference("pref_key_first_name");
         Last_Name = (EditTextPreference) findPreference("pref_key_last_name");
         Display_Name = (EditTextPreference) findPreference("pref_key_display_name");
     }
     private void setUpSettings(){
-        Username.setSummary(firebaseUser.getDisplayName());
-        Email.setSummary(firebaseUser.getEmail());
+        Username.setSummary(user.getUsername());
+        Email.setSummary(user.getEmail());
         Display_Name.setSummary(user.getDisplayname());
         Display_Name.setText(user.getDisplayname());
         First_Name.setSummary(user.getFirstname());
         First_Name.setText(user.getFirstname());
         Last_Name.setSummary(user.getLastname());
         Last_Name.setText(user.getLastname());
-        if(user.getPhoneNumber() != null){
-            SharedPreferences sharedPrefs = getActivity().getSharedPreferences(Utils.APP_PACKAGE,Context.MODE_PRIVATE);
-            Phone_Number.setChecked(sharedPrefs.getBoolean("phoneNumberOnline",true));
-        }
+        Phone_Number.setChecked(sharedPref.getBoolean("phoneNumberOnline",false));
     }
 
     private void settingOnClick(){
@@ -87,6 +84,10 @@ public class SettingFragment extends PreferenceFragment {
                 user.setFirstname(o.toString());
                 First_Name.setText(o.toString());
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_FIRSTNAME).setValue(o.toString());
+                Gson gson = new Gson();
+                String json = gson.toJson(user);
+                editor.putString("userObject",json);
+                editor.commit();
                 return false;
             }
         });
@@ -97,6 +98,10 @@ public class SettingFragment extends PreferenceFragment {
                 user.setLastname(o.toString());
                 Last_Name.setText(o.toString());
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_LASTNAME).setValue(o.toString());
+                Gson gson = new Gson();
+                String json = gson.toJson(user);
+                editor.putString("userObject",json);
+                editor.commit();
                 return false;
             }
         });
@@ -107,21 +112,64 @@ public class SettingFragment extends PreferenceFragment {
                 user.setDisplayname(o.toString());
                 Display_Name.setText(o.toString());
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_DISPLAYNAME).setValue(o.toString());
+                Gson gson = new Gson();
+                String json = gson.toJson(user);
+                editor.putString("userObject",json);
+                editor.commit();
                 return false;
             }
         });
         Phone_Number.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
+                TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+                String mPhoneNumber = tMgr.getLine1Number();
                 if(!(Boolean) o){
-                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE,Context.MODE_PRIVATE).edit();
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE).edit();
+                    if(user.getPhoneNumber()!= null) {
+                        mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).removeValue();
+                    }
+                    if(mPhoneNumber != null) {
+                        mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(mPhoneNumber).removeValue();
+                    }
                     editor.putBoolean("phoneNumberOnline", false);
+                    Phone_Number.setChecked(false);
                     editor.commit();
 
                 } else {
-                    SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, Context.MODE_PRIVATE).edit();
-                    editor.putBoolean("phoneNumberOnline", true);
-                    editor.commit();
+                    if(mPhoneNumber != null){
+                        if(user.getPhoneNumber().equals(mPhoneNumber)){
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE).edit();
+                            user.setPhoneNumber(mPhoneNumber);
+                            mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).setValue(user.getUsername());
+                            editor.putBoolean("phoneNumberOnline", true);
+                            Phone_Number.setChecked(true);
+                            Gson gson = new Gson();
+                            String json = gson.toJson(user);
+                            editor.putString("userObject",json);
+                            editor.commit();
+                            System.out.println("Phone number on");
+                            editor.commit();
+                        }
+                        //Assuming different phone number.
+                        //Remove current number off database
+                        //Replace current phone number with current sim card number
+                        else{
+                            mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).removeValue();
+                            mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_PHONENUMBER).setValue(mPhoneNumber);
+                            user.setPhoneNumber(mPhoneNumber);
+                            Gson gson = new Gson();
+                            String json = gson.toJson(user);
+                            editor.putString("userObject",json);
+                            editor.commit();
+                        }
+                    }
+                    //If phone number doesn't exists then do set to false with toast
+                    else {
+                        Phone_Number.setChecked(false);
+                        Toast.makeText(getActivity(),"Cannot find phone number",Toast.LENGTH_SHORT).show();
+                    }
+
                 }
                 return false;
             }

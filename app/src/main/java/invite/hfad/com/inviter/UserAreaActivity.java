@@ -110,7 +110,7 @@ public class UserAreaActivity extends AppCompatActivity {
 
         mDatabase = Utils.getDatabase().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        this.pref = getSharedPreferences("UserPref", 0);
+        this.pref = getSharedPreferences(Utils.APP_PACKAGE, 0);
         this.userID = pref.getString("userID", null);
 
         DatabaseReference userRef = Utils.getDatabase().getReference();

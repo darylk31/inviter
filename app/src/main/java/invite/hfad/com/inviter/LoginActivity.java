@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import invite.hfad.com.inviter.Register.RegisterName;
 
@@ -43,10 +44,48 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         mDatabase = Utils.getDatabase().getReference();
         if (auth.getCurrentUser() != null){
+            updateUser();
             startActivity(new Intent(LoginActivity.this, UserAreaActivity.class));
             finish();
         }
         setContentView(R.layout.activity_login);
+    }
+
+    private void updateUser(){
+        final SharedPreferences.Editor editor = getSharedPreferences(Utils.APP_PACKAGE, 0).edit();
+        String userId = auth.getCurrentUser().getDisplayName();
+        editor.putString("userID", userId);
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    User user = dataSnapshot.getValue(User.class);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(user);
+                    editor.putString("userObject",json);
+
+                    mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                editor.putBoolean("phoneNumberOnline",true);
+                            } else{
+                                editor.putBoolean("phoneNumberOnline",false);
+                            }
+                            editor.commit();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public void onLogin(View v){
@@ -81,39 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 else {
-                    String userId = auth.getCurrentUser().getDisplayName();
-                    final SharedPreferences.Editor editor = getSharedPreferences(Utils.APP_PACKAGE, 0).edit();
-                    editor.putString("userID", userId);
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_PHONENUMBER).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists())
-                            {
-                                mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.exists()){
-                                            editor.putBoolean("phoneNumberOnline",true);
-                                        } else{
-                                            editor.putBoolean("phoneNumberOnline",false);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    editor.commit();
+                    updateUser();
 
                     final UserDatabaseHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                     final SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -137,16 +144,19 @@ public class LoginActivity extends AppCompatActivity {
                                                 databaseHelper.insert_event(db, event);
                                                 eventCount[0]++;
                                                 System.out.println("Login Count Event:" + eventCount[0] + "Children:" + childrenCount[0]);
-
-                                                if (eventCount[0] == childrenCount[0]) {
-                                                    db.close();
-                                                    progressDialog.dismiss();
-                                                    Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
-                                                    startActivity(intent);
-                                                }
-                                            } else{
+                                            }
+                                            else
+                                            {
                                                 //If event doesn't exist anymore delete off my firebase table
                                                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(snapshot.getKey()).removeValue();
+                                                childrenCount[0]--;
+                                            }
+
+                                            if (eventCount[0] == childrenCount[0]) {
+                                                db.close();
+                                                progressDialog.dismiss();
+                                                Intent intent = new Intent(LoginActivity.this, UserAreaActivity.class);
+                                                startActivity(intent);
                                             }
                                         }
                                         @Override
