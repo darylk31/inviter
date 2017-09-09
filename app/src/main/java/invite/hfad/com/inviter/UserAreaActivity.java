@@ -157,17 +157,6 @@ public class UserAreaActivity extends AppCompatActivity {
                         intent = new Intent(UserAreaActivity.this, SettingActivity.class);
                         startActivity(intent);
                         return true;
-                    case R.id.nav_signout:
-                        auth.signOut();
-                        pref.edit().clear().commit();
-                        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
-                        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        db.delete("EVENTS", null, null);
-                        db.delete("FRIENDS", null, null);
-                        db.close();
-                        startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
-                        finish();
-                        return true;
                     default:
                         return true;
                 }

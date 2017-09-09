@@ -1,7 +1,10 @@
 package invite.hfad.com.inviter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -20,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Jimmy on 9/6/2016.
@@ -38,6 +42,7 @@ public class SettingFragment extends PreferenceFragment {
     EditTextPreference Display_Name;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
+    Preference SignOut;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -63,6 +68,7 @@ public class SettingFragment extends PreferenceFragment {
         First_Name = (EditTextPreference) findPreference("pref_key_first_name");
         Last_Name = (EditTextPreference) findPreference("pref_key_last_name");
         Display_Name = (EditTextPreference) findPreference("pref_key_display_name");
+        SignOut = findPreference("pref_key_Logout");
     }
     private void setUpSettings(){
         Username.setSummary(user.getUsername());
@@ -171,6 +177,22 @@ public class SettingFragment extends PreferenceFragment {
                     }
 
                 }
+                return false;
+            }
+        });
+
+        SignOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                auth.signOut();
+                sharedPref.edit().clear().commit();
+                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
+                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                db.delete("EVENTS", null, null);
+                db.delete("FRIENDS", null, null);
+                db.close();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
                 return false;
             }
         });
