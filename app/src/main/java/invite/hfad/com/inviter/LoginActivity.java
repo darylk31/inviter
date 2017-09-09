@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    User user = dataSnapshot.getValue(User.class);
+                    final User user = dataSnapshot.getValue(User.class);
                     Gson gson = new Gson();
                     String json = gson.toJson(user);
                     editor.putString("userObject",json);
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                     mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
+                            if(dataSnapshot.exists() && !user.getPhoneNumber().isEmpty()){
                                 editor.putBoolean("phoneNumberOnline",true);
                             } else{
                                 editor.putBoolean("phoneNumberOnline",false);

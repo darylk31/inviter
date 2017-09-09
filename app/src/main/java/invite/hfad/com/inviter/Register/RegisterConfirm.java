@@ -171,7 +171,7 @@ public class RegisterConfirm extends AppCompatActivity {
                             EmailAddress firebaseEmailAddress = new EmailAddress(uid,email, username);
                             setUserProfile(firebaseUser);
                             mAuth.signOut();
-                            if(phoneNumber != null){
+                            if(phoneNumber != null && !phoneNumber.isEmpty()){
                                 mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(phoneNumber).setValue(username);
                             }
                             mDatabase.child(Utils.USER).child(username).setValue(firebaseUser);
