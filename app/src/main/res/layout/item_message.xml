@@ -12,14 +12,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:gravity="center_vertical">
 
         <RelativeLayout
             android:id="@+id/messengerImageViewWrapper"
             android:layout_alignParentLeft="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/messengerImageView"
@@ -31,11 +30,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:id="@+id/messengerTextViewWrapper"
-            android:layout_toRightOf="@+id/messengerImageViewWrapper"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/messengerImageViewWrapper">
 
             <TextView
                 android:id="@+id/messengerTextView"
@@ -43,21 +40,39 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-            <ImageView
-                android:id="@+id/messageImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@color/colorPrimary"
-                android:scaleType="fitCenter"/>
-
-            <TextView
-                android:id="@+id/messageTextView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/messengerTextView"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:weightSum="10"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/messageImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:visibility="gone"
+                    android:background="@color/colorPrimary"
+                    android:scaleType="fitCenter"/>
+
+                <TextView
+                    android:id="@+id/messageTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_weight="6"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                <TextView
+                    android:id="@+id/chat_padding"
+                    android:visibility="invisible"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            </LinearLayout>
+
+
         </RelativeLayout>
 
     </RelativeLayout>

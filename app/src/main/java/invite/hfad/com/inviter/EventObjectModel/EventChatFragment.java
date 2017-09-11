@@ -265,13 +265,13 @@ public class EventChatFragment extends Fragment {
                     }
                 }
                 //If it's my message
-                if (friendlyMessage.getDisplayname().equals(user.getDisplayname())) {
-                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_design_1));
+                if (friendlyMessage.getName().equals(user.getUsername())) {
+                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1));
                     viewHolder.messageTextView.setTextColor(Color.WHITE);
-                    RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
-                    r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) viewHolder.messengerTextView.getLayoutParams();
-                    t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
+                    //RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
+                    //r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    //RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) viewHolder.messengerTextView.getLayoutParams();
+                    //t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
 
                 }
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

@@ -74,7 +74,7 @@ public class ChatDialogFragment extends DialogFragment{
                 ClipData clip = ClipData.newPlainText("label", message);
                 clipboard.setPrimaryClip(clip);
                 getDialog().dismiss();
-                Toast.makeText(getActivity(), "Copied Message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Copied Message", Toast.LENGTH_SHORT).show();
             }
         });
         pin_button.setOnClickListener(new View.OnClickListener() {
