@@ -76,7 +76,6 @@ public class EventOptionsDialogFragment extends DialogFragment {
         edit_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"1",Toast.LENGTH_SHORT).show();
                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

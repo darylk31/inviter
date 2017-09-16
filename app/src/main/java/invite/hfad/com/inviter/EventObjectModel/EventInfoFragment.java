@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,21 +25,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import id.zelory.compressor.Compressor;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.UserAreaActivity;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.Utils;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -134,7 +145,7 @@ public class EventInfoFragment extends Fragment {
     }
 
     private void setEventPicture() {
-        final ImageView EventPictureView = (ImageView) view.findViewById(R.id.event_image);
+        final ImageView EventPictureView = view.findViewById(R.id.event_image);
         StorageReference storageRef = FirebaseStorage.getInstance().getReference()
                 .child("events/" + id + ".jpg");
         storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -143,6 +154,7 @@ public class EventInfoFragment extends Fragment {
                 if (task.isSuccessful()) {
                     Glide.with(EventInfoFragment.this)
                             .load(task.getResult())
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(EventPictureView);
                 }
                 else
@@ -162,10 +174,10 @@ public class EventInfoFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Choose Picture"), 1);
+                                CropImage.activity()
+                                        .setGuidelines(CropImageView.Guidelines.ON)
+                                        .setAspectRatio(1,1)
+                                        .start(getActivity());
                                 break;
                             case 1:
                                 break;
@@ -180,23 +192,46 @@ public class EventInfoFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_CANCELED) {
-        }
-        if (resultCode == RESULT_OK) {
-            final ProgressDialog dialog = new ProgressDialog(getContext());
-            dialog.setMessage("Uploading image...");
-            dialog.show();
-            Uri selectedimg = data.getData();
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            UploadTask task = storageRef.child("events/" + id + ".jpg").putFile(selectedimg);
-            task.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                    setEventPicture();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE ) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Uploading image...");
+                dialog.show();
+                Uri resultUri = result.getUri();
+                File photoPath = new File(resultUri.getPath());
+
+                try {
+                    Bitmap photo_bitmap = new Compressor(getActivity().getApplicationContext())
+                            .setMaxWidth(200)
+                            .setMaxHeight(200)
+                            .setQuality(75)
+                            .compressToBitmap(photoPath);
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    photo_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] photoByteArray = baos.toByteArray();
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    UploadTask uploadtask = storageRef.child("events/" + id + ".jpg").putBytes(photoByteArray);
+                    uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @SuppressWarnings("VisibleForTests")
+                        @Override
+                        public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                            setEventPicture();
+                            Toast.makeText(getActivity().getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+                } catch (IOException e) {
                     dialog.dismiss();
+                    Toast.makeText(getActivity().getApplicationContext(), "Error uploading image, please try again.", Toast.LENGTH_SHORT).show();
                 }
-            });
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(getActivity().getApplicationContext(), "Error uploading image, please try again.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -219,14 +254,6 @@ public class EventInfoFragment extends Fragment {
         getView().findViewById(R.id.tv_eventinfoinvite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                EventViewPager parent_viewpager = (EventViewPager)getActivity();
-                Event event = parent_viewpager.getEvent();
-                if (event != null){
-                startActivity(new Intent(getActivity(), EditEventSelectContacts.class).putExtra("Event", event;));}
-                else {
-                    Toast.makeText(getContext(), "Please check your connection.", Toast.LENGTH_SHORT).show();}
-                    */
                 startActivity(new Intent(getActivity(), EditEventSelectContacts.class).putExtra("event_id", id));
 
             }

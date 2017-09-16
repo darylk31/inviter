@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by Jimmy on 9/6/2016.

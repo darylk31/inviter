@@ -34,6 +34,7 @@ public class EventViewPager extends AppCompatActivity {
     ViewPager viewPager;
     private static int pageNumber;
     Event event;
+    EventInfoFragment p1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,18 @@ public class EventViewPager extends AppCompatActivity {
         viewPager.setOffscreenPageLimit(1);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        p1.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         EventViewPager.ViewPagerAdapter adapter = new EventViewPager.ViewPagerAdapter(getSupportFragmentManager());
 
         Bundle args = new Bundle();
         args.putString("event_id", id);
-        EventInfoFragment p1 = new EventInfoFragment();
+        p1 = new EventInfoFragment();
         p1.setArguments(args);
         EventChatFragment p2 = new EventChatFragment();
         p2.setArguments(args);

@@ -78,7 +78,7 @@
             android:backgroundTint="@color/cardview_light_background"
             android:elevation="1dp"
             android:fontFamily="sans-serif"
-            android:text="@string/messenger_send_button_text" />
+            android:text="Send" />
 
         <Button
             style="@android:style/Widget.DeviceDefault.Button"

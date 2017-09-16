@@ -65,22 +65,24 @@
                     android:id="@+id/event_accept_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorWhite"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="@android:color/holo_green_light"
                     android:elevation="0dp"
                     android:text="Accept"
-                    android:textColor="@color/com_facebook_blue"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"/>
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/event_decline_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Decline"
-                    android:backgroundTint="@color/colorWhite"
-                    android:textColor="@color/com_facebook_blue"
                     android:layout_alignParentBottom="true"
-                    android:layout_toLeftOf="@id/event_accept_button"/>
+                    android:layout_toLeftOf="@id/event_accept_button"
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:text="Decline"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
