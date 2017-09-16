@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -265,14 +267,21 @@ public class EventChatFragment extends Fragment {
                     }
                 }
                 //If it's my message
+                Drawable otherBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1);
+                Drawable myBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex2);
+                viewHolder.messageTextView.setTextColor(Color.WHITE);
                 if (friendlyMessage.getName().equals(user.getUsername())) {
-                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1));
-                    viewHolder.messageTextView.setTextColor(Color.WHITE);
-                    //RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
+                    viewHolder.messageTextView.setBackground(myBubble);
+                    RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
                     //r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    //RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) viewHolder.messengerTextView.getLayoutParams();
-                    //t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
+                    //r.addRule(RelativeLayout.RIGHT_OF,R.id.messengerImageViewWrapper);
+                    RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) getActivity().findViewById(R.id.messageChat).getLayoutParams();
+                    t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
 
+                    LinearLayout.LayoutParams s = (LinearLayout.LayoutParams) viewHolder.messageTextView.getLayoutParams();
+
+                } else {
+                    viewHolder.messageTextView.setBackground(otherBubble);
                 }
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override

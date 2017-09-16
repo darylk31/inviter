@@ -27,6 +27,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,6 +37,7 @@ import java.util.Locale;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.Utils;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -136,7 +138,7 @@ public class CreateEvent extends AppCompatActivity {
                 String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location);
+                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location, Utils.getCurrentDate());
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);

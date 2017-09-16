@@ -13,8 +13,9 @@ public class EventObject {
     private String eventNote;
     private String userName;
     private EventPage eventPage;
+    private String lastModified;
 
-    public EventObject(String userName,String eventTitle, String eventNote, Date eventDate){
+    public EventObject(String userName,String eventTitle, String eventNote, Date eventDate,String lastModified){
         this.userName = userName;
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;

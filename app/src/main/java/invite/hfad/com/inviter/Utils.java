@@ -2,6 +2,10 @@ package invite.hfad.com.inviter;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by Jimmy on 5/18/2017.
  */
@@ -51,6 +55,12 @@ public class Utils {
             mDatabase.setPersistenceEnabled(true);
         }
         return mDatabase;
+    }
+
+    public static String getCurrentDate(){
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(cal.getTime());
     }
 
 }
