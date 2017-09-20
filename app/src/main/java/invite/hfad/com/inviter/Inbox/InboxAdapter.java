@@ -58,6 +58,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         this.eventlist = eventlist;
         eventrequests = eventlist.size();
         this.invitedbylist = invitedbylist;
+        System.out.println("InvitedByList: " + invitedbylist);
+        System.out.println("EventList: " + eventlist);
+        System.out.println("FriendList: " + friendlist);
     }
 
     @Override
