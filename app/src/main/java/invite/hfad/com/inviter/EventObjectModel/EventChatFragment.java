@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -272,14 +273,6 @@ public class EventChatFragment extends Fragment {
                 viewHolder.messageTextView.setTextColor(Color.WHITE);
                 if (friendlyMessage.getName().equals(user.getUsername())) {
                     viewHolder.messageTextView.setBackground(myBubble);
-                    RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
-                    //r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    //r.addRule(RelativeLayout.RIGHT_OF,R.id.messengerImageViewWrapper);
-                    RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) getActivity().findViewById(R.id.messageChat).getLayoutParams();
-                    t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
-
-                    LinearLayout.LayoutParams s = (LinearLayout.LayoutParams) viewHolder.messageTextView.getLayoutParams();
-
                 } else {
                     viewHolder.messageTextView.setBackground(otherBubble);
                 }
@@ -355,6 +348,10 @@ public class EventChatFragment extends Fragment {
                         mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
+                //Update event's last update message
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+                //Update my event last update message
+                mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).setValue(Utils.getCurrentDate());
             }
         });
         //Send Images
