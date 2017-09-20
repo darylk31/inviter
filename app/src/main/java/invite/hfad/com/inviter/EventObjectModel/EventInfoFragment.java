@@ -254,7 +254,10 @@ public class EventInfoFragment extends Fragment {
         getView().findViewById(R.id.tv_eventinfoinvite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), EditEventSelectContacts.class).putExtra("event_id", id));
+                startActivity(new Intent(getActivity(), EditEventSelectContacts.class)
+                        .putExtra("event_id", id)
+                        .putExtra("event_name", event_string)
+                );
 
             }
         });

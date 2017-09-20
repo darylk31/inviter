@@ -82,7 +82,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
                         if(dataSnapshot.exists()) {
                             Event event = dataSnapshot.getValue(Event.class);
                             Intent intent = new Intent(rootView.getContext(),EditEvent.class);
-                            intent.putExtra("event",(Parcelable) event);
+                            intent.putExtra("event",event);
                             startActivity(intent);
                         }
                     }
@@ -95,7 +95,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
         edit_admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),"2",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(),"2",Toast.LENGTH_SHORT).show();
             }
         });
         leave_event.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +109,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
                                 // continue with delete
                                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).removeValue();
                                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(event_id).removeValue();
-                                Toast.makeText(rootView.getContext(),"Event Left",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity().getApplicationContext(),"Event Left",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
@@ -134,8 +134,8 @@ public class EventOptionsDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 // continue with delete
                                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).removeValue();
-                                Toast.makeText(rootView.getContext(),"Sucessfully delete events",Toast.LENGTH_SHORT).show();
-                                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getContext());
+                                Toast.makeText(getActivity().getApplicationContext(),"Sucessfully delete events",Toast.LENGTH_SHORT).show();
+                                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
                                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                                 UserDatabaseHelper.delete_event(db, event_id);
                                 db.close();

@@ -36,6 +36,7 @@ public class EditEventSelectContacts extends AppCompatActivity {
     private TextView selected_list;
     private RecyclerView recyclerView;
     private String event_id;
+    private String event_name;
 
 
     @Override
@@ -45,6 +46,8 @@ public class EditEventSelectContacts extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_event_select_contacts);
         event_id = getIntent().getStringExtra("event_id");
+        event_name = getIntent().getStringExtra("event_name");
+
 
         selected_list = (TextView) findViewById(R.id.tvSelectedContacts);
         recyclerView = (RecyclerView)findViewById(R.id.selectfriends_recycler);
@@ -53,13 +56,15 @@ public class EditEventSelectContacts extends AppCompatActivity {
     }
 
     public void onButtonClick(View view){
+        final String mDisplayName = auth.getCurrentUser().getDisplayName();
         for(final String id: adapter.getArrayList()){
-            mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(mDisplayName).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
                         mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(event_id).setValue(auth.getCurrentUser().getDisplayName());
                         mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.INVITEDID).child(id).setValue(false);
+                        mDatabase.child(Utils.NOTIFICATIONS).child(id).child(Utils.EVENT_REQUEST).child(event_id).child(mDisplayName).setValue(event_name);
                     }
                 }
                 @Override

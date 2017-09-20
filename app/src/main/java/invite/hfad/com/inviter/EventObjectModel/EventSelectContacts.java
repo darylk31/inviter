@@ -48,15 +48,17 @@ public class EventSelectContacts extends AppCompatActivity {
 
     public void onButtonClick(View view){
         final String newKey = mDatabase.push().getKey();
+        final String mDisplayName = auth.getCurrentUser().getDisplayName();
         event.setEventId(newKey);
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).setValue(event);
         //Set yourself as an admin
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).setValue(newKey);
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).setValue(newKey);
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox
         //If not TODO::
+
         for(final String id: adapter.getArrayList()){
             System.out.println("THIS IS THEIR ID" + id);
             mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -65,6 +67,7 @@ public class EventSelectContacts extends AppCompatActivity {
                     if(dataSnapshot.exists()){
                         mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(newKey).setValue(auth.getCurrentUser().getDisplayName());
                         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.INVITEDID).child(id).setValue(false);
+                        mDatabase.child(Utils.NOTIFICATIONS).child(id).child(Utils.EVENT_REQUEST).child(newKey).child(mDisplayName).setValue(event.getEvent_name());
                     }
                 }
 

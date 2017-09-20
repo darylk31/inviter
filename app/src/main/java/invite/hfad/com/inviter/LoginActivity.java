@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import invite.hfad.com.inviter.Register.RegisterName;
@@ -63,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
                     Gson gson = new Gson();
                     String json = gson.toJson(user);
                     editor.putString("userObject",json);
-
                     mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,6 +86,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        mDatabase.child(Utils.NOTIFICATIONS).child(userId).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
     }
 
     public void onLogin(View v){

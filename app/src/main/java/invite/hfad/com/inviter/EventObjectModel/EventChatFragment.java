@@ -346,6 +346,7 @@ public class EventChatFragment extends Fragment {
                         mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
+                sendNotifications(timeStamp);
             }
         });
         //Send Images
@@ -377,6 +378,26 @@ public class EventChatFragment extends Fragment {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void sendNotifications(final String timeStamp){
+        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot attendee: dataSnapshot.getChildren()){
+                    if (!attendee.getKey().equals(mUsername)){
+                        String username = attendee.getKey();
+                        mFirebaseDatabaseReference.child(Utils.NOTIFICATIONS).child(username).child("event_chat").child(id).child(timeStamp).setValue(true);
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

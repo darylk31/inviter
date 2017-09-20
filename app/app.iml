@@ -121,7 +121,6 @@
     <orderEntry type="library" exported="" name="play-services-tasks-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="1_common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.1" level="project" />

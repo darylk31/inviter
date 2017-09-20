@@ -124,6 +124,7 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
                 if(!dataSnapshot.exists()){
                     mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(addUsername.getUsername()).setValue(false);
                     mDatabase.child(Utils.USER).child(addUsername.getUsername()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(auth.getCurrentUser().getDisplayName());
+                    mDatabase.child(Utils.NOTIFICATIONS).child(addUsername.getUsername()).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(true);
                 }
             }
             @Override
