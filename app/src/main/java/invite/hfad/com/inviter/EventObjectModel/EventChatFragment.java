@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,11 +30,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -265,14 +268,13 @@ public class EventChatFragment extends Fragment {
                     }
                 }
                 //If it's my message
+                Drawable otherBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1);
+                Drawable myBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex2);
+                viewHolder.messageTextView.setTextColor(Color.WHITE);
                 if (friendlyMessage.getName().equals(user.getUsername())) {
-                    viewHolder.messageTextView.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1));
-                    viewHolder.messageTextView.setTextColor(Color.WHITE);
-                    //RelativeLayout.LayoutParams r = (RelativeLayout.LayoutParams) viewHolder.messengerImageView.getLayoutParams();
-                    //r.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    //RelativeLayout.LayoutParams t = (RelativeLayout.LayoutParams) viewHolder.messengerTextView.getLayoutParams();
-                    //t.addRule(RelativeLayout.LEFT_OF,R.id.messengerImageViewWrapper);
-
+                    viewHolder.messageTextView.setBackground(myBubble);
+                } else {
+                    viewHolder.messageTextView.setBackground(otherBubble);
                 }
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -346,6 +348,10 @@ public class EventChatFragment extends Fragment {
                         mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
+                //Update event's last update message
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+                //Update my event last update message
+                mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).setValue(Utils.getCurrentDate());
                 sendNotifications(timeStamp);
             }
         });

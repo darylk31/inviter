@@ -141,16 +141,18 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         //Remove off invited id list
                         mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 
+
+                        //Adds to Users events
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(eventlist.get(pos).getLast_modified());
+                        //Removes off users inbox
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
+                                .child(eventlist.get(pos).getEventId()).removeValue();
+
                         //Writes to SQL
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.insert_event(db, eventlist.get(pos));
 
-                        //Adds to Users events
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(true);
-                        //Removes off users inbox
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
-                                .child(eventlist.get(pos).getEventId()).removeValue();
                         
                         Toast.makeText(context, eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);

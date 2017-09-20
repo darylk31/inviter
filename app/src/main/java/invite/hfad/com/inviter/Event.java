@@ -15,8 +15,9 @@ public class Event implements Parcelable{
     private String eventId;
     private String location;
     private String creator;
+    private String last_modified;
 
-    private final int PARAMETERS = 7;
+    private final int PARAMETERS = 8;
 
     public Event(){};
 
@@ -25,13 +26,15 @@ public class Event implements Parcelable{
                   String event_name,
                   String description,
                   String creator,
-                  String location) {
+                  String location,
+                  String last_modified) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
         this.description = description;
         this.creator = creator;
         this.location = location;
+        this.last_modified = last_modified;
         //chat object
     }
 
@@ -47,6 +50,7 @@ public class Event implements Parcelable{
         this.creator = data[4];
         this.location = data[5];
         this.eventId = data[6];
+        this.last_modified = data[7];
     }
 
     public String getStartDate(){
@@ -105,7 +109,7 @@ public class Event implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator,location,eventId});
+        dest.writeStringArray(new String[]{startDate,endDate,event_name,description,creator,location,eventId,last_modified});
     }
 
 
@@ -132,5 +136,13 @@ public class Event implements Parcelable{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getLast_modified() {
+        return last_modified;
+    }
+
+    public void setLast_modified(String last_modified) {
+        this.last_modified = last_modified;
     }
 }

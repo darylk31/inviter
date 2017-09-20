@@ -224,7 +224,7 @@ public class UserAreaActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_dashboard);
-        viewPager.setAdapter(makeAdapter());
+        //viewPager.setAdapter(makeAdapter());
         viewPager.setCurrentItem(pageNumber);
         countInboxItems();
         auth.addAuthStateListener(authListener);
@@ -334,7 +334,7 @@ public class UserAreaActivity extends AppCompatActivity {
         UserAreaActivity.ViewPagerAdapter adapter = new UserAreaActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CalendarFragment());
         adapter.addFragment(new HomeFragment());
-        //adapter.addFragment(new HomeOldFragment());
+        adapter.addFragment(new HomeNotificationFragment());
         return adapter;
     }
 

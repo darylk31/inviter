@@ -2,6 +2,10 @@ package invite.hfad.com.inviter;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by Jimmy on 5/18/2017.
  */
@@ -38,6 +42,7 @@ public class Utils {
     public static final String EVENT_TITLE = "event_name";
     public static final String EVENT_DESCRIPTION = "description";
     public static final String EVENT_LOCATION = "location";
+    public static final String EVENT_LAST_MODIFIED = "last_modified";
     public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
 
     public static final String USER_DISPLAYNAME = "displayname";
@@ -53,6 +58,12 @@ public class Utils {
             mDatabase.setPersistenceEnabled(true);
         }
         return mDatabase;
+    }
+
+    public static String getCurrentDate(){
+        Calendar cal = Calendar.getInstance();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return df.format(cal.getTime());
     }
 
 }

@@ -53,6 +53,9 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 
+dependencies {
+    compile 'com.android.support:support-v4:26.+'
+}
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
