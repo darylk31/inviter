@@ -31,27 +31,28 @@ exports.FriendRequest = functions.database.ref("/Notifications/{username}/Add_Re
   const payload = {
     "notification" : {
       "title": "Friend Request",
-      "body" : message,
+      "body" :  message,
       "icon" : "default"
     }
   }
 
-  admin.database().ref("/Notifications/" + username + "/deviceToken")
+  var deviceToken = admin.database().ref("/Notifications/" + username + "/deviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
-                        return admin.messaging().sendToDevice(child.key, payload);
-                        console.log(child.key, "Message: ", message);
+                          return admin.messaging().sendToDevice(child.key, payload).then(response => {
+                            console.log("Friend Request sent.");
+                          });
+                        });
                       });
-                    });
 });
 
 exports.EventRequest = functions.database.ref("/Notifications/{username}/Event_Request/{event_id}/{requester}").onWrite( event => {
 
   const username = event.params.username;
   const requester = event.params.requester;
-  var value = admin.database().ref("/Notifications/" + username + "/Event_Request/" + requester).once("value");
+  const event_id = event.params.id;
 
-  const message = requester + "invited you to: " + value + ".";
+  const message = requester + " invited you to: " + requester.value + ".";
 
   const payload = {
     "notification" : {
@@ -61,11 +62,12 @@ exports.EventRequest = functions.database.ref("/Notifications/{username}/Event_R
     }
   }
 
-  admin.database().ref("/Notifications/" + username + "/deviceToken")
+  var deviceToken = admin.database().ref("/Notifications/" + username + "/deviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
-                        return admin.messaging().sendToDevice(child.key, payload);
-                        console.log(child.key, "Message: ", message);
+                          return admin.messaging().sendToDevice(child.key, payload).then(response => {
+                            console.log("Event Request sent.");
+                          });
+                        });
                       });
-                    });
 })
