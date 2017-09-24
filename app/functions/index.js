@@ -3,24 +3,53 @@ const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
 
-exports.EventChat = functions.database.ref('/Notifications/{username}/event_chat/{event_id}').onWrite( event => {
+exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').onWrite( event => {
 
-  const username = event.params.username;
   const event_id = event.params.event_id;
+  const original = event.data.val();
+  const chat_id = event.params.chat_id;
 
-  console.log("Notification to: ", username);
-  console.log("Update from event: ", event_id);
+  var event_ref = admin.database().ref("/Events/" + event_id +"/").once("value");
+  return event_ref.then(function(snapshot){
+    var t = snapshot.val();
+    var message = original.name + ": " + original.text;
 
 
+
+   const payload = {
+     "data" : {
+       "title": t.event_name,
+       "body" : message,
+       "timeStamp" : original.timeStamp
+     }
+   }
+
+
+  var attendee_ref = admin.database().ref("/Events/" + event_id + "/Attendee")
+                        .once("value", function(snapshot){
+                          snapshot.forEach(function(child){
+                            getTokenId(child.key);
+                          });
+                        });
+
+  function getTokenId(username){
   var tokenID = admin.database().ref("/Notifications/" + username + "/deviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
-                        console.log("Child Key is: ", child.key);
+                        sendMessage(child.key);
                       });
                     });
+                  }
+
+  function sendMessage(tokenID){
+    return admin.messaging().sendToDevice(tokenID, payload).then(response => {
+                              console.log("Event Chat Notification.");
+                            });
+                            }
+   });
   });
 
-exports.FriendRequest = functions.database.ref("/Notifications/{username}/Add_Request/{requester}").onWrite( event => {
+exports.FriendRequest = functions.database.ref("/Users/{username}/Inbox/Add_Request/{requester}").onWrite( event => {
 
   const username = event.params.username;
   const requester = event.params.requester;
@@ -29,6 +58,7 @@ exports.FriendRequest = functions.database.ref("/Notifications/{username}/Add_Re
 
 
   const payload = {
+
     "notification" : {
       "title": "Friend Request",
       "body" :  message,
@@ -36,14 +66,14 @@ exports.FriendRequest = functions.database.ref("/Notifications/{username}/Add_Re
     }
   }
 
-  function sendMessage(key){
-    return admin.messaging().sendToDevice(key, payload).then(response => {
+  function sendMessage(tokenID){
+    return admin.messaging().sendToDevice(tokenID, payload).then(response => {
                               console.log("Friend Request sent.");
                             });
 
   }
 
-  var deviceToken = admin.database().ref("/Notifications/" + username + "/deviceToken")
+  var deviceToken = admin.database().ref("/Users/" + username + "/DeviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
                           sendMessage(child.key);
