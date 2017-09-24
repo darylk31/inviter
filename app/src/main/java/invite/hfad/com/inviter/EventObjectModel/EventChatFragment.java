@@ -30,13 +30,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,6 +55,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import invite.hfad.com.inviter.DialogBox.ChatDialogFragment;
+import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.FriendlyMessage;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
@@ -71,6 +69,7 @@ public class EventChatFragment extends Fragment {
 
     //Event id
     private String id;
+    private Event event;
 
     //Chat
     private static final String ANONYMOUS = "Anonymous";
@@ -100,7 +99,6 @@ public class EventChatFragment extends Fragment {
     public EventChatFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group1">
         <item
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_home_black_24dp"
@@ -21,6 +22,14 @@
             android:icon="@drawable/settings_24dp"
             android:title="Settings"
             android:checked="false"/>
-
+    </group>
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:title="Create new group..."
+            android:checked="false"
+            android:icon="@android:color/transparent"
+        />
     </group>
 </menu>

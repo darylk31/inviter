@@ -3,21 +3,29 @@ const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
 
-exports.EventChat = functions.database.ref('/Notifications/{username}/event_chat/{event_id}').onWrite( event => {
+exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').onWrite( event => {
 
-  const username = event.params.username;
   const event_id = event.params.event_id;
+  const original = event.data.val();
+  console.log("Id of chat" + original.id);
 
-  console.log("Notification to: ", username);
-  console.log("Update from event: ", event_id);
+
+  var event_ref = admin.database().ref("/Events/" + event_id +"/").once("value");
+  return event_ref.then(function(snapshot){
+        var t = snapshot.val();
+        console.log("Event name: " + t.event_name);
 
 
-  var tokenID = admin.database().ref("/Notifications/" + username + "/deviceToken")
-                    .once("value", function(snapshot){
-                      snapshot.forEach(function(child){
-                        console.log("Child Key is: ", child.key);
-                      });
-                    });
+  const payload = {
+    "data" : {
+      "title": t.event_name,
+      "body" : original.text,
+      "from" : original.name,
+      "icon" : "default"
+    }
+  }
+        });
+
   });
 
 exports.FriendRequest = functions.database.ref("/Notifications/{username}/Add_Request/{requester}").onWrite( event => {
