@@ -18,11 +18,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage){
         super.onMessageReceived(remoteMessage);
-        System.out.println("Firebase mesaging service recieved: Received Notification");
-        if (remoteMessage.getMessageType().equals("notification")) {
+        if (remoteMessage.getData().isEmpty()) {
             System.out.println("Firebase: Received Notification");
-            remoteMessage.getNotification().getBody();
-
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.drawable.ic_alarm_black_24dp)
@@ -38,10 +35,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
 
+        else {
+            System.out.println("Firebase: Received Data");
+            Map map = remoteMessage.getData();
+            String title = map.get("title").toString();
+            String body = map.get("body").toString();
+            String time = map.get("timeStamp").toString();
 
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(getBaseContext())
+                            .setSmallIcon(R.drawable.ic_alarm_black_24dp)
+                            .setContentTitle(title)
+                            .setContentText(body);
 
+            int mNotificationId = 001;
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        }
     }
-
-
-
 }
