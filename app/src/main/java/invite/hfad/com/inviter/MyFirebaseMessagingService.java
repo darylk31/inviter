@@ -40,7 +40,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Map map = remoteMessage.getData();
             String title = map.get("title").toString();
             String body = map.get("body").toString();
-            String time = map.get("timeStamp").toString();
+            String eventID = map.get("eventID").toString();
+
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(getBaseContext())
@@ -48,10 +52,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentTitle(title)
                             .setContentText(body);
 
-            int mNotificationId = 001;
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            int mNotificationId = 1;
+            mNotifyMgr.notify(eventID, mNotificationId, mBuilder.build());
         }
     }
 }

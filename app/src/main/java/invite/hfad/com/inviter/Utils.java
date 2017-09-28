@@ -32,7 +32,7 @@ public class Utils {
     public static final String USER_EVENTS = "Events";
     public static final String USER_ADD_REQUEST = "Add_Request";
     public static final String USER_EVENT_REQUEST = "Event_Request";
-    public static final String USER_TOKEN = "deviceToken";
+    public static final String USER_TOKEN = "DeviceToken";
 
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";

@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -183,6 +184,9 @@ public class SettingFragment extends PreferenceFragment {
         SignOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                mDatabase.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_TOKEN).child(deviceToken).removeValue();
+                mDatabase.child(Utils.DATABASE_PHONE_NUMBER).child(user.getPhoneNumber()).removeValue();
                 auth.signOut();
                 sharedPref.edit().clear().commit();
                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
