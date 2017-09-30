@@ -350,7 +350,7 @@ public class EventChatFragment extends Fragment {
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
                 //Update my event last update message
                 mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).setValue(Utils.getCurrentDate());
-                sendNotifications(timeStamp);
+                //sendNotifications(timeStamp);
             }
         });
         //Send Images

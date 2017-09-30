@@ -68,7 +68,6 @@ public class EventSelectContacts extends AppCompatActivity {
                     if(dataSnapshot.exists()){
                         mDatabase.child(Utils.USER).child(id).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(newKey).setValue(auth.getCurrentUser().getDisplayName());
                         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.INVITEDID).child(id).setValue(false);
-                        mDatabase.child(Utils.NOTIFICATIONS).child(id).child(Utils.EVENT_REQUEST).child(newKey).child(mDisplayName).setValue(event.getEvent_name());
                     }
                 }
 

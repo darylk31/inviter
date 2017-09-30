@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        mDatabase.child(Utils.NOTIFICATIONS).child(userId).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
+        mDatabase.child(Utils.USER).child(userId).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
     }
 
     public void onLogin(View v){
