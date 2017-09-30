@@ -94,32 +94,31 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
         event_dayOfWeek_text = (TextView) cardView.findViewById(R.id.event_dayOfWeek);
         event_time_text = (TextView) cardView.findViewById(R.id.event_time);
         Event event = event_ids.get(position);
-                            if(event.getEvent_name() == null){
-                                event_name_text.setText("huh");
-                            } else {
-                                event_name_text.setText(event.getEvent_name());
-                            }
-                            String output_day = "";
-                            String output_dayOfWeek = "";
-                            String output_time = "";
-                            try {
-                                date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event.getStartDate());
-                                output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-                                output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
-                                output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
-                            } catch (ParseException e) {
-                                try {
-                                    date = new SimpleDateFormat("yyyy-MM-dd").parse(event.getStartDate());
-                                    output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-                                    output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
-                                } catch (ParseException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                            event_day_text.setText(output_day);
-                            event_dayOfWeek_text.setText(output_dayOfWeek);
-                            event_time_text.setText(output_time);
-
+        if(event.getEvent_name() == null){
+            event_name_text.setText("huh");
+        } else {
+            event_name_text.setText(event.getEvent_name());
+        }
+        String output_day = "";
+        String output_dayOfWeek = "";
+        String output_time = "";
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event.getStartDate());
+            output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+            output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
+            output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
+        } catch (ParseException e) {
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(event.getStartDate());
+                output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+        }
+        event_day_text.setText(output_day);
+        event_dayOfWeek_text.setText(output_dayOfWeek);
+        event_time_text.setText(output_time);
 
         /*
         //...only if unread messages

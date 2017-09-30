@@ -146,7 +146,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
 
 
                         //Adds to Users events
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).setValue(eventlist.get(pos).getLast_modified());
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_LAST_MODIFIED).setValue(eventlist.get(pos).getLast_modified());
+
+                        //Sets User unread messages to 0
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
+
                         //Removes off users inbox
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();

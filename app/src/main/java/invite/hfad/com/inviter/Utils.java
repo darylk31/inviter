@@ -43,6 +43,7 @@ public class Utils {
     public static final String EVENT_DESCRIPTION = "description";
     public static final String EVENT_LOCATION = "location";
     public static final String EVENT_LAST_MODIFIED = "last_modified";
+    public static final String EVENT_UNREAD_MESSAGE = "unread_messages";
     public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
 
     public static final String USER_DISPLAYNAME = "displayname";

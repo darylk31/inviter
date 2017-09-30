@@ -53,8 +53,10 @@ public class EventSelectContacts extends AppCompatActivity {
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).setValue(event);
         //Set yourself as an admin
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
-        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).setValue(newKey);
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).setValue(event.getLast_modified());
+        //Set event for yourself
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(event.getLast_modified());
+        //Set unread messages to 0
+        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox

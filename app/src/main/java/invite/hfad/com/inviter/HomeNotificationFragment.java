@@ -59,7 +59,7 @@ public class HomeNotificationFragment extends Fragment {
         homeRecycler.setLayoutManager(layoutManager);
 
         final DatabaseReference mDatabaseReference = Utils.getDatabase().getReference();
-        mDatabaseReference.child(Utils.USER).child(user.getUsername()).child(Utils.USER_EVENTS).orderByValue().limitToFirst(MAX_NUMBER_OF_NOTIFICATION_TAB).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child(Utils.USER).child(user.getUsername()).child(Utils.USER_EVENTS).orderByChild(Utils.EVENT_LAST_MODIFIED).limitToFirst(MAX_NUMBER_OF_NOTIFICATION_TAB).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()){

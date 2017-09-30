@@ -207,7 +207,7 @@ public class EventChatFragment extends Fragment {
                 FriendlyMessage.class,
                 R.layout.item_message,
                 EventChatFragment.MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT)) {
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).limitToLast(50)) {
 
             @Override
             protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
@@ -349,7 +349,7 @@ public class EventChatFragment extends Fragment {
                 //Update event's last update message
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
                 //Update my event last update message
-                mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).setValue(Utils.getCurrentDate());
+                mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
                 //sendNotifications(timeStamp);
             }
         });
