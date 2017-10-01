@@ -47,13 +47,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
             NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(getBaseContext())
+                    new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.drawable.ic_alarm_black_24dp)
                             .setContentTitle(title)
                             .setContentText(body);
 
-            int mNotificationId = 1;
-            mNotifyMgr.notify(eventID, mNotificationId, mBuilder.build());
+            int mNotificationId = 001;
+
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());
         }
     }
 }

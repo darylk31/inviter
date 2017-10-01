@@ -9,16 +9,16 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
   const original = event.data.val();
   const chat_id = event.params.chat_id;
 
-  var event_ref = admin.database().ref("/Events/" + event_id +"/").once("value");
+  var event_ref = admin.database().ref("/Events/" + event_id).once("value");
   return event_ref.then(function(snapshot){
-    var t = snapshot.val();
+    var event_snapshot = snapshot.val();
     var message = original.name + ": " + original.text;
 
 
 
    const payload = {
      "data" : {
-       "title": t.event_name,
+       "title": event_snapshot.event_name,
        "body" : message,
        "eventID" : event_id
      }
@@ -29,31 +29,39 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
                         .once("value", function(snapshot){
                           snapshot.forEach(function(child){
                             getTokenId(child.key);
-                            updateTime(child.key);
+                            updateUser(child.key);
                           });
                         });
 
   function getTokenId(username){
-  var tokenID = admin.database().ref("/Users/" + username + "/deviceToken")
+  console.log("Original:", original.name);
+  console.log("Username:", username);
+  if (username != original.name){
+  var tokenID = admin.database().ref("/Users/" + username + "/DeviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
                         sendMessage(child.key);
                       });
                     });
+                   }
                   }
 
-  function updateTime(username){
-    var event_ref = admin.database().ref("/Users/" + username + "/Events");
-    var time = {[event_id]: t.last_modified};
+  function updateUser(username){
+    var event_ref = admin.database().ref("/Users/" + username + "/Events/" + event_id );
+    var time = {last_modified: event_snapshot.last_modified};
     event_ref.update(time);
-    console.log("Time Updated.");
+    if (username != original.name){
+    var unread_ref = event_ref.child("unread_messages");
+    unread_ref.transaction(function(unread_number){
+        return (unread_number || 0) + 1;})
+    }
   }
 
   function sendMessage(tokenID){
     return admin.messaging().sendToDevice(tokenID, payload).then(response => {
                               console.log("Event Chat Notification.");
                             });
-                            }
+                           }
    });
   });
 
@@ -96,6 +104,15 @@ exports.EventRequest = functions.database.ref("/Users/{username}/Inbox/Event_Req
   const requester = event.data.val();
 
 
+
+  var deviceToken = admin.database().ref("/Users/" + username + "/DeviceToken")
+                    .once("value", function(snapshot){
+                      snapshot.forEach(function(child){
+                            sendMessage(child.key);
+                          });
+                        });
+
+
   function sendMessage(tokenID){
   var event_ref = admin.database().ref("/Events/"+ event_id ).once("value");
   return event_ref.then(result => {
@@ -115,11 +132,4 @@ exports.EventRequest = functions.database.ref("/Users/{username}/Inbox/Event_Req
       });
     });
   }
-
-  var deviceToken = admin.database().ref("/Users/" + username + "/DeviceToken")
-                    .once("value", function(snapshot){
-                      snapshot.forEach(function(child){
-                            sendMessage(child.key);
-                          });
-                        });
                       })
