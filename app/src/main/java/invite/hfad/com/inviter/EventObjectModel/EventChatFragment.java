@@ -307,6 +307,7 @@ public class EventChatFragment extends Fragment {
                                 lastVisiblePosition == (positionStart - 1))) {
                     mMessageRecyclerView.scrollToPosition(positionStart);
                 }
+                mFirebaseDatabaseReference.child(Utils.USER).child(user.getUsername()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
             }
         });
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -349,7 +350,7 @@ public class EventChatFragment extends Fragment {
                 //Update event's last update message
                 mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
                 //Update my event last update message
-                mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+                //mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
                 //sendNotifications(timeStamp);
             }
         });

@@ -210,4 +210,5 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         InboxAdapter.this.notifyDataSetChanged();
 
     }
+
 }

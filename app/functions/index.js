@@ -13,9 +13,6 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
   return event_ref.then(function(snapshot){
     var event_snapshot = snapshot.val();
     var message = original.name + ": " + original.text;
-
-
-
    const payload = {
      "data" : {
        "title": event_snapshot.event_name,
@@ -23,7 +20,6 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
        "eventID" : event_id
      }
    }
-
 
   var attendee_ref = admin.database().ref("/Events/" + event_id + "/Attendee")
                         .once("value", function(snapshot){
@@ -34,9 +30,8 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
                         });
 
   function getTokenId(username){
-  console.log("Original:", original.name);
-  console.log("Username:", username);
   if (username != original.name){
+  console.log("Orignial %s sending to %s", original.name,username);
   var tokenID = admin.database().ref("/Users/" + username + "/DeviceToken")
                     .once("value", function(snapshot){
                       snapshot.forEach(function(child){
@@ -49,6 +44,7 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
   function updateUser(username){
     var event_ref = admin.database().ref("/Users/" + username + "/Events/" + event_id );
     var time = {last_modified: event_snapshot.last_modified};
+    console.log("%s updated time : %s",event_id,time);
     event_ref.update(time);
     if (username != original.name){
     var unread_ref = event_ref.child("unread_messages");
@@ -59,9 +55,9 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
 
   function sendMessage(tokenID){
     return admin.messaging().sendToDevice(tokenID, payload).then(response => {
-                              console.log("Event Chat Notification.");
+                              console.log("Token id:%s Recieved Chat Notification.",tokenID);
                             });
-                           }
+                          }
    });
   });
 

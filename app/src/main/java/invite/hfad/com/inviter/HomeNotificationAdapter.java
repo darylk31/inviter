@@ -59,6 +59,7 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
     TextView event_day_text;
     TextView event_dayOfWeek_text;
     TextView event_time_text;
+    TextView event_message_text;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -82,7 +83,7 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
 
     @Override
     public HomeNotificationAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CardView event_cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.home_item_layout, parent, false);
+        CardView event_cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.home_notification_item_layout, parent, false);
         return new ViewHolder(event_cv);
     }
 
@@ -92,7 +93,7 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
         event_name_text = (TextView) cardView.findViewById(R.id.event_name);
         event_day_text = (TextView) cardView.findViewById(R.id.event_day);
         event_dayOfWeek_text = (TextView) cardView.findViewById(R.id.event_dayOfWeek);
-        event_time_text = (TextView) cardView.findViewById(R.id.event_time);
+        event_message_text = (TextView) cardView.findViewById(R.id.event_last_message);
         Event event = event_ids.get(position);
         if(event.getEvent_name() == null){
             event_name_text.setText("huh");
@@ -118,7 +119,24 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
         }
         event_day_text.setText(output_day);
         event_dayOfWeek_text.setText(output_dayOfWeek);
-        event_time_text.setText(output_time);
+        event_message_text.setText("test");
+/*
+        mDatabaseReference.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.CHAT).limitToLast(1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    FriendlyMessage m = dataSnapshot.getValue(FriendlyMessage.class);
+                    event_message_text.setText(m.getText());
+                    notifyDataSetChanged();
+                    System.out.println(dataSnapshot.getValue());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        */
 
         /*
         //...only if unread messages
@@ -136,6 +154,9 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
                 });
         }
 
+    public void updateEventList(ArrayList<Event> eventlist){
+        this.event_ids = eventlist;
+    }
 
     @Override
     public int getItemCount() {
