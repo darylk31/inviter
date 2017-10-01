@@ -78,7 +78,8 @@ exports.FriendRequest = functions.database.ref("/Users/{username}/Inbox/Add_Requ
     "notification" : {
       "title": "Friend Request",
       "body" :  message,
-      "icon" : "default"
+      "icon" : "default",
+      "click_action": "OPEN_INBOX"
     }
   }
 
@@ -123,7 +124,8 @@ exports.EventRequest = functions.database.ref("/Users/{username}/Inbox/Event_Req
       "notification" : {
         "title": "Event Invite",
         "body": message,
-        "icon": "default"
+        "icon": "default",
+        "click_action": "OPEN_INBOX"
         }
       }
 

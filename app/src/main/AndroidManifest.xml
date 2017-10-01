@@ -58,6 +58,10 @@
             android:name=".Inbox.InboxActivity"
             android:parentActivityName=".UserAreaActivity"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="OPEN_INBOX"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UserAreaActivity"/>
