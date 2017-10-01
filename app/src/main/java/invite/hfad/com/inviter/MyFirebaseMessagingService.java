@@ -4,8 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -56,9 +54,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         else {
             System.out.println("Firebase: Received Data");
             Map map = remoteMessage.getData();
-            String title = map.get("title").toString();
-            String body = map.get("body").toString();
-            String eventID = map.get("eventID").toString();
+            final String title = map.get("title").toString();
+            final String body = map.get("body").toString();
+            final String eventID = map.get("eventID").toString();
 
             NotificationManager mNotifyMgr =
                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
