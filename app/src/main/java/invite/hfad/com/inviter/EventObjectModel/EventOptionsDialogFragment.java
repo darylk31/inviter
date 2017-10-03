@@ -22,6 +22,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
@@ -109,6 +111,10 @@ public class EventOptionsDialogFragment extends DialogFragment {
                                 // continue with delete
                                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).removeValue();
                                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(event_id).removeValue();
+                                SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
+                                SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                                UserDatabaseHelper.delete_event(db, event_id);
+                                db.close();
                                 Toast.makeText(getActivity().getApplicationContext(),"Event Left",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
                                 startActivity(intent);
@@ -134,7 +140,9 @@ public class EventOptionsDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 // continue with delete
                                 mDatabase.child(Utils.EVENT_DATABASE).child(event_id).removeValue();
-                                Toast.makeText(getActivity().getApplicationContext(),"Sucessfully delete events",Toast.LENGTH_SHORT).show();
+                                mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(event_id).removeValue();
+                                FirebaseStorage.getInstance().getReference().child("events/" + event_id + ".jpg").delete();
+                                Toast.makeText(getActivity().getApplicationContext(),"Successfully deleted event",Toast.LENGTH_SHORT).show();
                                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
                                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                                 UserDatabaseHelper.delete_event(db, event_id);

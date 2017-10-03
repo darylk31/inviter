@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contacts_cardview"
     android:layout_width="match_parent"
-    android:layout_height="125dp"
+    android:layout_height="100dp"
     android:layout_margin="5dp">
 
     <LinearLayout
@@ -11,42 +11,24 @@
         android:layout_height="match_parent">
         android:orientation="vertical">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/home_chat_ImageView"
+            android:layout_width="85dp"
+            android:layout_height="85dp">
+        </de.hdodenhof.circleimageview.CircleImageView>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="5dp">
 
-            <ImageView
+            <TextView
+                android:id="@+id/home_chat_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:id="@+id/notification"
+                android:textSize="12dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerHorizontal="true"/>
-
-            <RelativeLayout
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/rlDateText">
-            <TextView
-                android:id="@+id/event_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/event_dayOfWeek"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                android:layout_below="@+id/event_day"
-                />
-            </RelativeLayout>
 
 
             <LinearLayout
@@ -61,7 +43,7 @@
                 android:paddingBottom="5dp">
 
                 <TextView
-                    android:id="@+id/event_name"
+                    android:id="@+id/home_event_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -70,19 +52,23 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/event_last_message"
+                    android:id="@+id/home_event_last_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14dp"
-                    android:textStyle="italic" />
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="16dp" />
 
+                <TextView
+                    android:id="@+id/home_event_last_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12dp" />
 
             </LinearLayout>
-
         </RelativeLayout>
-
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

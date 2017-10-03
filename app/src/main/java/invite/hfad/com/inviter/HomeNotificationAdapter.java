@@ -93,7 +93,7 @@ public class HomeNotificationAdapter extends RecyclerView.Adapter<HomeNotificati
         event_name_text = (TextView) cardView.findViewById(R.id.event_name);
         event_day_text = (TextView) cardView.findViewById(R.id.event_day);
         event_dayOfWeek_text = (TextView) cardView.findViewById(R.id.event_dayOfWeek);
-        event_message_text = (TextView) cardView.findViewById(R.id.event_last_message);
+        //event_message_text = (TextView) cardView.findViewById(R.id.event_last_message);
         Event event = event_ids.get(position);
         if(event.getEvent_name() == null){
             event_name_text.setText("huh");

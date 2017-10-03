@@ -71,7 +71,9 @@ public class EditEventSelectContacts extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
+
         }
+        finish();
     }
 
     public void remove_attendee(){

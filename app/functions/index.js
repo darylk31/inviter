@@ -46,11 +46,6 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
     var time = {last_modified: event_snapshot.last_modified};
     console.log("%s updated time : %s",event_id,time);
     event_ref.update(time);
-    if (username != original.name){
-    var unread_ref = event_ref.child("unread_messages");
-    unread_ref.transaction(function(unread_number){
-        return (unread_number || 0) + 1;})
-    }
   }
 
   function sendMessage(tokenID){

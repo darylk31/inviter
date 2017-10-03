@@ -92,6 +92,7 @@ public class EventChatFragment extends Fragment {
     private View rootView;
     private Toolbar toolbar;
     private TextView noChatText;
+    private RecyclerView.AdapterDataObserver dataObserver;
 
     private SharedPreferences sharedPref;
     User user;
@@ -201,7 +202,7 @@ public class EventChatFragment extends Fragment {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-        //New child entires
+        //New child entries
         mFirebaseDatabaseReference = Utils.getDatabase().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, EventChatFragment.MessageViewHolder>(
                 FriendlyMessage.class,
@@ -292,7 +293,8 @@ public class EventChatFragment extends Fragment {
                 });
             }
         };
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+
+        dataObserver = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
@@ -307,9 +309,25 @@ public class EventChatFragment extends Fragment {
                                 lastVisiblePosition == (positionStart - 1))) {
                     mMessageRecyclerView.scrollToPosition(positionStart);
                 }
-                mFirebaseDatabaseReference.child(Utils.USER).child(user.getUsername()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
+                ValueEventListener read_listener = new ValueEventListener(){
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            long total_messages = dataSnapshot.getChildrenCount();
+                            mFirebaseDatabaseReference.child(Utils.USER).child(mFirebaseAuth.getCurrentUser().getDisplayName())
+                                    .child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_READ_MESSAGES).setValue(total_messages);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                };
+                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(read_listener);
             }
-        });
+        };
+
+        mFirebaseAdapter.registerAdapterDataObserver(dataObserver);
+
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
         mMessageEditText = (EditText) rootView.findViewById(R.id.messageEditText);
@@ -387,23 +405,9 @@ public class EventChatFragment extends Fragment {
         });
     }
 
-    private void sendNotifications(final String timeStamp){
-        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot attendee: dataSnapshot.getChildren()){
-                    if (!attendee.getKey().equals(mUsername)){
-                        String username = attendee.getKey();
-                        mFirebaseDatabaseReference.child(Utils.NOTIFICATIONS).child(username).child("event_chat").child(id).child(timeStamp).setValue(true);
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    @Override
+    public void onStop(){
+        super.onStop();
+        mFirebaseAdapter.unregisterAdapterDataObserver(dataObserver);
     }
 }

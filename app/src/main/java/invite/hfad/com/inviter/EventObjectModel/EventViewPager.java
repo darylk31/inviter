@@ -1,11 +1,17 @@
 package invite.hfad.com.inviter.EventObjectModel;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -124,7 +130,7 @@ public class EventViewPager extends AppCompatActivity {
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         UserDatabaseHelper.delete_event(db, id);
                         db.close();
-                        Toast.makeText(getApplicationContext(),"Sorry this event has been deleted",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"This event has been cancelled.",Toast.LENGTH_SHORT).show();
                         ref.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(id).removeValue();
                         startActivity(new Intent(EventViewPager.this, UserAreaActivity.class));
                         finish();

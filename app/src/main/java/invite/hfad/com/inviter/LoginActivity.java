@@ -123,7 +123,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     updateUser();
-
                     final UserDatabaseHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                     final SQLiteDatabase db = databaseHelper.getWritableDatabase();
                     progressDialog.setMessage("Retrieving account details...");

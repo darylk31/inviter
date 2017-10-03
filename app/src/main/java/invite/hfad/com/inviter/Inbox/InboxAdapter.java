@@ -13,7 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -135,21 +138,36 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                 eventaccept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int pos = holder.getAdapterPosition() - friendrequests;
+                        final int pos = holder.getAdapterPosition() - friendrequests;
+
+                        DatabaseReference eventTableRef = mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId());
+                        final DatabaseReference userEventRef = mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS)
+                                .child(eventlist.get(pos).getEventId());
 
                         //Add to attendee list
                         //Set value to false defaulty not an admin
-                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName())
-                                .setValue(false);
-                        //Remove off invited id list
-                        mDatabase.child(Utils.EVENT_DATABASE).child(eventlist.get(pos).getEventId()).child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
+                        eventTableRef.child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(false);
 
+                        eventTableRef.child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()){
+                                    userEventRef.child(Utils.EVENT_READ_MESSAGES).setValue(dataSnapshot.getChildrenCount());
+                                }
+                                else
+                                    userEventRef.child(Utils.EVENT_READ_MESSAGES).setValue(0);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+                        //Remove off invited id list
+                        eventTableRef.child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 
                         //Adds to Users events
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_LAST_MODIFIED).setValue(eventlist.get(pos).getLast_modified());
-
-                        //Sets User unread messages to 0
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(eventlist.get(pos).getEventId()).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
+                        userEventRef.child(Utils.EVENT_LAST_MODIFIED).setValue(eventlist.get(pos).getLast_modified());
+                        userEventRef.child(Utils.EVENT_ID).setValue(eventlist.get(pos).getEventId());
 
                         //Removes off users inbox
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)

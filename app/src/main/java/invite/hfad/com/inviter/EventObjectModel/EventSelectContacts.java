@@ -54,16 +54,16 @@ public class EventSelectContacts extends AppCompatActivity {
         //Set yourself as an admin
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
         //Set event for yourself
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(event.getLast_modified());
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(event.getLast_modified());
         //Set unread messages to 0
-        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_UNREAD_MESSAGE).setValue(0);
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_READ_MESSAGES).setValue(0);
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_ID).setValue(newKey);
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox
         //If not TODO::
 
         for(final String id: adapter.getArrayList()){
-            System.out.println("THIS IS THEIR ID" + id);
             mDatabase.child(Utils.USER).child(id).child(Utils.CONTACTS).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
