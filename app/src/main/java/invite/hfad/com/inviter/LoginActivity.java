@@ -101,9 +101,12 @@ public class LoginActivity extends AppCompatActivity {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot != null){
+                            if(dataSnapshot.exists()){
                                 User user = dataSnapshot.getValue(User.class);
                                 performLogin(user.getEmail(),password);
+                            } else{
+                                Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                             }
                         }
                         @Override
@@ -193,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
             Toast.makeText(getApplicationContext(), "Wrong Email Address or password", Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
             valid = false;
         }
         return valid;
