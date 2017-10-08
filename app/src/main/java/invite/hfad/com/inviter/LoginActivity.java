@@ -56,7 +56,8 @@ public class LoginActivity extends AppCompatActivity {
         final SharedPreferences.Editor editor = getSharedPreferences(Utils.APP_PACKAGE, 0).edit();
         String userId = auth.getCurrentUser().getDisplayName();
         editor.putString("userID", userId);
-        editor.putInt("friendNotifications", friendCount);
+        editor.putInt("friendNotifications", 0);
+        editor.putInt("eventNotifications", 0);
         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
