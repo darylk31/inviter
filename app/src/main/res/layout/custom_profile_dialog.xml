@@ -64,30 +64,37 @@
 
         <Button
             style="@android:style/Widget.DeviceDefault.Button"
+            android:id="@+id/message_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/cardview_light_background"
             android:elevation="1dp"
             android:fontFamily="sans-serif"
+            android:visibility="gone"
+
             android:text="@string/messenger_button_text" />
 
         <Button
             style="@android:style/Widget.DeviceDefault.Button"
+            android:id="@+id/add_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/cardview_light_background"
             android:elevation="1dp"
             android:fontFamily="sans-serif"
-            android:text="Send" />
+            android:visibility="gone"
+            android:text="@string/Add_friend_text" />
 
         <Button
             style="@android:style/Widget.DeviceDefault.Button"
+            android:id="@+id/unfriend_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/cardview_light_background"
             android:elevation="1dp"
             android:fontFamily="sans-serif"
-            android:text="@string/remove_button_text" />
+            android:visibility="gone"
+            android:text="@string/unfriend_text" />
 
 
     </LinearLayout>

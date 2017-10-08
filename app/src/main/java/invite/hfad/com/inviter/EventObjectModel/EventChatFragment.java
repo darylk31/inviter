@@ -50,6 +50,7 @@ import com.google.gson.Gson;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -256,11 +257,16 @@ public class EventChatFragment extends Fragment {
                             .into(viewHolder.messengerImageView);
                 }
                 //TimeStamp
+                viewHolder.messageTimeStamp.setVisibility(TextView.GONE);
                 if(friendlyMessage.getTimeStamp() != null){
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
                     try {
                         Date date = format.parse(friendlyMessage.getTimeStamp());
-                        viewHolder.messageTimeStamp.setText(date.toString());
+                        int hour = date.getHours() % 12;
+                        if (hour == 0)
+                            hour = 12;
+                        String timeText = String.format("%02d:%02d %s", hour ,date.getMinutes(), date.getHours() < 12 ? "AM" : "PM");
+                        viewHolder.messageTimeStamp.setText(timeText);
                         System.out.println( "this is the sent time" + date.toString());
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -289,6 +295,18 @@ public class EventChatFragment extends Fragment {
                             chatDialogFragment.show(fm,"dialog");
                         }
                         return true;
+                    }
+                });
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(viewHolder.messageTimeStamp.getVisibility() == View.GONE){
+                            viewHolder.messageTimeStamp.animate().alpha(1.0f);
+                            viewHolder.messageTimeStamp.setVisibility(View.VISIBLE);
+                        } else{
+                            viewHolder.messageTimeStamp.setVisibility(View.GONE);
+                            viewHolder.messageTimeStamp.animate().alpha(0.0f);
+                        }
                     }
                 });
             }

@@ -100,10 +100,10 @@
     <orderEntry type="library" exported="" name="support-core-ui-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="constraint-layout-solver-1.1.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-solver-1.1.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="firebase-messaging-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="rxjava-2.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="multidex-instrumentation-1.0.1" level="project" />
@@ -122,12 +122,12 @@
     <orderEntry type="library" exported="" name="play-services-tasks-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-11.0.4" level="project" />
-    <orderEntry type="library" exported="" name="constraint-layout-1.1.0-beta2" level="project" />
     <orderEntry type="library" exported="" name="common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="1_common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.1" level="project" />
     <orderEntry type="library" exported="" name="compressor-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="extensions-1.0.0-alpha8" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-1.1.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="exifinterface-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-11.0.4" level="project" />
