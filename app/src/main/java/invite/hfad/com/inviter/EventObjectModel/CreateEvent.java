@@ -145,7 +145,6 @@ public class CreateEvent extends AppCompatActivity {
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
                 try {
-
                     if (new SimpleDateFormat("yyyy-MM-dd").parse(startDateData).before(yesterday())) {
                         Toast.makeText(getApplicationContext(), "Date has passed.", Toast.LENGTH_SHORT).show();
                         return;

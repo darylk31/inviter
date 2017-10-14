@@ -35,6 +35,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import invite.hfad.com.inviter.EventObjectModel.EventViewPager;
 
@@ -135,7 +142,36 @@ public class HomeChatFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         viewHolder.setUnread(dataSnapshot.getChildrenCount() - event.getRead_messages());
-                        viewHolder.setLastTime(event.getLast_modified());
+
+                        //Converting Date to English (Today, Yesterday etc)
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+                        try {
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(format.parse(event.getLast_modified()));
+
+                            Calendar yesterday = Calendar.getInstance();
+                            yesterday.add(Calendar.DAY_OF_YEAR, -1);
+
+                            Calendar today = Calendar.getInstance();
+
+                            if(cal.get(Calendar.YEAR) == today.get(Calendar.YEAR) && cal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)){
+                                Date date = format.parse(event.getLast_modified());
+                                int hour = date.getHours() % 12;
+                                if (hour == 0)
+                                    hour = 12;
+                                String timeText = String.format("%02d:%02d %s", hour ,date.getMinutes(), date.getHours() < 12 ? "AM" : "PM");
+                                viewHolder.setLastTime(timeText);
+                            }
+                            else if(cal.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) && cal.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)){
+                                viewHolder.setLastTime("Yesterday");
+                            } else{
+                                Date newDate = new SimpleDateFormat("yyyy-MM-dd").parse(event.getLast_modified());
+                                String dateOutput = new SimpleDateFormat("MMM dd", Locale.ENGLISH).format(newDate);
+                                viewHolder.setLastTime(dateOutput);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
