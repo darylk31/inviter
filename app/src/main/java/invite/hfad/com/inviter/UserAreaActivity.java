@@ -94,7 +94,6 @@ public class UserAreaActivity extends AppCompatActivity {
     private FirebaseUser user;
     private int inboxCounter;
     private ImageView profilePictureView;
-    private BroadcastReceiver broadcastReceiver;
 
 
     public void onCreate(Bundle savedInstanceState) {

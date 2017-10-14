@@ -15,6 +15,7 @@ exports.EventChat = functions.database.ref('/Events/{event_id}/Chat/{chat_id}').
     var message = original.name + ": " + original.text;
    const payload = {
      "data" : {
+       "type": "Chat",
        "title": event_snapshot.event_name,
        "body" : message,
        "eventID" : event_id
@@ -65,12 +66,9 @@ exports.FriendRequest = functions.database.ref("/Users/{username}/Inbox/Add_Requ
 
 
   const payload = {
-
-    "notification" : {
-      "title": "Friend Request",
-      "body" :  message,
-      "icon" : "default",
-      "click_action": "OPEN_INBOX"
+    "data" : {
+      "type" : "FriendRequest",
+      "body" :  message
     }
   }
 
@@ -112,11 +110,9 @@ exports.EventRequest = functions.database.ref("/Users/{username}/Inbox/Event_Req
       const message = requester + " invited you to: " + event.event_name + ".";
 
       const payload = {
-      "notification" : {
-        "title": "Event Invite",
-        "body": message,
-        "icon": "default",
-        "click_action": "OPEN_INBOX"
+      "data" : {
+        "type": "EventRequest",
+        "body": message
         }
       }
 
@@ -125,4 +121,4 @@ exports.EventRequest = functions.database.ref("/Users/{username}/Inbox/Event_Req
       });
     });
   }
-                      })
+ })

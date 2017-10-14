@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.MyFirebaseMessagingService;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -53,6 +54,7 @@ public class EventViewPager extends AppCompatActivity {
         setupViewPager(viewPager);
         viewPager.setCurrentItem(pageNumber);
         viewPager.setOffscreenPageLimit(1);
+        clearNotification();
     }
 
     @Override
@@ -154,5 +156,10 @@ public class EventViewPager extends AppCompatActivity {
 
     public Event getEvent(){
         return event;
+    }
+
+    private void clearNotification(){
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancel(id, 001);
     }
 }

@@ -109,8 +109,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition();
                         Toast.makeText(context, friendlist.get(pos).getUsername() + "'s request denied.", Toast.LENGTH_SHORT).show();
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUid()).removeValue();
-                        mDatabase.child(Utils.USER).child(friendlist.get(pos).getUid()).child("Contacts").child(auth.getCurrentUser().getDisplayName()).removeValue();
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child(Utils.USER_ADD_REQUEST).child(friendlist.get(pos).getUsername()).removeValue();
+                        mDatabase.child(Utils.USER).child(friendlist.get(pos).getUsername()).child("Contacts").child(auth.getCurrentUser().getDisplayName()).removeValue();
                         removefriendrequest(pos);
                     }
                 });

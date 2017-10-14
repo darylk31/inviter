@@ -1,6 +1,9 @@
 package invite.hfad.com.inviter.Inbox;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,10 +52,10 @@ public class InboxActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         mDatabase = Utils.getDatabase().getReference();
         tv_empty = (TextView)findViewById(R.id.tv_emptyInbox);
-
         friendlist = new ArrayList<>();
         eventlist = new ArrayList<>();
         invitedbylist = new ArrayList<>();
+        clearNotification();
         searchinbox();
         searchevents();
     }
@@ -138,5 +141,16 @@ public class InboxActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void clearNotification(){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel("FriendRequest", 002);
+        notificationManager.cancel("EventRequest", 002);
+        SharedPreferences sharedPreferences = getSharedPreferences(Utils.APP_PACKAGE, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("friendNotifications", 0);
+        editor.putInt("eventNotifications", 0);
+        editor.commit();
     }
 }

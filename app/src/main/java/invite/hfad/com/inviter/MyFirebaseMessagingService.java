@@ -2,7 +2,9 @@ package invite.hfad.com.inviter;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -18,58 +20,72 @@ import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    public int CHAT_NOTIFICATION = 001;
+    public int INBOX_NOTIFICATION = 002;
+
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage){
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        if (remoteMessage.getData().isEmpty()) {
-            System.out.println("Firebase: Received Notification");
-            NotificationCompat.Builder builder =
-                    new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(R.drawable.ic_alarm_black_24dp)
-                            .setContentTitle(remoteMessage.getNotification().getTitle())
-                            .setContentText(remoteMessage.getNotification().getBody());
+        Map map = remoteMessage.getData();
+        String type = map.get("type").toString();
+        String title = null;
+        String body = null;
+        String eventID = null;
+        String tag = null;
+        switch (type) {
+            case "Chat":
+                title = map.get("title").toString();
+                body = map.get("body").toString();
+                eventID = map.get("eventID").toString();
+                break;
+            case "EventRequest":
+                SharedPreferences eventPref = getSharedPreferences(Utils.APP_PACKAGE, 0);
+                int eventCount = eventPref.getInt("eventNotifications", 0);
+                eventCount++;
+                SharedPreferences.Editor eventEditor = eventPref.edit();
+                eventEditor.putInt("eventNotifications", eventCount);
+                eventEditor.commit();
 
-            builder.setAutoCancel(true);
+                tag = "EventRequest";
 
-            Intent inboxIntent = new Intent(getApplicationContext(), InboxActivity.class);
+                if (eventCount == 1){
+                title = "Event Request";}
+                else {
+                    title = "Event Request (" + eventCount + ")";
+                }
+                body = map.get("body").toString();
+                break;
+            case "FriendRequest":
+                SharedPreferences friendPref = getSharedPreferences(Utils.APP_PACKAGE, 0);
+                int friendCount = friendPref.getInt("friendNotifications", 0);
+                friendCount++;
+                SharedPreferences.Editor friendEditor = friendPref.edit();
+                friendEditor.putInt("friendNotifications", friendCount);
+                friendEditor.commit();
 
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                    getApplicationContext(),
-                    0,
-                    inboxIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            );
+                tag = "FriendRequest";
 
-            builder.setContentIntent(resultPendingIntent);
-
-            int mNotificationId = 001;
-
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-            mNotifyMgr.notify(mNotificationId, builder.build());
-
+                if (friendCount == 0){
+                    title = "Friend Request";}
+                else {
+                    title = "Friend Request (" + friendCount + ")";
+                }
+                body = map.get("body").toString();
+                break;
         }
-
-        else {
-            System.out.println("Firebase: Received Data");
-            Map map = remoteMessage.getData();
-            final String title = map.get("title").toString();
-            final String body = map.get("body").toString();
-            final String eventID = map.get("eventID").toString();
-
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
 
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(R.drawable.ic_alarm_black_24dp)
-                            .setContentTitle(title)
-                            .setContentText(body);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_alarm_black_24dp)
+                        .setContentTitle(title)
+                        .setContentText(body);
 
-            mBuilder.setAutoCancel(true);
+        mBuilder.setAutoCancel(true);
 
+        if (eventID != null) {
             Intent eventIntent = new Intent(getApplicationContext(), EventViewPager.class);
             eventIntent.putExtra("event_id", eventID);
 
@@ -82,9 +98,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             mBuilder.setContentIntent(resultPendingIntent);
 
-            int mNotificationId = 001;
+            mNotifyMgr.notify(eventID, CHAT_NOTIFICATION, mBuilder.build());
+        }
+        else {
+            Intent inboxIntent = new Intent(getApplicationContext(), InboxActivity.class);
 
-            mNotifyMgr.notify(eventID, mNotificationId, mBuilder.build());
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    getApplicationContext(),
+                    0,
+                    inboxIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
+
+            mBuilder.setContentIntent(resultPendingIntent);
+
+
+            mNotifyMgr.notify(tag, INBOX_NOTIFICATION, mBuilder.build());
         }
     }
 }

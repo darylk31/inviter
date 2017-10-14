@@ -63,13 +63,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
@@ -77,6 +70,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
@@ -85,7 +85,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
@@ -100,10 +99,10 @@
     <orderEntry type="library" exported="" name="support-core-ui-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-media-compat-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-solver-1.1.0-beta3" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="support-core-utils-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="constraint-layout-solver-1.1.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="firebase-messaging-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="rxjava-2.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="multidex-instrumentation-1.0.1" level="project" />
@@ -118,16 +117,16 @@
     <orderEntry type="library" exported="" name="firebase-storage-common-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-places-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="firebase-ui-database-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="android-image-cropper-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="android-image-cropper-2.5.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="constraint-layout-1.1.0-beta3" level="project" />
     <orderEntry type="library" exported="" name="play-services-auth-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="1_common-1.0.0-alpha8" level="project" />
     <orderEntry type="library" exported="" name="gson-2.8.1" level="project" />
     <orderEntry type="library" exported="" name="compressor-2.1.0" level="project" />
     <orderEntry type="library" exported="" name="extensions-1.0.0-alpha8" level="project" />
-    <orderEntry type="library" exported="" name="constraint-layout-1.1.0-beta1" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="exifinterface-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-11.0.4" level="project" />
