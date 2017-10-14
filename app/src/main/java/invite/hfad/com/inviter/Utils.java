@@ -1,5 +1,7 @@
 package invite.hfad.com.inviter;
 
+import android.net.ConnectivityManager;
+
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
@@ -37,6 +39,7 @@ public class Utils {
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";
     public static final String EVENT_ADMIN = "Admins";
+    public static final String EVENT_PHOTO = "photoUrl";
     public static final String EVENT_ATTENDEE = "Attendee";
     public static final String EVENT_STARTDATE = "startDate";
     public static final String EVENT_TITLE = "event_name";

@@ -3,19 +3,31 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contacts_cardview"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_margin="5dp">
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="0dp"
+    card_view:contentPadding="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/home_chat_ImageView"
-            android:layout_width="85dp"
-            android:layout_height="85dp">
-        </de.hdodenhof.circleimageview.CircleImageView>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/home_chat_ImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="3dp"
+                android:drawingCacheQuality="auto"></de.hdodenhof.circleimageview.CircleImageView>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -26,46 +38,50 @@
                 android:id="@+id/home_chat_unread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12dp"
                 android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:textSize="12dp" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/rlDateText"
-                android:layout_toEndOf="@+id/rlDateText"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:orientation="vertical"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
+                android:layout_marginLeft="3dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
 
                 <TextView
                     android:id="@+id/home_event_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
-                    android:textSize="20dp" />
+                    android:textStyle="bold"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/home_event_last_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:maxLines="1"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="16dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/home_event_last_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
                     android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:textColor="@color/colorAccent"
                     android:textSize="12dp" />
+
 
             </LinearLayout>
         </RelativeLayout>

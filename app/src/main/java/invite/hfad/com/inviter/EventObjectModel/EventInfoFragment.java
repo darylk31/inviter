@@ -30,6 +30,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -146,23 +150,27 @@ public class EventInfoFragment extends Fragment {
 
     private void setEventPicture() {
         final ImageView EventPictureView = view.findViewById(R.id.event_image);
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
-                .child("events/" + id + ".jpg");
-        storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+        Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_PHOTO)
+                .addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    String url = dataSnapshot.getValue().toString();
                     Glide.with(EventInfoFragment.this)
-                            .load(task.getResult())
+                            .load(url)
                             .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                             .into(EventPictureView);
                 }
-                else
+                else {
                     Glide.with(EventInfoFragment.this)
-                        .load(R.drawable.event_camera)
+                            .load(R.drawable.event_camera)
                             .dontAnimate()
                             .into(EventPictureView);
+                }
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         EventPictureView.setOnClickListener(new View.OnClickListener() {
@@ -214,14 +222,20 @@ public class EventInfoFragment extends Fragment {
 
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference();
-                    UploadTask uploadtask = storageRef.child("events/" + id + ".jpg").putBytes(photoByteArray);
+                    final UploadTask uploadtask = storageRef.child("events/" + id + ".jpg").putBytes(photoByteArray);
                     uploadtask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @SuppressWarnings("VisibleForTests")
                         @Override
                         public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                            setEventPicture();
-                            Toast.makeText(getActivity().getApplicationContext(), "Profile updated!", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id)
+                                    .child(Utils.EVENT_PHOTO).setValue(taskSnapshot.getDownloadUrl().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    setEventPicture();
+                                    Toast.makeText(getActivity().getApplicationContext(), "Event picture updated!", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            });
                         }
                     });
                 } catch (IOException e) {

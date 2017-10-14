@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -73,13 +75,12 @@ public class HomeChatFragment extends Fragment {
                 .child(Utils.USER_EVENTS).orderByChild(Utils.EVENT_LAST_MODIFIED).limitToFirst(MAX_NUMBER_OF_NOTIFICATION_TAB);
         userEventQuery.keepSynced(true);
         userEventRef = Utils.getDatabase().getReference().child("Users").child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS);
-
+        downloadChats();
         return mainView;
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
+
+    public void downloadChats(){
         context = getContext();
 
         FirebaseRecyclerAdapter<UserEvents, HomeChatViewHolder> homeChatRecylerAdapter = new FirebaseRecyclerAdapter<UserEvents, HomeChatViewHolder>(
@@ -103,18 +104,6 @@ public class HomeChatFragment extends Fragment {
                         if (dataSnapshot.exists()) {
                             Event eventSnapshot = dataSnapshot.getValue(Event.class);
                             viewHolder.setEventName(eventSnapshot.getEvent_name());
-                            StorageReference storageRef = FirebaseStorage.getInstance().getReference()
-                                    .child("events/" + eventID + ".jpg");
-                            storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        viewHolder.setPicture(task.getResult(), context);
-                                    } else {
-                                        viewHolder.setPicture(null, context);
-                                    }
-                                }
-                            });
                         }
                         else {
                             userEventRef.child(eventID).removeValue();
@@ -122,6 +111,24 @@ public class HomeChatFragment extends Fragment {
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
+                });
+
+                eventTableRef.child(eventID).child(Utils.EVENT_PHOTO).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            String url = dataSnapshot.getValue().toString();
+                            viewHolder.setPicture(url, context);
+                        }
+                        else {
+                            viewHolder.setPicture(null, context);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
                 });
 
                 eventTableRef.child(eventID).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -139,12 +146,14 @@ public class HomeChatFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            for (DataSnapshot message_snapshot: dataSnapshot.getChildren()) {
+                            for (DataSnapshot message_snapshot : dataSnapshot.getChildren()) {
                                 FriendlyMessage message = message_snapshot.getValue(FriendlyMessage.class);
                                 viewHolder.setLastMessage(message.getDisplayname() + ": " + message.getText());
                             }
                         }
-                    }
+                        else
+                            {viewHolder.setLastMessage("Created on: " + event.getLast_modified());}
+                        }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -175,8 +184,7 @@ public class HomeChatFragment extends Fragment {
             super(itemView);
             cardView = itemView;
         }
-
-        public void setPicture(Uri url, Context context){
+        public void setPicture(String url, Context context){
             CircleImageView imageView = cardView.findViewById(R.id.home_chat_ImageView);
 
             if (url == null){
@@ -189,9 +197,9 @@ public class HomeChatFragment extends Fragment {
             else
             Glide.with(context)
                         .load(url)
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(imageView);
             }
+
 
 
         public void setEventName(String name){
