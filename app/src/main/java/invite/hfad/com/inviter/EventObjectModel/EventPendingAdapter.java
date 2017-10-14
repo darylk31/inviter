@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter.EventObjectModel;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +51,7 @@ public class EventPendingAdapter extends RecyclerView.Adapter<EventPendingAdapte
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventViewPager) context, userArrayList.get(position).getUsername());
+                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventMembersActivity) context, userArrayList.get(position).getUsername());
                 profileDialogBox.show();
             }
         });

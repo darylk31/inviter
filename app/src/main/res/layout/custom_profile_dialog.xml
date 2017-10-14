@@ -56,6 +56,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/profile_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profile_dialog_header"
@@ -71,7 +72,6 @@
             android:elevation="1dp"
             android:fontFamily="sans-serif"
             android:visibility="gone"
-
             android:text="@string/messenger_button_text" />
 
         <Button

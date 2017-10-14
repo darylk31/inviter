@@ -13,10 +13,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -136,14 +138,32 @@ public class CreateEvent extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String title = titleDisplay.getText().toString().trim();
+                if(titleDisplay.getText().toString().trim().equalsIgnoreCase("")){
+                    titleDisplay.setError("Missing event name.");
+                    return;
+                }
                 String description = descriptionDisplay.getText().toString().trim();
                 String date = startDateData + " " + startTimeData;
+                try {
+
+                    if (new SimpleDateFormat("yyyy-MM-dd").parse(startDateData).before(yesterday())) {
+                        Toast.makeText(getApplicationContext(), "Date has passed.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location, Utils.getCurrentDate());
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);
             }
         });
+    }
+    private Date yesterday() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return cal.getTime();
     }
 
     public void setUpGoogleLocation() {

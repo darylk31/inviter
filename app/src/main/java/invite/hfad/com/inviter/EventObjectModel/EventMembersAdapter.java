@@ -61,7 +61,7 @@ public class EventMembersAdapter extends RecyclerView.Adapter<EventMembersAdapte
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventViewPager) context, user_list.get(position).getUsername());
+                ProfileDialogBox profileDialogBox = new ProfileDialogBox((EventMembersActivity) context, user_list.get(position).getUsername());
                 profileDialogBox.show();
             }
         });

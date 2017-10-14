@@ -98,6 +98,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getActivity().getApplicationContext(),"2",Toast.LENGTH_SHORT).show();
+                
             }
         });
         leave_event.setOnClickListener(new View.OnClickListener() {
