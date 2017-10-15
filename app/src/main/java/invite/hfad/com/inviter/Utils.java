@@ -39,7 +39,6 @@ public class Utils {
 
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";
-    public static final String EVENT_ADMIN = "Admins";
     public static final String EVENT_PHOTO = "photoUrl";
     public static final String EVENT_ATTENDEE = "Attendee";
     public static final String EVENT_STARTDATE = "startDate";
@@ -48,6 +47,7 @@ public class Utils {
     public static final String EVENT_LOCATION = "location";
     public static final String EVENT_LAST_MODIFIED = "last_modified";
     public static final String EVENT_READ_MESSAGES = "read_messages";
+    public static final String EVENT_CREATOR = "creator";
     public static final String EVENT_ID = "eventID";
     public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
 

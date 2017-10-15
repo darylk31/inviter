@@ -7,15 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +32,17 @@ import invite.hfad.com.inviter.Utils;
  */
 public class EventEditAdminActivity extends AppCompatActivity {
 
+    //Only available to admins and creator.
+
 
     private RecyclerView recyclerView;
     private Query attendeeQuery;
     private DatabaseReference attendeeRef;
     private DatabaseReference userRef;
     private static Context context;
+    private String eventID;
+    private Boolean isCreator;
+    private String creatorUsername;
 
 
     @Override
@@ -46,11 +51,11 @@ public class EventEditAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_edit_admin);
         recyclerView = findViewById(R.id.edit_admin_recycler);
         context = getApplicationContext();
-        String eventID = getIntent().getStringExtra("eventID");
+        eventID = getIntent().getStringExtra("eventID");
         attendeeQuery = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(eventID).child(Utils.EVENT_ATTENDEE);
         attendeeRef = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(eventID).child(Utils.EVENT_ATTENDEE);
         userRef = Utils.getDatabase().getReference().child(Utils.USER);
-
+        checkCreator();
     }
 
     @Override
@@ -59,6 +64,26 @@ public class EventEditAdminActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         getAttendees();
+    }
+
+    public void checkCreator(){
+        Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(eventID).child(Utils.EVENT_CREATOR).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        creatorUsername = dataSnapshot.getValue(String.class);
+                        if (creatorUsername.equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
+                            isCreator = true;
+                        } else
+                            isCreator = false;
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
+
     }
 
     public void getAttendees(){
@@ -71,8 +96,8 @@ public class EventEditAdminActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final EditAdminViewHolder viewHolder, Boolean model, int position) {
 
-                String username = this.getRef(position).getKey();
-                viewHolder.setSwitch(model);
+                final String username = this.getRef(position).getKey();
+                viewHolder.setCheckBox(model);
 
                 userRef.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -86,15 +111,27 @@ public class EventEditAdminActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {}
                 });
 
-                viewHolder.admin_switch.setOnClickListener(new View.OnClickListener() {
+                viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(viewHolder.admin_switch.isChecked()){
-                            Toast.makeText(context, "You cannot remove an admin.", Toast.LENGTH_SHORT);
-                        } else{
-                            viewHolder.admin_switch.setChecked(true);
-                            Toast.makeText(context, viewHolder.name + " is now an admin.", Toast.LENGTH_SHORT);
+                        if (viewHolder.admin_checkBox.isChecked()){
+                            if (!isCreator){
+                            Toast.makeText(context, "Only the event creator can remove admins.", Toast.LENGTH_SHORT).show();
+                            } else{
+                                if (username.equals(creatorUsername)) {
+                                    Toast.makeText(context, "Creator has to be an admin.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    viewHolder.setCheckBox(false);
+                                    Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(eventID).child(Utils.EVENT_ATTENDEE)
+                                            .child(username).setValue(false);
+                                }
+                            }
                         }
+                        else{
+                            viewHolder.setCheckBox(true);
+                            Toast.makeText(context, username + " is now an admin.", Toast.LENGTH_SHORT).show();
+                            Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(eventID).child(Utils.EVENT_ATTENDEE)
+                                .child(username).setValue(true);}
                     }
                 });
             }
@@ -105,13 +142,13 @@ public class EventEditAdminActivity extends AppCompatActivity {
     public static class EditAdminViewHolder extends RecyclerView.ViewHolder {
 
         View cardView;
-        Switch admin_switch;
+        CheckBox admin_checkBox;
         TextView name;
 
         public EditAdminViewHolder(View itemView) {
             super(itemView);
             cardView = itemView;
-            admin_switch = cardView.findViewById(R.id.edit_admin_switch);
+            admin_checkBox = cardView.findViewById(R.id.edit_admin_checkBox);
             name = cardView.findViewById(R.id.tv_eventMembersName);
 
         }
@@ -120,8 +157,8 @@ public class EventEditAdminActivity extends AppCompatActivity {
             name.setText(username);
         }
 
-        public void setSwitch(Boolean admin){
-            admin_switch.setChecked(admin);
+        public void setCheckBox(Boolean admin){
+            admin_checkBox.setChecked(admin);
         }
 
         public void setPicture(String url){

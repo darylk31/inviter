@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp">
 
@@ -31,17 +32,19 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@+id/civ_eventMembers"
                 android:layout_toRightOf="@+id/civ_eventMembers"
-                android:layout_toLeftOf="@+id/edit_admin_switch"
+                android:layout_toLeftOf="@+id/edit_admin_checkBox"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="15dp" />
 
-            <Switch
-                android:id="@+id/edit_admin_switch"
+            <CheckBox
+                android:id="@+id/edit_admin_checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_centerVertical="true"
+                android:clickable="false"
+                app:buttonTint="@android:color/holo_blue_light" />
 
         </RelativeLayout>
 

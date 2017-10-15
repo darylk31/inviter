@@ -1,5 +1,6 @@
 package invite.hfad.com.inviter.EventObjectModel;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,15 +8,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.Utils;
@@ -26,67 +33,112 @@ public class EventMembersFragment extends Fragment {
     private String id;
     private String creator;
     private RecyclerView attendee_recycler;
-
+    private View mainView;
+    private DatabaseReference eventTableRef;
+    private Query attendeeRef;
+    private static Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         id = getArguments().getString("event_id");
-        return inflater.inflate(R.layout.fragment_event_members, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        attendee_recycler = (RecyclerView) getView().findViewById(R.id.eventAttendees_recycler);
+        mainView = inflater.inflate(R.layout.fragment_event_members, container, false);
+        attendee_recycler = mainView.findViewById(R.id.eventAttendees_recycler);
         attendee_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        final ArrayList<String> adminId = new ArrayList<>();
-        final ArrayList<String> acceptedId = new ArrayList<>();
-        DatabaseReference event_ref = Utils.getDatabase().getReference();
-        DatabaseReference attendee = event_ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE);
-        attendee.addListenerForSingleValueEvent(new ValueEventListener() {
+        eventTableRef = Utils.getDatabase().getReference().child("Events").child(id);
+        eventTableRef.child(Utils.EVENT_CREATOR).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (snapshot.getValue(boolean.class)) {
-                            adminId.add(snapshot.getKey());
-                        } else
-                            acceptedId.add(snapshot.getKey());
-                    }
-                populateAttendee(adminId, acceptedId);
+                creator = dataSnapshot.getValue(String.class);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        attendeeRef = eventTableRef.child(Utils.EVENT_ATTENDEE).orderByValue().startAt(true);
+        context = getContext();
+        return mainView;
     }
 
-    private void populateAttendee(ArrayList<String> admin_array, ArrayList<String> attendee_array){
-        DatabaseReference databaseReference = Utils.getDatabase().getReference();
-        final int admin_size = admin_array.size();
-        admin_array.addAll(attendee_array);
-        final ArrayList<User> allAttendee_Users = new ArrayList<>();
-        for (int i = 0; i < admin_array.size(); i++) {
-            databaseReference.child(Utils.USER).child(admin_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Boolean, EventMemberViewHolder> eventMembersAdapter = new FirebaseRecyclerAdapter<Boolean, EventMemberViewHolder>(
+                Boolean.class,
+                R.layout.member_list_item,
+                EventMemberViewHolder.class,
+                attendeeRef) {
+            @Override
+            protected void populateViewHolder(final EventMemberViewHolder viewHolder, final Boolean admin, int position) {
+
+                final String username = this.getRef(position).getKey();
+
+                Utils.getDatabase().getReference().child(Utils.USER).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        allAttendee_Users.add(user);
+                        if (username.equals(creator)){
+                            viewHolder.setName(user.getDisplayname() + " (Creator)");
+                        } else {
+                            if (admin){
+                                viewHolder.setName(user.getDisplayname() + " (Admin)");
+                            } else{
+                                viewHolder.setName(user.getDisplayname());
+                            }
+                        }
+                        viewHolder.setPicture(user.getPhotoUrl());
                     }
-                    EventMembersAdapter adapter = new EventMembersAdapter(allAttendee_Users, admin_size, getContext());
-                    attendee_recycler.setAdapter(adapter);
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+                viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ProfileDialogBox profileDialogBox = new ProfileDialogBox(context, username);
+                        profileDialogBox.show();
+                    }
+                });
+            }
+        };
+
+        attendee_recycler.setAdapter(eventMembersAdapter);
+    }
+
+    public static class EventMemberViewHolder extends RecyclerView.ViewHolder{
+
+        View cardView;
+        TextView displayname;
+        CircleImageView imageView;
+
+        public EventMemberViewHolder(View itemView){
+            super(itemView);
+            cardView = itemView;
+            displayname = cardView.findViewById(R.id.tv_eventMembersName);
+            imageView = cardView.findViewById(R.id.civ_eventMembers);
+        }
+
+        public void setPicture(String url){
+            if (url == null) {
+                Glide.with(context)
+                        .load(R.drawable.profile_image)
+                        .into(imageView);
+            }
+            else {
+                Glide.with(context)
+                        .load(url)
+                        .into(imageView);
+            }
+
+        }
+
+        public void setName(String name){
+            displayname.setText(name);
         }
     }
-
 }
 
 

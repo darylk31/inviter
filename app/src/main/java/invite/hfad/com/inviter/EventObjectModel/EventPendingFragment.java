@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.Utils;
@@ -27,60 +29,57 @@ public class EventPendingFragment extends Fragment {
 
     private String id;
     private RecyclerView pending_recycler;
+    private View mainView;
+    private DatabaseReference eventPendingRef;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         id = getArguments().getString("event_id");
-        return inflater.inflate(R.layout.fragment_event_pending, container, false);
+        mainView = inflater.inflate(R.layout.fragment_event_pending, container, false);
+        pending_recycler = mainView.findViewById(R.id.eventPending_recycler);
+        pending_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventPendingRef = Utils.getDatabase().getReference().child("Events").child(id).child(Utils.INVITEDID);
+        context = getContext();
+        return mainView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        pending_recycler = (RecyclerView) getView().findViewById(R.id.eventPending_recycler);
-        pending_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        final ArrayList<String> pendingId = new ArrayList<>();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference pending_ref = ref.child(Utils.EVENT_DATABASE).child(id).child(Utils.INVITEDID);
-        pending_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseRecyclerAdapter<Boolean, EventMembersFragment.EventMemberViewHolder> eventMembersAdapter = new FirebaseRecyclerAdapter<Boolean, EventMembersFragment.EventMemberViewHolder>(
+                Boolean.class,
+                R.layout.member_list_item,
+                EventMembersFragment.EventMemberViewHolder.class,
+                eventPendingRef) {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists())
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        pendingId.add(snapshot.getKey());
-                    }
-                populatePending(pendingId);
-            }
+            protected void populateViewHolder(final EventMembersFragment.EventMemberViewHolder viewHolder, final Boolean admin, int position) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
+                final String username = this.getRef(position).getKey();
 
-        private void populatePending(ArrayList<String> pending_array) {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-            final ArrayList<User> allPending_Users = new ArrayList<>();
-            for (int i = 0; i < pending_array.size(); i++) {
-                databaseReference.child(Utils.USER).child(pending_array.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                Utils.getDatabase().getReference().child(Utils.USER).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            User user = dataSnapshot.getValue(User.class);
-                            allPending_Users.add(user);
-                        }
-                        EventPendingAdapter adapter = new EventPendingAdapter(allPending_Users, getContext());
-                        pending_recycler.setAdapter(adapter);
+                        User user = dataSnapshot.getValue(User.class);
+                        viewHolder.setName(user.getDisplayname());
+                        viewHolder.setPicture(user.getPhotoUrl());
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
 
+                viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ProfileDialogBox profileDialogBox = new ProfileDialogBox(context, username);
+                        profileDialogBox.show();
                     }
                 });
-            }}
-
-
+            }
+        };
+        pending_recycler.setAdapter(eventMembersAdapter);
     }
+}

@@ -16,6 +16,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
+import invite.hfad.com.inviter.Utils;
 
 /**
  * Created by Daryl on 8/15/2017.
@@ -27,14 +28,17 @@ public class EventMembersAdapter extends RecyclerView.Adapter<EventMembersAdapte
     private ArrayList<User> user_list;
     private int admin_num;
     private Context context;
+    private String creator;
 
 
 
     public EventMembersAdapter(ArrayList<User> user_list,
                                int admin_num,
+                               String creator,
                                Context context){
         this.user_list = user_list;
         this.admin_num = admin_num;
+        this.creator = creator;
         this.context = context;
     }
 
@@ -47,8 +51,8 @@ public class EventMembersAdapter extends RecyclerView.Adapter<EventMembersAdapte
     @Override
     public void onBindViewHolder(EventMembersAdapter.ViewHolder holder, final int position) {
         final CardView cardView = holder.cardView;
-        TextView displayname = (TextView) cardView.findViewById(R.id.tv_eventMembersName);
-        CircleImageView imageView = (CircleImageView) cardView.findViewById(R.id.civ_eventMembers);
+        TextView displayname = cardView.findViewById(R.id.tv_eventMembersName);
+        CircleImageView imageView = cardView.findViewById(R.id.civ_eventMembers);
         if (position <= admin_num - 1) {
             displayname.setText(user_list.get(position).getDisplayname() + " (Admin)");}
         else {
