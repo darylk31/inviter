@@ -3,39 +3,24 @@ package invite.hfad.com.inviter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,8 +43,9 @@ public class HomeChatFragment extends Fragment {
     private DatabaseReference eventTableRef;
     private DatabaseReference userEventRef;
     private Context context;
-    private int MAX_NUMBER_OF_NOTIFICATION_TAB = 12;
-
+    private int MAX_NUMBER_OF_NOTIFICATION_TAB = 10;
+    private int CurrentPage = 1;
+    private FirebaseRecyclerAdapter homeChatRecyclerAdapter;
 
     public HomeChatFragment() {
     }
@@ -71,21 +57,25 @@ public class HomeChatFragment extends Fragment {
         mainView = inflater.inflate(R.layout.fragment_home_chat, container, false);
         chatRecycler = mainView.findViewById(R.id.home_chat_recycler);
         chatRecycler.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         chatRecycler.setLayoutManager(linearLayoutManager);
-
         auth = FirebaseAuth.getInstance();
         eventTableRef = Utils.getDatabase().getReference().child("Events");
         userEventQuery = Utils.getDatabase().getReference().child("Users").child(auth.getCurrentUser().getDisplayName())
-                .child(Utils.USER_EVENTS).orderByChild(Utils.EVENT_LAST_MODIFIED).limitToFirst(MAX_NUMBER_OF_NOTIFICATION_TAB);
+                .child(Utils.USER_EVENTS).orderByChild(Utils.EVENT_LAST_MODIFIED).limitToLast(MAX_NUMBER_OF_NOTIFICATION_TAB * CurrentPage);
         userEventQuery.keepSynced(true);
         userEventRef = Utils.getDatabase().getReference().child("Users").child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS);
-        downloadChats();
+        //downloadChats();
         return mainView;
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        downloadChats();
+    }
 
     public void downloadChats(){
         context = getContext();
@@ -208,9 +198,9 @@ public class HomeChatFragment extends Fragment {
 
             }
         };
-
         chatRecycler.setAdapter(homeChatRecylerAdapter);
     }
+
 
     public static class HomeChatViewHolder extends RecyclerView.ViewHolder{
 

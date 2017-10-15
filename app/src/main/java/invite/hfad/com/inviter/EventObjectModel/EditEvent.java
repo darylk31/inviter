@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.FriendlyMessage;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -173,6 +174,14 @@ public class EditEvent extends AppCompatActivity {
 
                 if(event.getLocation() != null)
                     mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LOCATION).setValue(event.getLocation());
+
+                if(event.getLast_modified() != null)
+                    mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+
+                String friendlyMessageId = mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.CHAT).push().getKey();
+                FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,"Event updated",
+                        Utils.APP, event.getPhotoUrl(),Utils.getCurrentDate(), null,Utils.APP);
+                mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
 
                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();

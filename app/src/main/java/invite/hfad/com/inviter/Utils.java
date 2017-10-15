@@ -16,6 +16,8 @@ import java.util.Date;
 public class Utils {
 
     public static final String APP_PACKAGE = "invite.hfad.com.inviter";
+    public static final String APP = "app";
+
 
     public static final String INBOX = "Inbox";
     public static final String FRIEND_REQUEST = "Friend_Request";

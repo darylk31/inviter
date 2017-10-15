@@ -275,8 +275,13 @@ public class EventChatFragment extends Fragment {
                 //If it's my message
                 Drawable otherBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1);
                 Drawable myBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex2);
+                Drawable systemBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex3);
                 viewHolder.messageTextView.setTextColor(Color.WHITE);
-                if (friendlyMessage.getName().equals(user.getUsername())) {
+                if(friendlyMessage.getName().equals(Utils.APP)){
+                    viewHolder.messengerTextView.setVisibility(View.GONE);
+                    viewHolder.messageTextView.setBackground(systemBubble);
+                }
+                else if (friendlyMessage.getName().equals(user.getUsername())) {
                     viewHolder.messageTextView.setBackground(myBubble);
                 } else {
                     viewHolder.messageTextView.setBackground(otherBubble);

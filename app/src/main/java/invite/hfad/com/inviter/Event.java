@@ -16,6 +16,7 @@ public class Event implements Parcelable{
     private String location;
     private String creator;
     private String last_modified;
+    private String photoUrl;
 
     private final int PARAMETERS = 8;
 
@@ -28,6 +29,24 @@ public class Event implements Parcelable{
                   String creator,
                   String location,
                   String last_modified) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.event_name = event_name;
+        this.description = description;
+        this.creator = creator;
+        this.location = location;
+        this.last_modified = last_modified;
+        //chat object
+    }
+
+    public Event (String startDate,
+                  String endDate,
+                  String event_name,
+                  String description,
+                  String creator,
+                  String location,
+                  String last_modified,
+                  String photoUrl) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.event_name = event_name;
@@ -144,5 +163,13 @@ public class Event implements Parcelable{
 
     public void setLast_modified(String last_modified) {
         this.last_modified = last_modified;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
