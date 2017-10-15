@@ -26,7 +26,7 @@ import invite.hfad.com.inviter.UserDatabaseHelper;
 public class EventSelectContacts extends AppCompatActivity {
 
     private Event event;
-    private SelectContactsAdapter adapter;
+    private EventSelectContactsAdapter adapter;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
     private SQLiteDatabase db;
@@ -38,10 +38,10 @@ public class EventSelectContacts extends AppCompatActivity {
         mDatabase = Utils.getDatabase().getReference();
         auth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_event_select_contacts);
-        TextView selected_list = (TextView) findViewById(R.id.tvSelectedContacts);
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.selectfriends_recycler);
+        TextView selected_list = findViewById(R.id.tvSelectedContacts);
+        RecyclerView recyclerView = findViewById(R.id.selectfriends_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new SelectContactsAdapter(getApplicationContext(), selected_list);
+        adapter = new EventSelectContactsAdapter(getApplicationContext(), selected_list);
         recyclerView.setAdapter(adapter);
         event = getIntent().getParcelableExtra("myEvent");
     }

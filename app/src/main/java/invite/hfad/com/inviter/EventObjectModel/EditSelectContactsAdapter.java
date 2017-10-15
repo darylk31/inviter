@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
     TextView selected_list;
     ArrayList<String> selected_names;
     ArrayList<String> remove_list;
+    String names;
 
 
 
@@ -47,7 +49,7 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY USERNAME;", null);
+            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY LOWER(DISPLAY);", null);
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
@@ -90,8 +92,7 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
     @Override
     public void onBindViewHolder(final EditSelectContactsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
-        final ImageView selected = (ImageView) cardView.findViewById(R.id.ivSelected);
-        selected.setVisibility(View.INVISIBLE);
+        final CheckBox checkBox = cardView.findViewById(R.id.selectfriend_checkbox);
         final TextView dname = (TextView) cardView.findViewById(R.id.tvFriendsDisplayName);
         final TextView uname = (TextView) cardView.findViewById(R.id.tvFriendsUserName);
         dname.setText(displayname.get(position));
@@ -100,25 +101,26 @@ public class EditSelectContactsAdapter extends RecyclerView.Adapter<EditSelectCo
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selected.getVisibility() == View.INVISIBLE){
-                    selected.setVisibility(View.VISIBLE);
+                if (!checkBox.isChecked()){
+                    checkBox.setChecked(true);
                     invited.add(uname.getText().toString());
                     selected_names.add(dname.getText().toString());
-                    //invited.add(username.get(holder.getAdapterPosition()));
-                    //selected_names.add(displayname.get(holder.getAdapterPosition()));
-                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
+                    names = TextUtils.join(", ", Arrays.asList(selected_names));
+                    names = names.substring(1, names.length()-1);
+                    selected_list.setText(names);
                 }
                 else {
-                    selected.setVisibility(View.INVISIBLE);
+                    checkBox.setChecked(false);
                     invited.remove(uname.getText().toString());
                     selected_names.remove(dname.getText().toString());
-                    //invited.remove(username[holder.getAdapterPosition()]);
-                    //selected_names.remove(displayname[holder.getAdapterPosition()]);
                     if (selected_names.isEmpty()){
                         selected_list.setText("Just Me");
                     }
-                    else
-                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
+                    else {
+                        names = TextUtils.join(", ", Arrays.asList(selected_names));
+                        names = names.substring(1, names.length() - 1);
+                        selected_list.setText(names);
+                    }
                 }
             }
         });
