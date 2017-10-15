@@ -210,6 +210,7 @@ public class HomeChatFragment extends Fragment {
             super(itemView);
             cardView = itemView;
         }
+
         public void setPicture(String url, Context context){
             CircleImageView imageView = cardView.findViewById(R.id.home_chat_ImageView);
 

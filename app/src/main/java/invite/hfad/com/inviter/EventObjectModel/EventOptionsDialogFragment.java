@@ -97,8 +97,9 @@ public class EventOptionsDialogFragment extends DialogFragment {
         edit_admin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity().getApplicationContext(),"2",Toast.LENGTH_SHORT).show();
-                
+                Intent intent = new Intent(rootView.getContext(),EventEditAdminActivity.class);
+                intent.putExtra("eventID", event_id);
+                startActivity(intent);
             }
         });
         leave_event.setOnClickListener(new View.OnClickListener() {

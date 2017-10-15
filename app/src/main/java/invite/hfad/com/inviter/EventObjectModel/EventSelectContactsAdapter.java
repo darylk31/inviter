@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,7 @@ import invite.hfad.com.inviter.UserDatabaseHelper;
  * Created by Daryl on 6/14/2017.
  */
 
-public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAdapter.ViewHolder> {
+public class EventSelectContactsAdapter extends RecyclerView.Adapter<EventSelectContactsAdapter.ViewHolder> {
 
     Cursor cursor;
     SQLiteDatabase db;
@@ -36,15 +37,16 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
     ArrayList<String> invited;
     TextView selected_list;
     ArrayList<String> selected_names;
+    String names;
 
 
 
-    public SelectContactsAdapter(Context context, TextView list){
+    public EventSelectContactsAdapter(Context context, TextView list){
         try {
             this.context = context;
             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
             SQLiteDatabase db = databaseHelper.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY USERNAME;", null);
+            Cursor cursor = db.rawQuery("SELECT * FROM FRIENDS WHERE ACCEPT=1 ORDER BY LOWER(DISPLAY);", null);
             this.cursor = cursor;
             this.db = db;
             if (cursor == null){
@@ -79,34 +81,38 @@ public class SelectContactsAdapter extends RecyclerView.Adapter<SelectContactsAd
     }
 
     @Override
-    public SelectContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventSelectContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cv = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.selectfriends_list_item, parent, false);
         return new ViewHolder(cv);
     }
 
     @Override
-    public void onBindViewHolder(final SelectContactsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final EventSelectContactsAdapter.ViewHolder holder, int position) {
         final CardView cardView = holder.cardView;
-        final ImageView selected = (ImageView) cardView.findViewById(R.id.ivSelected);
-        selected.setVisibility(View.INVISIBLE);
+        final CheckBox checkBox = cardView.findViewById(R.id.selectfriend_checkbox);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (selected.getVisibility() == View.INVISIBLE){
-                    selected.setVisibility(View.VISIBLE);
+                if (!checkBox.isChecked()){
+                    checkBox.setChecked(true);
                     invited.add(username[holder.getAdapterPosition()]);
                     selected_names.add(username[holder.getAdapterPosition()]);
-                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
+                    names = TextUtils.join(", ", Arrays.asList(selected_names));
+                    names = names.substring(1, names.length()-1);
+                    selected_list.setText(names);
                 }
                 else {
-                    selected.setVisibility(View.INVISIBLE);
+                    checkBox.setChecked(false);
                     invited.remove(username[holder.getAdapterPosition()]);
                     selected_names.remove(username[holder.getAdapterPosition()]);
                     if (selected_names.isEmpty()){
                         selected_list.setText("Just Me");
                     }
-                    else
-                    selected_list.setText(TextUtils.join(", ", Arrays.asList(selected_names)));
+                    else {
+                        names = TextUtils.join(", ", Arrays.asList(selected_names));
+                        names = names.substring(1, names.length() - 1);
+                        selected_list.setText(names);
+                    }
                 }
             }
         });

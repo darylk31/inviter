@@ -89,6 +89,7 @@
             android:name=".EventObjectModel.EditEvent"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity android:name=".EventObjectModel.EventEditAdminActivity"/>
         <activity android:name=".EventObjectModel.EventMembersActivity"/>
         <activity android:name=".Register.RegisterPhoneNumber"/>
         <activity android:name=".EventObjectModel.EditEventSelectContacts" />

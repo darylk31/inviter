@@ -49,8 +49,8 @@ public class EditEventSelectContacts extends AppCompatActivity {
         event_name = getIntent().getStringExtra("event_name");
 
 
-        selected_list = (TextView) findViewById(R.id.tvSelectedContacts);
-        recyclerView = (RecyclerView)findViewById(R.id.selectfriends_recycler);
+        selected_list = findViewById(R.id.tvSelectedContacts);
+        recyclerView = findViewById(R.id.selectfriends_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         remove_attendee();
     }
@@ -81,7 +81,7 @@ public class EditEventSelectContacts extends AppCompatActivity {
         final long[] attendee_count = {0};
         DatabaseReference databaseReference = Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE)
                 .child(event_id).child(Utils.EVENT_ATTENDEE);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists())
