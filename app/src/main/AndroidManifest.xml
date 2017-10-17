@@ -34,7 +34,7 @@
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".Register.ForgotPasswordActivity"/>
         <activity
             android:name=".SettingActivity"
             android:label="Preferences"
