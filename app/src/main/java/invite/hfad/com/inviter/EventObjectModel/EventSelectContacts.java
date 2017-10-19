@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.UserEvents;
 import invite.hfad.com.inviter.Utils;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 
@@ -54,10 +55,9 @@ public class EventSelectContacts extends AppCompatActivity {
         //Set yourself as an admin
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
         //Set event for yourself
-        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(event.getLast_modified());
-        //Set unread messages to 0
-        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_READ_MESSAGES).setValue(0);
-        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_ID).setValue(newKey);
+        UserEvents userEvents = new UserEvents(event.getLast_modified(),0,newKey,Utils.TYPE_EVENT);
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(userEvents);
+
         //Iterate through arraylist
         //Check to see if they're on each others contacts
         //If so add to new event id to event request inbox

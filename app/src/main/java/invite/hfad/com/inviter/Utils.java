@@ -58,6 +58,9 @@ public class Utils {
     public static final String USER_LASTNAME = "lastname";
     public static final String USER_PHONENUMBER = "phonenumber";
 
+    public static final int TYPE_EVENT = 0;
+    public static final int TYPE_CHAT = 1;
+
     private static FirebaseDatabase mDatabase;
 
     public static FirebaseDatabase getDatabase() {
