@@ -9,13 +9,19 @@ public class UserEvents {
     private String last_modified;
     private long read_messages;
     private String eventID;
+    private int type;
+    /*
+    0 = Event
+    1 = Chat
+     */
 
     public UserEvents(){};
 
     public UserEvents(
             String last_modified,
             long read_messages,
-            String eventID)
+            String eventID,
+            int type)
     {
         this.last_modified = last_modified;
         this.read_messages = read_messages;
@@ -43,5 +49,13 @@ public class UserEvents {
 
     public void setEventID(String eventID) {
         this.eventID = eventID;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
