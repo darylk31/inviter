@@ -26,6 +26,7 @@ public class UserEvents {
         this.last_modified = last_modified;
         this.read_messages = read_messages;
         this.eventID = eventID;
+        this.type = type;
     }
     public String getLast_modified() {
         return last_modified;

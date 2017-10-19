@@ -28,6 +28,7 @@ import invite.hfad.com.inviter.Event;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.UserEvents;
 import invite.hfad.com.inviter.Utils;
 
 
@@ -42,6 +43,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
     private Context context;
+    private long read_message = 0;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
@@ -152,10 +154,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()){
-                                    userEventRef.child(Utils.EVENT_READ_MESSAGES).setValue(dataSnapshot.getChildrenCount());
+                                    read_message = dataSnapshot.getChildrenCount();
                                 }
-                                else
-                                    userEventRef.child(Utils.EVENT_READ_MESSAGES).setValue(0);
                             }
 
                             @Override
@@ -166,8 +166,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         eventTableRef.child(Utils.INVITEDID).child(auth.getCurrentUser().getDisplayName()).removeValue();
 
                         //Adds to Users events
-                        userEventRef.child(Utils.EVENT_LAST_MODIFIED).setValue(eventlist.get(pos).getLast_modified());
-                        userEventRef.child(Utils.EVENT_ID).setValue(eventlist.get(pos).getEventId());
+                        UserEvents userEvents = new UserEvents(eventlist.get(pos).getLast_modified(),read_message,eventlist.get(pos).getEventId(),Utils.TYPE_EVENT);
+                        userEventRef.setValue(userEvents);
 
                         //Removes off users inbox
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.EVENT_REQUEST)

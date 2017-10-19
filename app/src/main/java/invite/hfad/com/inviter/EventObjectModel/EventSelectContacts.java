@@ -56,7 +56,7 @@ public class EventSelectContacts extends AppCompatActivity {
         mDatabase.child(Utils.EVENT_DATABASE).child(newKey).child(Utils.EVENT_ATTENDEE).child(auth.getCurrentUser().getDisplayName()).setValue(true);
         //Set event for yourself
         UserEvents userEvents = new UserEvents(event.getLast_modified(),0,newKey,Utils.TYPE_EVENT);
-        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).child(Utils.EVENT_LAST_MODIFIED).setValue(userEvents);
+        mDatabase.child(Utils.USER).child(mDisplayName).child(Utils.USER_EVENTS).child(newKey).setValue(userEvents);
 
         //Iterate through arraylist
         //Check to see if they're on each others contacts
