@@ -62,7 +62,7 @@ public class SearchFriendsAdapter extends RecyclerView.Adapter<SearchFriendsAdap
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfileDialogBox dialogBox = new ProfileDialogBox((ContactsActivity) context, username[holder.getAdapterPosition()] );
+                ProfileDialogBox dialogBox = new ProfileDialogBox(context, username[holder.getAdapterPosition()] );
                 dialogBox.show();
             }
         });
