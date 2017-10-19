@@ -3,6 +3,7 @@ package invite.hfad.com.inviter.DialogBox;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import invite.hfad.com.inviter.ChatActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -61,7 +63,6 @@ public class ProfileDialogBox extends Dialog {
         message = (Button) findViewById(R.id.message_user);
         add_friend = (Button) findViewById(R.id.add_user);
         remove_friend = (Button) findViewById(R.id.unfriend_user);
-
         mDatabase = Utils.getDatabase().getReference();
             mDatabase.child(Utils.USER).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -129,7 +130,24 @@ public class ProfileDialogBox extends Dialog {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),"Work in progress",Toast.LENGTH_SHORT).show();
+                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.CHAT).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            String ChatId = dataSnapshot.getValue().toString();
+                            Intent intent = new Intent(context, ChatActivity.class);
+                            intent.putExtra("chat_id", ChatId);
+                            intent.putExtra("username",username);
+                            context.startActivity(intent);
+                        } else {
+                            //Make a new chat thing.
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
         });
         add_friend.setOnClickListener(new View.OnClickListener() {

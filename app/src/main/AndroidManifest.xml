@@ -60,8 +60,10 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="OPEN_INBOX"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UserAreaActivity"/>
@@ -92,7 +94,7 @@
         <activity android:name=".EventObjectModel.EventEditAdminActivity"/>
         <activity android:name=".EventObjectModel.EventMembersActivity"/>
         <activity android:name=".Register.RegisterPhoneNumber"/>
-        <activity android:name=".EventObjectModel.EditEventSelectContacts" />
+        <activity android:name=".EventObjectModel.EditEventSelectContacts"/>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
 
         <service
@@ -103,7 +105,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
         <service
             android:name=".MyFirebaseInstanceIDService"
             android:enabled="true"
@@ -113,8 +114,8 @@
             </intent-filter>
         </service>
 
-
+        <activity android:name=".ChatActivity">
+        </activity>
     </application>
-
 
 </manifest>
