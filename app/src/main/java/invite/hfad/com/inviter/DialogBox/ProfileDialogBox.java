@@ -25,6 +25,7 @@ import invite.hfad.com.inviter.ChatActivity;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.UserEvents;
 import invite.hfad.com.inviter.Utils;
 
 /**
@@ -42,6 +43,7 @@ public class ProfileDialogBox extends Dialog {
     Button add_friend;
     Button remove_friend;
     LinearLayout button_list;
+    private int read_message = 0;
 
 
     public ProfileDialogBox(Context a, String username){
@@ -130,7 +132,7 @@ public class ProfileDialogBox extends Dialog {
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.CHAT).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.PERSONAL_CHATS).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()){
@@ -140,7 +142,41 @@ public class ProfileDialogBox extends Dialog {
                             intent.putExtra("username",username);
                             context.startActivity(intent);
                         } else {
-                            //Make a new chat thing.
+                            //Make a new chat key
+                            String newKey = mDatabase.child(Utils.EVENT_DATABASE).push().getKey();
+                            //Create Chat
+                            mDatabase.child(Utils.CHAT_DATABASE).child(newKey).child(Utils.CHAT_MEMBERS).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue(true);
+                            mDatabase.child(Utils.CHAT_DATABASE).child(newKey).child(Utils.CHAT_MEMBERS).child(username).setValue(true);
+                            mDatabase.child(Utils.CHAT_DATABASE).child(newKey).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        read_message = (int)dataSnapshot.getChildrenCount();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            //Create UserEvents Chat
+                            UserEvents userEvents = new UserEvents(Utils.getCurrentDate(),read_message,newKey,Utils.TYPE_CHAT);
+                            //Add Chat into User Events
+                            mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(newKey).setValue(userEvents);
+                            //Add Chat into username Events
+                            mDatabase.child(Utils.USER).child(username).child(Utils.USER_EVENTS).child(newKey).setValue(userEvents);
+                            //Add chat username and key to own personal chats
+                            mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.PERSONAL_CHATS).child(username).setValue(newKey);
+                            //Add own name and key to usernames personal chats
+                            mDatabase.child(Utils.USER).child(username).child(Utils.PERSONAL_CHATS).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue(newKey);
+
+                            //Open new Chat Activity
+                            String ChatId = newKey;
+                            Intent intent = new Intent(context, ChatActivity.class);
+                            intent.putExtra("chat_id", ChatId);
+                            intent.putExtra("username",username);
+                            context.startActivity(intent);
                         }
                     }
 

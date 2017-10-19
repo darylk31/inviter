@@ -188,7 +188,7 @@ public class ChatFragment extends Fragment {
                 FriendlyMessage.class,
                 R.layout.item_message,
                 ChatFragment.MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).limitToLast(50)) {
+                mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.CHAT).limitToLast(50)) {
 
             @Override
             protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
@@ -338,7 +338,7 @@ public class ChatFragment extends Fragment {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 };
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(read_listener);
+                mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(read_listener);
             }
         };
 
@@ -375,17 +375,14 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
+                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
                         mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
+                mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
                 mMessageEditText.setText("");
                 //Update event's last update message
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
-                //Update my event last update message
-                //mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
-                //sendNotifications(timeStamp);
+                mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
             }
         });
         //Send Images
@@ -405,7 +402,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void checkForMessageText(){
-        mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
+        mFirebaseDatabaseReference.child(Utils.CHAT_DATABASE).child(id).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.exists()){

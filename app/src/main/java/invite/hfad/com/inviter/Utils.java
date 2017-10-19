@@ -60,6 +60,9 @@ public class Utils {
 
     public static final int TYPE_EVENT = 0;
     public static final int TYPE_CHAT = 1;
+    public static final String PERSONAL_CHATS = "Personal_Chats";
+    public static final String CHAT_DATABASE = "JustChatOnlyNoEventInvolvedCanBePersonalOrGroupMessaging_Database";
+    public static final String CHAT_MEMBERS = "Members";
 
     private static FirebaseDatabase mDatabase;
 
