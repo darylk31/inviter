@@ -224,31 +224,41 @@ public class HomeChatFragment extends Fragment {
                             public void onCancelled(DatabaseError databaseError) {}
                         });
 
+                        chatTableRef.child(eventID).child(Utils.CHAT_MEMBERS).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot member: dataSnapshot.getChildren()){
+                                    if(!member.getKey().equals(auth.getCurrentUser().getDisplayName())){
+                                        chatDisplayName = member.getKey();
+                                        viewHolder.setEventName(chatDisplayName);
+                                        Utils.getDatabase().getReference().child(Utils.USER).child(chatDisplayName)
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        User user = dataSnapshot.getValue(User.class);
+                                                        viewHolder.setPicture(user.getPhotoUrl(), context);}
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {}
+                                                });
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
+
+
+
                         chatTableRef.child(eventID).child(Utils.CHAT).limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
                                     for (DataSnapshot message_snapshot : dataSnapshot.getChildren()) {
                                         FriendlyMessage message = message_snapshot.getValue(FriendlyMessage.class);
-                                        viewHolder.setLastMessage(message.getText());
-                                        chatDisplayName = message.getDisplayname();
-                                        viewHolder.setEventName(chatDisplayName);
-                                        Utils.getDatabase().getReference().child(Utils.USER).child(message.getDisplayname())
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        User user = dataSnapshot.getValue(User.class);
-                                                        viewHolder.setPicture(user.getPhotoUrl(), context);
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-                                                    }
-                                                });
-                                    }
+                                        viewHolder.setLastMessage(message.getText());}
                                 }
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {}
                         });
