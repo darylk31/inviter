@@ -19,7 +19,6 @@ import invite.hfad.com.inviter.Utils;
 public class RegisterUsername extends AppCompatActivity {
 
     private EditText username;
-    private DatabaseReference onlineDataBase;
     private DatabaseReference mDatabase;
     private Bundle bundle;
 
@@ -46,40 +45,23 @@ public class RegisterUsername extends AppCompatActivity {
             return;
         }
 
-        onlineDataBase = Utils.getDatabase().getReference().child(".info/connected");
-        onlineDataBase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        mDatabase.child(Utils.USER).child(username.getText().toString().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-                    mDatabase.child(Utils.USER).child(username.getText().toString().toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (!(dataSnapshot.exists())) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!(dataSnapshot.exists())) {
                                     Intent intent = new Intent(RegisterUsername.this, RegisterEmail.class);
                                     intent.putExtra("firstname", bundle.getString("firstname"));
                                     intent.putExtra("lastname", bundle.getString("lastname"));
                                     intent.putExtra("username", username.getText().toString());
                                     startActivity(intent);
-                                } else {
-                                    Toast.makeText(getApplicationContext(), "Usernames already exists", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
-                } //Not connected
-                else {
-                    Toast.makeText(getApplicationContext(),"Please check your connection.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Usernames already exists", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
-            public void onCancelled(DatabaseError error) {
-                System.err.println("Listener was cancelled");
-            }
-        });
+            public void onCancelled(DatabaseError databaseError) {}
+                        });
     }
 
     private boolean usernameStartWithLetter(String s) {

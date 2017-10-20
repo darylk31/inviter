@@ -20,8 +20,9 @@ import invite.hfad.com.inviter.Inbox.InboxActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    public int CHAT_NOTIFICATION = 001;
-    public int INBOX_NOTIFICATION = 002;
+    public int EVENT_CHAT_NOTIFICATION = 001;
+    public int PERSONAL_CHAT_NOTIFICATION = 002;
+    public int INBOX_NOTIFICATION = 003;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -31,12 +32,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title = null;
         String body = null;
         String eventID = null;
+        String chatEventID = null;
         String tag = null;
         switch (type) {
-            case "Chat":
+            case "EventChat":
                 title = map.get("title").toString();
                 body = map.get("body").toString();
                 eventID = map.get("eventID").toString();
+                break;
+            case "PersonalChat":
+                title = map.get("title").toString();
+                body = map.get("body").toString();
+                chatEventID = map.get("PersonalChatID").toString();
                 break;
             case "EventRequest":
                 SharedPreferences eventPref = getSharedPreferences(Utils.APP_PACKAGE, 0);
@@ -98,8 +105,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             mBuilder.setContentIntent(resultPendingIntent);
 
-            mNotifyMgr.notify(eventID, CHAT_NOTIFICATION, mBuilder.build());
+            mNotifyMgr.notify(eventID, EVENT_CHAT_NOTIFICATION, mBuilder.build());
         }
+        else
+            if(chatEventID != null){
+                Intent chatEventIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                chatEventIntent.putExtra("chat_id", chatEventID);
+                chatEventIntent.putExtra("username", title);
+
+                PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                        getApplicationContext(),
+                        0,
+                        chatEventIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+                mBuilder.setContentIntent(resultPendingIntent);
+                mNotifyMgr.notify(eventID, PERSONAL_CHAT_NOTIFICATION, mBuilder.build());
+
+            }
         else {
             Intent inboxIntent = new Intent(getApplicationContext(), InboxActivity.class);
 

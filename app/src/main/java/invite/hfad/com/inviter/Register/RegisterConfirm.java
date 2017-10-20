@@ -106,12 +106,6 @@ public class RegisterConfirm extends AppCompatActivity {
      * @param v
      */
     public void onNextButton(View v) {
-        onlineDatabase = FirebaseDatabase.getInstance().getReference(".info/connected");
-        onlineDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
                     mDatabase.child(Utils.USER).child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -136,19 +130,10 @@ public class RegisterConfirm extends AppCompatActivity {
                             }
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
+                        public void onCancelled(DatabaseError databaseError) {}
                     });
-                } else {
-                    Toast.makeText(getApplicationContext(), "Please check your connection.", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                System.err.println("Listener was cancelled");
-            }
-        });
     }
+
 
     private void createUser(String e){
         final String emailString = e;

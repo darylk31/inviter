@@ -37,7 +37,7 @@ public class Utils {
     public static final String USER_EVENTS = "Events";
     public static final String USER_ADD_REQUEST = "Add_Request";
     public static final String USER_EVENT_REQUEST = "Event_Request";
-    public static final String USER_TOKEN = "DeviceToken";
+    public static final String USER_TOKEN = "Device_Token";
 
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";
@@ -60,8 +60,8 @@ public class Utils {
 
     public static final int TYPE_EVENT = 0;
     public static final int TYPE_CHAT = 1;
-    public static final String PERSONAL_CHATS = "Personal_Chats";
-    public static final String CHAT_DATABASE = "JustChatOnlyNoEventInvolvedCanBePersonalOrGroupMessaging_Database";
+    public static final String PERSONAL_CHATS = "Personal_Chat";
+    public static final String CHAT_DATABASE = "Personal_Chat";
     public static final String CHAT_MEMBERS = "Members";
 
     private static FirebaseDatabase mDatabase;

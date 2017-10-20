@@ -63,9 +63,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
         this.eventlist = eventlist;
         eventrequests = eventlist.size();
         this.invitedbylist = invitedbylist;
-        System.out.println("InvitedByList: " + invitedbylist);
-        System.out.println("EventList: " + eventlist);
-        System.out.println("FriendList: " + friendlist);
     }
 
     @Override
@@ -188,7 +185,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
                         int pos = holder.getAdapterPosition() - friendrequests;
-                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child("Inbox").child("Event_Request")
+                        mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();
                         Toast.makeText(context, " Event request declined.", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);

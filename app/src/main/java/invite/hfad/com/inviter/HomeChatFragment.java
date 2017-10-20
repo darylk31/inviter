@@ -217,9 +217,10 @@ public class HomeChatFragment extends Fragment {
                         chatTableRef.child(eventID).child(Utils.CHAT).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                viewHolder.setUnread(dataSnapshot.getChildrenCount() - event.getRead_messages());
+                                if (dataSnapshot.exists()){
+                                    viewHolder.setUnread(dataSnapshot.getChildrenCount() - event.getRead_messages());
+                                }
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {}
                         });
