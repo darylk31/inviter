@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,6 +65,11 @@ public class EventInfoFragment extends Fragment {
     private String event_string;
     private View view;
     private TextView event_location;
+    private TextView event_name;
+    private TextView event_date;
+    private TextView event_time;
+    private TextView event_description;
+    private boolean isAttending = true;
 
 
     @Override
@@ -77,49 +83,65 @@ public class EventInfoFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
-        setEventPicture();
-        try {
-            SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
-            SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
-            Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
-            cursor.moveToLast();
-            TextView event_name = (TextView) view.findViewById(R.id.tv_eventpagename);
-            this.event_string = cursor.getString(4);
-            event_name.setText(event_string);
-            TextView event_date = (TextView) view.findViewById(R.id.tv_eventpagedate);
-            TextView event_time = (TextView) view.findViewById(R.id.tv_eventpagetime);
-            String event_day = cursor.getString(2);
-            try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
-                String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-                String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
-                String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
-                event_date.setText(output_month + " " + output_day + ", " + output_year);
-                String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
-                event_time.setText(output_time);
-            } catch (ParseException e) {
-                try {
-                    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
-                    String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-                    String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
-                    String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
-                    event_date.setText(output_month + " " + output_day + ", " + output_year);
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            event_location = (TextView) view.findViewById(R.id.tv_eventpageloc);
-            event_location.setText(cursor.getString(6));
-            TextView event_description = (TextView) view.findViewById(R.id.tv_eventpagedescrip);
-            event_description.setText(cursor.getString(5));
-            cursor.close();
+        event_name = view.findViewById(R.id.tv_eventpagename);
+        event_date = view.findViewById(R.id.tv_eventpagedate);
+        event_time = view.findViewById(R.id.tv_eventpagetime);
+        event_description = view.findViewById(R.id.tv_eventpagedescrip);
+        event_location = view.findViewById(R.id.tv_eventpageloc);
+        SQLiteOpenHelper eventDatabaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
+        SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
+        Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
+        // attending event, therefore showing from SQL database.
+        if (cursor.moveToLast()){
+            showEventInfo(cursor);
             event_db.close();
-
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-            Toast toast = Toast.makeText(this.getContext(), "Error: Event unavailable", Toast.LENGTH_SHORT);
-            toast.show();
         }
+        // visiting as a pending user.
+        else {
+            isAttending = false;
+            Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()){
+                        Toast.makeText(getActivity().getApplicationContext(),"This event has been cancelled.",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getActivity(), UserAreaActivity.class));
+                        Utils.getDatabase().getReference().child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.INBOX)
+                                .child(Utils.USER_EVENT_REQUEST).child(id).removeValue();
+                    }
+                    else {
+                        Event event = dataSnapshot.getValue(Event.class);
+                        event_name.setText(event.getEvent_name());
+                        String event_day = event.getStartDate();
+                        try {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
+                            String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                            String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+                            String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+                            event_date.setText(output_month + " " + output_day + ", " + output_year);
+                            String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
+                            event_time.setText(output_time);
+                        } catch (ParseException e) {
+                            try {
+                                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                                String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                                String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+                                String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+                                event_date.setText(output_month + " " + output_day + ", " + output_year);
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                        event_description.setText(event.getDescription());
+                        event_location.setText(event.getLocation());
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
+
+
+        setEventPicture();
         onEventOptions();
         onInvite();
 
@@ -133,8 +155,7 @@ public class EventInfoFragment extends Fragment {
             }
         });
 
-
-        TextView tv_members = (TextView) view.findViewById(R.id.tv_eventinfomembers);
+        TextView tv_members = view.findViewById(R.id.tv_eventinfomembers);
         tv_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,7 +165,6 @@ public class EventInfoFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         arrowAnimation();
     }
 
@@ -173,28 +193,31 @@ public class EventInfoFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-        EventPictureView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setItems(R.array.Picture_Options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                CropImage.activity()
-                                        .setGuidelines(CropImageView.Guidelines.ON)
-                                        .setAspectRatio(1,1)
-                                        .start(getActivity());
-                                break;
-                            case 1:
-                                break;
+
+        if (isAttending) {
+            EventPictureView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setItems(R.array.Picture_Options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    CropImage.activity()
+                                            .setGuidelines(CropImageView.Guidelines.ON)
+                                            .setAspectRatio(1, 1)
+                                            .start(getActivity());
+                                    break;
+                                case 1:
+                                    break;
+                            }
                         }
-                    }
-                });
-                builder.show();
-            }
-        });
+                    });
+                    builder.show();
+                }
+            });
+        }
     }
 
     @Override
@@ -254,12 +277,14 @@ public class EventInfoFragment extends Fragment {
         getView().findViewById(R.id.tv_eventinfooptions).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventOptionsDialogFragment optionsDialogFragment = new EventOptionsDialogFragment();
-                Bundle args = new Bundle();
-                args.putString("id",id);
-                optionsDialogFragment.setArguments(args);
-                android.app.FragmentManager fm = getActivity().getFragmentManager();
-                optionsDialogFragment.show(fm,"dialog");
+                if (isAttending) {
+                    EventOptionsDialogFragment optionsDialogFragment = new EventOptionsDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putString("id", id);
+                    optionsDialogFragment.setArguments(args);
+                    android.app.FragmentManager fm = getActivity().getFragmentManager();
+                    optionsDialogFragment.show(fm, "dialog");
+                }
             }
         });
     }
@@ -268,11 +293,15 @@ public class EventInfoFragment extends Fragment {
         getView().findViewById(R.id.tv_eventinfoinvite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), EditEventSelectContacts.class)
-                        .putExtra("event_id", id)
-                        .putExtra("event_name", event_string)
-                );
-
+                if (isAttending) {
+                    startActivity(new Intent(getActivity(), EditEventSelectContacts.class)
+                            .putExtra("event_id", id)
+                            .putExtra("event_name", event_string)
+                    );
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Must be attendee to invite more people.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -301,5 +330,38 @@ public class EventInfoFragment extends Fragment {
             }
         });
         arrows.setAnimation(fadeOut);
+    }
+
+    private void showEventInfo(Cursor cursor){
+        event_name = view.findViewById(R.id.tv_eventpagename);
+        this.event_string = cursor.getString(4);
+        event_name.setText(event_string);
+        event_date = view.findViewById(R.id.tv_eventpagedate);
+        event_time = view.findViewById(R.id.tv_eventpagetime);
+        String event_day = cursor.getString(2);
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
+            String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+            String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+            String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+            event_date.setText(output_month + " " + output_day + ", " + output_year);
+            String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
+            event_time.setText(output_time);
+        } catch (ParseException e) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
+                String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
+                String output_month = new SimpleDateFormat("MMM", Locale.ENGLISH).format(date);
+                String output_year = new SimpleDateFormat("yyyy", Locale.ENGLISH).format(date);
+                event_date.setText(output_month + " " + output_day + ", " + output_year);
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
+        }
+        event_location = view.findViewById(R.id.tv_eventpageloc);
+        event_location.setText(cursor.getString(6));
+        event_description = view.findViewById(R.id.tv_eventpagedescrip);
+        event_description.setText(cursor.getString(5));
+        cursor.close();
     }
 }

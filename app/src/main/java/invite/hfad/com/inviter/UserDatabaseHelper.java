@@ -147,7 +147,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     public static void delete_friend(SQLiteDatabase db,
                                      String username) {
-        db.delete("FRIENDS", "USERNAME=" + username, null);
+        db.execSQL("DELETE FROM FRIENDS WHERE USERNAME LIKE '" + username + "';");
     }
 
 

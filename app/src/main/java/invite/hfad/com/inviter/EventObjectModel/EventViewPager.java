@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.Fragment;
@@ -50,7 +51,7 @@ public class EventViewPager extends AppCompatActivity {
         getSupportActionBar().hide();
         this.id = getIntent().getStringExtra("event_id");
         updateEvent();
-        viewPager = (ViewPager) findViewById(R.id.event_viewpager);
+        viewPager = findViewById(R.id.event_viewpager);
         setupViewPager(viewPager);
         viewPager.setCurrentItem(pageNumber);
         viewPager.setOffscreenPageLimit(1);
@@ -141,8 +142,11 @@ public class EventViewPager extends AppCompatActivity {
                         event = dataSnapshot.getValue(Event.class);
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        UserDatabaseHelper.update_event(db, id, event);
-                        db.close();
+                        Cursor cursor = db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
+                        if (cursor != null) {
+                            UserDatabaseHelper.update_event(db, id, event);
+                            db.close();
+                        }
                     }
             }
 

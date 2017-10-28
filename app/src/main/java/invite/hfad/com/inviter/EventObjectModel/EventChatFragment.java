@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -94,6 +95,7 @@ public class EventChatFragment extends Fragment {
     private Toolbar toolbar;
     private TextView noChatText;
     private RecyclerView.AdapterDataObserver dataObserver;
+    private boolean isAttending = true;
 
     private SharedPreferences sharedPref;
     private User user;
@@ -146,8 +148,20 @@ public class EventChatFragment extends Fragment {
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT TITLE FROM EVENTS WHERE EID='" + id + "';", null);
-        cursor.moveToLast();
-        toolbar.setTitle(cursor.getString(0));
+        if (cursor.moveToLast()){
+            toolbar.setTitle(cursor.getString(0));
+        }
+        else {
+            Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_TITLE).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    toolbar.setTitle(dataSnapshot.getValue(String.class));
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+
+        }
         cursor.close();
         db.close();
         super.onActivityCreated(savedInstanceState);
@@ -162,6 +176,17 @@ public class EventChatFragment extends Fragment {
     }
     @Override
     public void onStart(){
+        Utils.getDatabase().getReference().child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_ATTENDEE)
+                .child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    isAttending = false;}
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
         populateFragment();
         super.onStart();
     }
@@ -177,11 +202,11 @@ public class EventChatFragment extends Fragment {
 
         public MessageViewHolder(View v) {
             super(v);
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
-            messageImageView = (ImageView) itemView.findViewById(R.id.messageImageView);
-            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
-            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
-            messageTimeStamp = (TextView) itemView.findViewById(R.id.messageTimeStamp);
+            messageTextView = itemView.findViewById(R.id.messageTextView);
+            messageImageView = itemView.findViewById(R.id.messageImageView);
+            messengerTextView = itemView.findViewById(R.id.messengerTextView);
+            messengerImageView = itemView.findViewById(R.id.messengerImageView);
+            messageTimeStamp = itemView.findViewById(R.id.messageTimeStamp);
         }
 
     }
@@ -395,22 +420,28 @@ public class EventChatFragment extends Fragment {
             }
         });
         //Send Chat text
-        mSendButton = (Button) rootView.findViewById(R.id.sendButton);
+        mSendButton = rootView.findViewById(R.id.sendButton);
         mSendButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
-                String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,mMessageEditText.getText().toString(),
-                        mUsername, mPhotoUrl,timeStamp, null,user.getDisplayname());
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
-                mMessageEditText.setText("");
-                //Update event's last update message
-                mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
-                //Update my event last update message
-                //mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
-                //sendNotifications(timeStamp);
+                if (isAttending) {
+                    String friendlyMessageId = mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).push().getKey();
+                    String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                    FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId, mMessageEditText.getText().toString(),
+                            mUsername, mPhotoUrl, timeStamp, null, user.getDisplayname());
+                    mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
+                    mMessageEditText.setText("");
+                    //Update event's last update message
+                    mFirebaseDatabaseReference.child(Utils.EVENT_DATABASE).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+                    //Update my event last update message
+                    //mFirebaseDatabaseReference.child(Utils.USER).child(user.getDisplayname()).child(Utils.USER_EVENTS).child(id).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+                    //sendNotifications(timeStamp);
+                }
+
+                else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Must be attending event to message.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //Send Images
@@ -419,11 +450,16 @@ public class EventChatFragment extends Fragment {
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Select image for image message on click.
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_IMAGE);
+                if (isAttending) {
+                    // Select image for image message on click.
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, REQUEST_IMAGE);
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "Must be attending event to message.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         checkForMessageText();
