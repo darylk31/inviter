@@ -3,15 +3,20 @@ package invite.hfad.com.inviter.Register;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,10 +25,12 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+import com.google.firebase.database.ValueEventListener;
+import com.loopj.android.http.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import invite.hfad.com.inviter.EmailAddress;
 import invite.hfad.com.inviter.LoginActivity;
@@ -106,36 +113,100 @@ public class RegisterConfirm extends AppCompatActivity {
      * @param v
      */
     public void onNextButton(View v) {
-                    mDatabase.child(Utils.USER).child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+        SafetyNet.getClient(this).verifyWithRecaptcha("6Lex7DUUAAAAACNj2_pDIlUghcGSpp9Lg8FQPwfB")
+                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+                    @Override
+                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+                        if (!response.getTokenResult().isEmpty()) {
+                            handleSiteVerify(response.getTokenResult());
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Error message:" + e.getMessage());
+                        if (e instanceof ApiException) {
+                            ApiException apiException = (ApiException) e;
+                            //Log.d(TAG, "Error message: " +
+                            //        CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+                        } else {
+                            //Log.d(TAG, "Unknown type of error: " + e.getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void handleSiteVerify(String response){
+        RequestParams params = new RequestParams();
+        params.put("secret", "6Lex7DUUAAAAAEQobx8P3v0YZNKGAr_zkyt3Y2vY");
+        params.put("response", response);
+        SafetyNetClient.post("/recaptcha/api/siteverify", params,new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject jsonResponse){
+                try {
+                    String jsonResult = jsonResponse.getString("success");
+                    if(jsonResult=="true"){
+                        createUser();
+                    } else{
+                        Toast.makeText(getApplicationContext(),"Sorry something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
+    public static class SafetyNetClient {
+        private static final String BASE_URL = "https://www.google.com";
+
+        private static AsyncHttpClient client = new AsyncHttpClient();
+
+        public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+            client.get(getAbsoluteUrl(url), params, responseHandler);
+        }
+
+        public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+            client.post(getAbsoluteUrl(url), params, responseHandler);
+        }
+
+        private static String getAbsoluteUrl(String relativeUrl) {
+            return BASE_URL + relativeUrl;
+        }
+    }
+
+    private void createUser(){
+        mDatabase.child(Utils.USER).child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!(dataSnapshot.exists())) {
+                    final String emailString = email.substring(0, email.indexOf('.'));
+                    mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (!(dataSnapshot.exists())) {
-                                final String emailString = email.substring(0, email.indexOf('.'));
-                                mDatabase.child(Utils.EMAIL).child(emailString.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (!(dataSnapshot.exists())) {
-                                            //Create user
-                                            createUser(emailString);
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                    }
-                                });
+                                //Create user
+                                createFirebaseUser(emailString);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Email Address. \n Please try again.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
                     });
+                } else {
+                    Toast.makeText(getApplicationContext(), "Oops looks like there was an error with the Usernames. \n Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
 
-    private void createUser(String e){
+    private void createFirebaseUser(String e){
         final String emailString = e;
         showProgressDialog();
         mAuth = FirebaseAuth.getInstance();

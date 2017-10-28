@@ -173,7 +173,6 @@ public class ChatFragment extends Fragment {
         //TODO:: Check if user is logged in?
         mUsername = mFirebaseUser.getDisplayName();
         if (mFirebaseUser.getPhotoUrl() != null) {
-            System.out.println("NO FUTURE");
             mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
         }
         //Initalize ProgressBar and RecyclerView
@@ -269,7 +268,7 @@ public class ChatFragment extends Fragment {
                     viewHolder.messageTextView.setBackground(otherBubble);
                 }
                 //Check to see if previous message was said by the same person
-                if(position - 1 > 0) {
+                if(position - 1 >= 0) {
                     if (mFirebaseAdapter.getItem(position - 1).getName().equals(friendlyMessage.getName())) {
                         viewHolder.messengerTextView.setVisibility(View.GONE);
                         viewHolder.messengerImageView.setVisibility(View.INVISIBLE);
