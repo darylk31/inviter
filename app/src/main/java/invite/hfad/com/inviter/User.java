@@ -19,8 +19,7 @@ public class User {
     private Map<String,Boolean> contacts;
     private Map<String,String> inbox;
 
-    private final String defaultURL = "https://firebasestorage.googleapis.com/v0/b/inviter-96012.appspot.com/o/default%2Fdownload.jpg?alt=media&token=72fb0556-f0a9-440f-8d9e-4d29311847a1";
-
+    private final String defaultURL = "";
     public User() {
     }
 

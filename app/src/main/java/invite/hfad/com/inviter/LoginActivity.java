@@ -88,8 +88,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        mDatabase.child(Utils.USER).child(userId).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
     }
 
     public void onLogin(View v){
@@ -181,11 +179,15 @@ public class LoginActivity extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
                         }
                     });
+
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
                 }
             }
 
 
         });
+
     }
 
     private boolean validateForm(){

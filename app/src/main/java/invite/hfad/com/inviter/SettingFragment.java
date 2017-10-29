@@ -37,6 +37,7 @@ public class SettingFragment extends PreferenceFragment {
     Preference Username;
     Preference Email;
     SwitchPreference Phone_Number;
+    SwitchPreference Notification_Preference;
     EditTextPreference First_Name;
     EditTextPreference Last_Name;
     EditTextPreference Display_Name;
@@ -68,6 +69,7 @@ public class SettingFragment extends PreferenceFragment {
         First_Name = (EditTextPreference) findPreference("pref_key_first_name");
         Last_Name = (EditTextPreference) findPreference("pref_key_last_name");
         Display_Name = (EditTextPreference) findPreference("pref_key_display_name");
+        Notification_Preference = (SwitchPreference) findPreference("pref_key_notification_toggle");
         SignOut = findPreference("pref_key_Logout");
     }
     private void setUpSettings(){
@@ -80,6 +82,17 @@ public class SettingFragment extends PreferenceFragment {
         Last_Name.setSummary(user.getLastname());
         Last_Name.setText(user.getLastname());
         Phone_Number.setChecked(sharedPref.getBoolean("phoneNumberOnline",false));
+        mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child("Device_Token").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                    Notification_Preference.setChecked(true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void settingOnClick(){
@@ -176,6 +189,20 @@ public class SettingFragment extends PreferenceFragment {
                         Toast.makeText(getActivity(),"Cannot find phone number",Toast.LENGTH_SHORT).show();
                     }
 
+                }
+                return false;
+            }
+        });
+        Notification_Preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                if(!(Boolean) o){
+                    mDatabase.child(Utils.USER).child(user.getUsername()).child("Device_Token").removeValue();
+                    Notification_Preference.setChecked(false);
+                } else{
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                    mDatabase.child(Utils.USER).child(user.getUsername()).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
+                    Notification_Preference.setChecked(true);
                 }
                 return false;
             }

@@ -218,6 +218,36 @@ public class EventChatFragment extends Fragment {
             protected void populateViewHolder(final MessageViewHolder viewHolder, final FriendlyMessage friendlyMessage, int position) {
                 checkForMessageText();
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
+                //If it's my message
+                Drawable otherBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1);
+                Drawable myBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex2);
+                Drawable systemBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex3);
+                viewHolder.messageTextView.setTextColor(Color.WHITE);
+                //Check for admin Messages
+                if(friendlyMessage.getName().equals(Utils.APP)){
+                    viewHolder.messengerTextView.setVisibility(View.GONE);
+                    viewHolder.messageTextView.setBackground(systemBubble);
+                }
+                //Check for my messages
+                else if (friendlyMessage.getName().equals(user.getUsername())) {
+                    viewHolder.messageTextView.setBackground(myBubble);
+                }
+                //Everyone elses messages
+                else {
+                    viewHolder.messageTextView.setBackground(otherBubble);
+                }
+                //Check to see if previous message was said by the same person
+                if(position - 1 >= 0) {
+                    if (mFirebaseAdapter.getItem(position - 1).getName().equals(friendlyMessage.getName())) {
+                        viewHolder.messengerTextView.setVisibility(View.GONE);
+                        viewHolder.messengerImageView.setVisibility(View.INVISIBLE);
+                    } else {
+                        viewHolder.messengerTextView.setVisibility(View.VISIBLE);
+                        viewHolder.messengerImageView.setVisibility(View.VISIBLE);
+                    }
+                }
+                previousMessageName = friendlyMessage.getName();
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
                     System.out.println(friendlyMessage.getText());
@@ -275,35 +305,6 @@ public class EventChatFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                //If it's my message
-                Drawable otherBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex1);
-                Drawable myBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex2);
-                Drawable systemBubble = ContextCompat.getDrawable(getContext(), R.drawable.chat_bubble_ex3);
-                viewHolder.messageTextView.setTextColor(Color.WHITE);
-                //Check for admin Messages
-                if(friendlyMessage.getName().equals(Utils.APP)){
-                    viewHolder.messengerTextView.setVisibility(View.GONE);
-                    viewHolder.messageTextView.setBackground(systemBubble);
-                }
-                //Check for my messages
-                else if (friendlyMessage.getName().equals(user.getUsername())) {
-                    viewHolder.messageTextView.setBackground(myBubble);
-                }
-                //Everyone elses messages
-                else {
-                    viewHolder.messageTextView.setBackground(otherBubble);
-                }
-                //Check to see if previous message was said by the same person
-                if(position - 1 > 0) {
-                    if (mFirebaseAdapter.getItem(position - 1).getName().equals(friendlyMessage.getName())) {
-                        viewHolder.messengerTextView.setVisibility(View.GONE);
-                        viewHolder.messengerImageView.setVisibility(View.INVISIBLE);
-                    } else {
-                        viewHolder.messengerTextView.setVisibility(View.VISIBLE);
-                        viewHolder.messengerImageView.setVisibility(View.VISIBLE);
-                    }
-                }
-                previousMessageName = friendlyMessage.getName();
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {

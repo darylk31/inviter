@@ -159,6 +159,7 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
     }
+
     private Date yesterday() {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
