@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter.Inbox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
@@ -25,6 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.EventObjectModel.EventViewPager;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
@@ -187,8 +189,27 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         int pos = holder.getAdapterPosition() - friendrequests;
                         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.INBOX).child(Utils.USER_EVENT_REQUEST)
                                 .child(eventlist.get(pos).getEventId()).removeValue();
-                        Toast.makeText(context, " Event request declined.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Event request declined.", Toast.LENGTH_SHORT).show();
                         removeeventrequest(pos);
+                        try{
+                            SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
+                            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                            UserDatabaseHelper.delete_event(db, eventlist.get(pos).getEventId());
+                        }
+                        catch(Exception e){}
+                    }
+                });
+
+                CardView inbox_cardview = cardView.findViewById(R.id.inbox_event_cardview);
+
+                inbox_cardview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getAdapterPosition() - friendrequests;
+                        String event_id = eventlist.get(pos).getEventId();
+                        Intent intent = new Intent(view.getContext(), EventViewPager.class);
+                        intent.putExtra("event_id", event_id);
+                        view.getContext().startActivity(intent);
                     }
                 });
         }

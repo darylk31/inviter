@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,9 +48,6 @@ public class HomeChatFragment extends Fragment {
     private Context context;
     private int MAX_NUMBER_OF_NOTIFICATION_TAB = 10;
     private int CurrentPage = 1;
-
-    private int chatCount =  0;
-    private int lastVisiblePosition = 0;
     private String chatDisplayName;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter<UserEvents, HomeChatViewHolder> homeChatRecylerAdapter;
@@ -68,19 +66,29 @@ public class HomeChatFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         chatRecycler.setLayoutManager(linearLayoutManager);
-        /*
+
+        final TextView loadmore = mainView.findViewById(R.id.tv_loadMore);
+
         chatRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (linearLayoutManager.findFirstVisibleItemPosition() == 0 && linearLayoutManager.getChildCount() >= (MAX_NUMBER_OF_NOTIFICATION_TAB * CurrentPage - 1)) {
+                if (linearLayoutManager.findFirstVisibleItemPosition() == 0 && linearLayoutManager.getItemCount() == MAX_NUMBER_OF_NOTIFICATION_TAB * CurrentPage) {
                     loadmore.setVisibility(View.VISIBLE);
                     loadmore.bringToFront();
                 }
-                else loadmore.setVisibility(View.INVISIBLE);
+                else loadmore.setVisibility(View.GONE);
             }
         });
-        */
+
+        loadmore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadMoreData();
+            }
+        });
+
+
         auth = FirebaseAuth.getInstance();
         eventTableRef = Utils.getDatabase().getReference().child("Events");
         chatTableRef = Utils.getDatabase().getReference().child(Utils.CHAT_DATABASE);
@@ -308,6 +316,7 @@ public class HomeChatFragment extends Fragment {
             }
         };
         chatRecycler.setAdapter(homeChatRecylerAdapter);
+
     }
 
             public static class HomeChatViewHolder extends RecyclerView.ViewHolder {
@@ -356,5 +365,10 @@ public class HomeChatFragment extends Fragment {
                     TextView unread_tv = cardView.findViewById(R.id.home_chat_unread);
                     unread_tv.setText(Long.toString(unread));
                 }
+            }
+
+            private void loadMoreData(){
+                CurrentPage++;
+                downloadChats();
             }
         }
