@@ -84,6 +84,7 @@ public class HomeChatFragment extends Fragment {
         loadmore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadmore.setVisibility(View.GONE);
                 loadMoreData();
             }
         });

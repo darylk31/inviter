@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -28,8 +29,7 @@ import java.util.concurrent.ExecutionException;
 public class CalendarFragment extends Fragment {
     MaterialCalendarView calendarView;
     RecyclerView recyclerView;
-    String[] event_names;
-    String[] event_ids;
+    TextView emptyMessage;
     View view;
 
     @Override
@@ -41,17 +41,11 @@ public class CalendarFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
-        calendarView = (MaterialCalendarView) view.findViewById(R.id.calendarView);
-        recyclerView = (RecyclerView) view.findViewById(R.id.calender_recycler);
+        calendarView = view.findViewById(R.id.calendarView);
+        recyclerView = view.findViewById(R.id.calender_recycler);
+        emptyMessage = view.findViewById(R.id.tv_calendar_empty);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
-            @Override
-            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-                recyclerView.setAdapter(null);
-            }
-        });
-
         calendarView.setSelectedDate(Calendar.getInstance());
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -68,8 +62,10 @@ public class CalendarFragment extends Fragment {
                     if (cursor != null && cursor.moveToFirst()) {
                         recyclerView.setAdapter(new CalendarAdapter(cursor));
                         cursor.close();
+                        emptyMessage.setVisibility(View.GONE);
                     } else {
                         recyclerView.setAdapter(null);
+                        emptyMessage.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -93,21 +89,16 @@ public class CalendarFragment extends Fragment {
                     if (cursor != null && cursor.moveToFirst()) {
                         return true;
                     }
-
                     cursor.close();
                     event_db.close();
-
                 } catch (Exception e) {}
                 return false;
             }
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(10, R.color.colorAccent));
+                view.addSpan(new DotSpan(10, R.color.colorPrimary));
             }
         });
-
     }
-
-
 }

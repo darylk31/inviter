@@ -27,12 +27,12 @@ public class PhoneContactsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        PhoneContactsAdapter adapter = new PhoneContactsAdapter(getActivity().getApplicationContext());
+        PhoneContactsAdapter adapter = new PhoneContactsAdapter(getContext());
         if (adapter.getItemCount() == 0) {
-            TextView permission_message = (TextView) getView().findViewById(R.id.tv_phoneContacts);
+            TextView permission_message = getView().findViewById(R.id.tv_phoneContacts);
             permission_message.setText("Please enable permission to access phone contacts.");
         } else {
-            RecyclerView PhoneContactsRecycler = (RecyclerView) getView().findViewById(R.id.phoneContacts_recycler);
+            RecyclerView PhoneContactsRecycler = getView().findViewById(R.id.phoneContacts_recycler);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             PhoneContactsRecycler.setLayoutManager(layoutManager);
             PhoneContactsRecycler.setAdapter(adapter);

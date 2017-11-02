@@ -39,6 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/tvPContactInvite"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Invite!"
                 android:layout_marginRight="10dp"

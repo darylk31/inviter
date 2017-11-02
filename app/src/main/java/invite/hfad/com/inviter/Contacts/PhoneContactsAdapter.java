@@ -14,7 +14,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
+import invite.hfad.com.inviter.Utils;
 
 /**
  * Created by Daryl on 4/7/2017.
@@ -22,9 +31,10 @@ import invite.hfad.com.inviter.R;
 
 public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdapter.ViewHolder> {
 
-    private String[] phoneNumbers;
-    private String[] names;
+    private ArrayList<String> phoneNumbers;
+    private ArrayList<String> names;
     private Cursor cursor;
+    private Context context;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -38,6 +48,7 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
     }
 
     public PhoneContactsAdapter(Context context) {
+        this.context = context;
 
         String filter = ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER + " > 0 and " +
                 ContactsContract.CommonDataKinds.Phone.TYPE + "=" + ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE;
@@ -52,8 +63,8 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
                     filter,
                     null,
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY + " ASC");
-            phoneNumbers = new String[getItemCount()];
-            names = new String[getItemCount()];
+            phoneNumbers = new ArrayList<String>();
+            names = new ArrayList<String>();
             storeContacts();
         } catch (Exception e) {
 
@@ -68,20 +79,21 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
     }
 
     @Override
-    public void onBindViewHolder(PhoneContactsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(PhoneContactsAdapter.ViewHolder holder, final int position) {
+
         final CardView cardView = holder.cardView;
-        TextView contact_name = (TextView) cardView.findViewById(R.id.tvPContactName);
-        TextView contact_number = (TextView) cardView.findViewById(R.id.tvPContactNumber);
-        contact_name.setText(names[position]);
-        contact_number.setText(phoneNumbers[position]);
+        final TextView contact_name = cardView.findViewById(R.id.tvPContactName);
+        final TextView contact_number = cardView.findViewById(R.id.tvPContactNumber);
+        contact_name.setText(names.get(position));
+        contact_number.setText(phoneNumbers.get(position));
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView tv_number = (TextView) v.findViewById(R.id.tvPContactNumber);
+                TextView tv_number = v.findViewById(R.id.tvPContactNumber);
                 String number = tv_number.getText().toString();
 
-                TextView tv_name = (TextView) v.findViewById(R.id.tvPContactName);
+                TextView tv_name = v.findViewById(R.id.tvPContactName);
                 String name = tv_name.getText().toString();
 
                 Intent smsIntent = new Intent(Intent.ACTION_VIEW);
@@ -91,12 +103,38 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
                 v.getContext().startActivity(smsIntent);
             }
         });
-    }
+
+        //check if in phone numbers table.
+        Utils.getDatabase().getReference().child(Utils.DATABASE_PHONE_NUMBER).child(phoneNumbers.get(position))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            final String username = dataSnapshot.getValue().toString();
+                            contact_number.setText(username);
+                            TextView invite_text = cardView.findViewById(R.id.tvPContactInvite);
+                            invite_text.setVisibility(View.INVISIBLE);
+                            cardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    ProfileDialogBox dialogBox = new ProfileDialogBox(context, username);
+                                    dialogBox.show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
+        }
+
 
     @Override
     public int getItemCount() {
         try{
-            return cursor.getCount();}
+            return names.size();}
         catch (Exception e) {
             return 0;
         }
@@ -104,15 +142,25 @@ public class PhoneContactsAdapter extends RecyclerView.Adapter<PhoneContactsAdap
 
 
     public void storeContacts() {
-        String[] cnames = new String[getItemCount()];
-        String[] numbers = new String[getItemCount()];
-        for (int i = 0; i < getItemCount(); i++) {
-            cursor.moveToPosition(i);
-            cnames[i] = cursor.getString(1);
-            numbers[i] = cursor.getString(2);
+        ArrayList cnames = new ArrayList<String>();
+        ArrayList numbers = new ArrayList<String>();
+        if (cursor == null){
+            return;
         }
-        this.phoneNumbers = numbers;
-        this.names = cnames;
+        else {
+            cursor.moveToFirst();
+            if (cursor.getString(2) != null) {
+                cnames.add(cursor.getString(1));
+                numbers.add(cursor.getString(2));
+            }
+            while (cursor.moveToNext()){
+                if (cursor.getString(2) != null) {
+                    cnames.add(cursor.getString(1));
+                    numbers.add(cursor.getString(2));
+                }
+            }
+            this.phoneNumbers = numbers;
+            this.names = cnames;
+        }
     }
-
 }
