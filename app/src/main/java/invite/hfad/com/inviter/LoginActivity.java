@@ -145,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (dataSnapshot.exists()) {
                                                 System.out.println("Login accessed children.");
                                                 Event event = dataSnapshot.getValue(Event.class);
-                                                databaseHelper.insert_event(db, event);
+                                                databaseHelper.insert_event(db, event,getApplicationContext());
                                                 eventCount[0]++;
                                                 System.out.println("Login Count Event:" + eventCount[0] + "Children:" + childrenCount[0]);
                                             }

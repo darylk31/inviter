@@ -1,9 +1,17 @@
 package invite.hfad.com.inviter;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
+import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -11,6 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
+import java.util.TimeZone;
+
+import static android.provider.CalendarContract.ACCOUNT_TYPE_LOCAL;
 
 /**
  * Created by Daryl on 9/22/2016.
@@ -20,7 +33,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_Version = 1;
 
     public UserDatabaseHelper(Context context) {
-
         super(context, DB_Name, null, DB_Version);
     }
 
@@ -34,7 +46,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "TITLE TEXT, "
                 + "DESCRIPTION TEXT, "
                 + "LOCATION TEXT);");
-
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "USERNAME TEXT PRIMARY KEY, "
                 + "DISPLAY TEXT, "
@@ -69,8 +80,8 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
 
     public static void insert_event(
-            SQLiteDatabase db, Event event) {
-
+            SQLiteDatabase db, Event event,
+            Context context) {
         ContentValues eventValues = new ContentValues();
         eventValues.put("EID", event.getEventId());
         eventValues.put("CREATOR", event.getCreator());
@@ -80,7 +91,44 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         eventValues.put("DESCRIPTION", event.getDescription());
         eventValues.put("LOCATION", event.getLocation());
         db.insert("EVENTS", null, eventValues);
+        long startMillis = 0;
+        long endMillis = 0;
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(2017, 10, 19, 7, 30);
+        startMillis = beginTime.getTimeInMillis();
+        ContentResolver cr = context.getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(Events.TITLE, event.getEvent_name());
+        values.put(Events.DESCRIPTION, event.getDescription());
+        values.put(Events.DTSTART, startMillis);
+        values.put(Events.DTEND, startMillis);
+        values.put(Events.CALENDAR_ID, 1);
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(Events.EVENT_TIMEZONE, timeZone.getID());
+        //long eventID = Long.parseLong(uri.getLastPathSegment());
+        //System.out.println("This event id" + eventID);
+        Uri uri = CalendarContract.CONTENT_URI;
+        asSyncAdapter(uri, "Inviter", "Inviter");
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        uri = cr.insert(Events.CONTENT_URI, values);
+        
 
+    }
+
+    static Uri asSyncAdapter(Uri uri, String account, String accountType) {
+        return uri.buildUpon()
+                .appendQueryParameter(android.provider.CalendarContract.CALLER_IS_SYNCADAPTER,"true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
     }
 
     public static void delete_event(SQLiteDatabase db,

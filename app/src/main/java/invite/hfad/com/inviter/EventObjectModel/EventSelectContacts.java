@@ -80,7 +80,7 @@ public class EventSelectContacts extends AppCompatActivity {
         }
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         db = databaseHelper.getWritableDatabase();
-        UserDatabaseHelper.insert_event(db, event);
+        UserDatabaseHelper.insert_event(db, event,getApplicationContext());
         Toast.makeText(getApplicationContext(), "Successfully added Event", Toast.LENGTH_LONG).show();
 
         

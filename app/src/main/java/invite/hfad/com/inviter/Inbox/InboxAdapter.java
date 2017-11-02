@@ -175,7 +175,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         //Writes to SQL
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        UserDatabaseHelper.insert_event(db, eventlist.get(pos));
+                        UserDatabaseHelper.insert_event(db, eventlist.get(pos),context);
 
                         
                         Toast.makeText(context, eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();

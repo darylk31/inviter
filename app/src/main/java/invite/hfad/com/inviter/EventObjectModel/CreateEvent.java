@@ -143,6 +143,9 @@ public class CreateEvent extends AppCompatActivity {
                     return;
                 }
                 String description = descriptionDisplay.getText().toString().trim();
+                if(startTimeData == null){
+                    startTimeData = String.format("%02d:%02d:%02d", 00, 00, 00);
+                }
                 String date = startDateData + " " + startTimeData;
                 try {
                     if (new SimpleDateFormat("yyyy-MM-dd").parse(startDateData).before(yesterday())) {
