@@ -7,12 +7,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import invite.hfad.com.inviter.Event;
@@ -68,6 +72,34 @@ public class CreateEvent extends AppCompatActivity {
         onStartDateSelect();
         onStartTimeClick();
         onButtonClick();
+        titleDisplayListener();
+    }
+
+    private void titleDisplayListener() {
+        if (titleDisplay.getText().toString().equalsIgnoreCase("")) {
+            button.setImageDrawable(getResources().getDrawable(R.drawable.ic_priority_high_black_24dp));
+        } else{
+            button.setImageDrawable(getResources().getDrawable(R.drawable.ic_send_black_24dp));
+        }
+        titleDisplay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (titleDisplay.getText().toString().equalsIgnoreCase("")) {
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.ic_priority_high_black_24dp));
+                } else{
+                    button.setImageDrawable(getResources().getDrawable(R.drawable.ic_send_black_24dp));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -137,11 +169,11 @@ public class CreateEvent extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = titleDisplay.getText().toString().trim();
-                if(titleDisplay.getText().toString().trim().equalsIgnoreCase("")){
-                    titleDisplay.setError("Missing event name.");
+                if (titleDisplay.getText().toString().equalsIgnoreCase("")) {
+                    displaySpeechRecognizer();
                     return;
                 }
+                String title = titleDisplay.getText().toString().trim();
                 String description = descriptionDisplay.getText().toString().trim();
                 if(startTimeData == null){
                     startTimeData = String.format("%02d:%02d:%02d", 00, 00, 00);
@@ -159,9 +191,22 @@ public class CreateEvent extends AppCompatActivity {
                 Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
                 intent.putExtra("myEvent", (Parcelable) event);
                 startActivity(intent);
+
             }
         });
     }
+
+    private static final int SPEECH_REQUEST_CODE = 0;
+
+    // Create an intent that can start the Speech Recognizer activity
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+// Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
 
     private Date yesterday() {
         final Calendar cal = Calendar.getInstance();
@@ -212,9 +257,7 @@ public class CreateEvent extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == PLACE_PICKER_REQUEST) {
-
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 if (place.getName() != null){
@@ -229,6 +272,13 @@ public class CreateEvent extends AppCompatActivity {
                         tvLocation.setSelected(true);
                 }}, 2000);
             }
+        }
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            // Do something with spokenText
+            titleDisplay.setText(spokenText);
         }
     }
 

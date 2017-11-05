@@ -73,7 +73,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                     + "TIME TEXT, "
                     + "ENDDAY TEXT, "
                     + "ENDTIME TEXT, "
-                    + "ALLDAY INTEGER "
+                    + "ALLDAY INTEGER,"
                     + "REMINDER INTEGER);");
         }
     }
@@ -107,8 +107,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         values.put(Events.EVENT_TIMEZONE, timeZone.getID());
         //long eventID = Long.parseLong(uri.getLastPathSegment());
         //System.out.println("This event id" + eventID);
-        Uri uri = CalendarContract.CONTENT_URI;
-        asSyncAdapter(uri, "Inviter", "Inviter");
+        Uri uri = asSyncAdapter(CalendarContract.CONTENT_URI, "Inviter", "Inviter");
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -120,8 +119,6 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
             return;
         }
         uri = cr.insert(Events.CONTENT_URI, values);
-        
-
     }
 
     static Uri asSyncAdapter(Uri uri, String account, String accountType) {
