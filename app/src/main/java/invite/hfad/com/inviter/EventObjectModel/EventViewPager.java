@@ -131,7 +131,7 @@ public class EventViewPager extends AppCompatActivity {
                     if (!dataSnapshot.exists()){
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        UserDatabaseHelper.delete_event(db, id);
+                        UserDatabaseHelper.delete_event(db, id, getApplicationContext());
                         db.close();
                         Toast.makeText(getApplicationContext(),"This event has been cancelled.",Toast.LENGTH_SHORT).show();
                         ref.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(id).removeValue();

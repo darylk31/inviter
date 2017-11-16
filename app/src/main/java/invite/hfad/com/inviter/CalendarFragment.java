@@ -97,7 +97,7 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void decorate(DayViewFacade view) {
-                view.addSpan(new DotSpan(10, R.color.colorPrimary));
+                view.addSpan(new DotSpan(6, R.color.colorPrimary));
             }
         });
     }

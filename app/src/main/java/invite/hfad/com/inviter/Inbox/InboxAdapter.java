@@ -194,7 +194,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         try{
                             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                             SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                            UserDatabaseHelper.delete_event(db, eventlist.get(pos).getEventId());
+                            UserDatabaseHelper.delete_event(db, eventlist.get(pos).getEventId(), context);
                         }
                         catch(Exception e){}
                     }

@@ -118,6 +118,13 @@
 
         <activity android:name=".ChatActivity">
         </activity>
+        <provider
+            android:authorities="invite.hfad.com.inviter"
+            android:name=".EventObjectModel.EventProvider"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true">
+        </provider>
     </application>
 
 </manifest>

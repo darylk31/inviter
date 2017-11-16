@@ -125,15 +125,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
                     output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
                     output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
-                } catch (ParseException e) {
-                    try {
-                        date = new SimpleDateFormat("yyyy-MM-dd").parse(event_day);
-                        output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
-                        output_dayOfWeek = new SimpleDateFormat("EEE", Locale.ENGLISH).format(date);
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
+                    if (output_time.equals("00:00 AM")) {
+                        output_time = null;
                     }
-                }
+                } catch (ParseException e) {}
 
                 event_day_text.setText(output_day);
                 event_dayOfWeek_text.setText(output_dayOfWeek);

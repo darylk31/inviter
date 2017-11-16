@@ -106,8 +106,6 @@ public class UserAreaActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user == null) {
-                    // user auth state is changed - user is null
-                    // launch login activity
                     startActivity(new Intent(UserAreaActivity.this, LoginActivity.class));
                     finish();
                 }
@@ -122,7 +120,7 @@ public class UserAreaActivity extends AppCompatActivity {
         DatabaseReference userRef = Utils.getDatabase().getReference();
         userRef.keepSynced(true);
 
-        navigationView = (NavigationView) findViewById(R.id.drawer_nav_view);
+        navigationView = findViewById(R.id.drawer_nav_view);
 
         //CountInboxItems
         countInboxItems();
@@ -187,7 +185,6 @@ public class UserAreaActivity extends AppCompatActivity {
 
         //Update Scheduler
         scheduleUpdate();
-
     }
 
     private void scheduleUpdate() {

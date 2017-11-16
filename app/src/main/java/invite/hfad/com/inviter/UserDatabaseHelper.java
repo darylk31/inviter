@@ -1,9 +1,11 @@
 package invite.hfad.com.inviter;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
@@ -24,6 +26,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import static android.provider.CalendarContract.ACCOUNT_TYPE_LOCAL;
+import static android.provider.CalendarContract.CONTENT_URI;
 
 /**
  * Created by Daryl on 9/22/2016.
@@ -31,6 +34,7 @@ import static android.provider.CalendarContract.ACCOUNT_TYPE_LOCAL;
 public class UserDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_Name = "User_DB";
     private static final int DB_Version = 1;
+    private static final int MY_CALENDAR_ID = 333;
 
     public UserDatabaseHelper(Context context) {
         super(context, DB_Name, null, DB_Version);
@@ -46,6 +50,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "TITLE TEXT, "
                 + "DESCRIPTION TEXT, "
                 + "LOCATION TEXT);");
+
         db.execSQL("CREATE TABLE FRIENDS ("
                 + "USERNAME TEXT PRIMARY KEY, "
                 + "DISPLAY TEXT, "
@@ -64,6 +69,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
 
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         if (oldVersion < newVersion) {
             db.execSQL("CREATE TABLE EVENTS ("
                     + "EID TEXT PRIMARY KEY, "
@@ -76,6 +82,83 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                     + "ALLDAY INTEGER,"
                     + "REMINDER INTEGER);");
         }
+    }
+
+    public static Uri createLocalCalendar(Context context, String accountName) {
+        Uri target = Uri.parse(CalendarContract.Calendars.CONTENT_URI.toString());
+        target = target.buildUpon().appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, Utils.APP_PACKAGE).build();
+
+
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Calendars.ACCOUNT_NAME, accountName);
+        values.put(CalendarContract.Calendars.ACCOUNT_TYPE, Utils.APP_PACKAGE);
+        values.put(CalendarContract.Calendars.NAME, "Inviter (" + accountName + ")");
+        values.put(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, Utils.APP_PACKAGE);
+        values.put(CalendarContract.Calendars.CALENDAR_COLOR, 0x00FF00);
+        values.put(CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL, CalendarContract.Calendars.CAL_ACCESS_READ);
+        values.put(CalendarContract.Calendars.OWNER_ACCOUNT, accountName);
+        values.put(CalendarContract.Calendars.VISIBLE, 1);
+        values.put(CalendarContract.Calendars.SYNC_EVENTS, 1);
+        values.put(CalendarContract.Calendars.CAN_PARTIALLY_UPDATE, 1);
+
+        Uri newCalendar = context.getContentResolver().insert(target, values);
+        return newCalendar;
+    }
+
+    public static boolean checkForLocalCalendar(Context context, String accountName) {
+        String[] EVENT_PROJECTION = new String[]{
+                CalendarContract.Calendars._ID,                           // 0
+                CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
+                CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+        };
+
+        Cursor cur = null;
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+        String[] selectionArgs = new String[]{accountName, Utils.APP_PACKAGE, accountName};
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            //TODO: ask for permission.
+        } else {
+            cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+        }
+        return cur != null;
+    }
+
+    public static void deleteLocalCalendar(Context context, String accountName){
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+        String[] selectionArgs = new String[]{accountName, Utils.APP_PACKAGE, accountName};
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            //TODO: ask for permission.
+        } else {
+           cr.delete(uri, selection, selectionArgs);
+        }
+    }
+    public static void insert_event_calendar(Event event, Context context, String accountName){
+        long startMillis = 0;
+        long endMillis = 0;
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(2017, 10, 21, 7, 30);
+        startMillis = beginTime.getTimeInMillis();
+        ContentValues values = new ContentValues();
+        values.put(Events._ID, event.getEventId());
+        values.put(Events.TITLE, event.getEvent_name());
+        values.put(Events.DESCRIPTION, event.getDescription());
+        values.put(Events.DTSTART, startMillis);
+        values.put(Events.DTEND, startMillis);
+        values.put(Events.CALENDAR_ID, MY_CALENDAR_ID);
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(Events.EVENT_TIMEZONE, timeZone.getID());
+        Uri uri = context.getContentResolver().insert(asSyncAdapter(Events.CONTENT_URI, accountName), values);
     }
 
 
@@ -91,46 +174,20 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         eventValues.put("DESCRIPTION", event.getDescription());
         eventValues.put("LOCATION", event.getLocation());
         db.insert("EVENTS", null, eventValues);
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2017, 10, 19, 7, 30);
-        startMillis = beginTime.getTimeInMillis();
-        ContentResolver cr = context.getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(Events.TITLE, event.getEvent_name());
-        values.put(Events.DESCRIPTION, event.getDescription());
-        values.put(Events.DTSTART, startMillis);
-        values.put(Events.DTEND, startMillis);
-        values.put(Events.CALENDAR_ID, 1);
-        TimeZone timeZone = TimeZone.getDefault();
-        values.put(Events.EVENT_TIMEZONE, timeZone.getID());
-        //long eventID = Long.parseLong(uri.getLastPathSegment());
-        //System.out.println("This event id" + eventID);
-        Uri uri = asSyncAdapter(CalendarContract.CONTENT_URI, "Inviter", "Inviter");
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        uri = cr.insert(Events.CONTENT_URI, values);
     }
 
-    static Uri asSyncAdapter(Uri uri, String account, String accountType) {
+    static Uri asSyncAdapter(Uri uri, String accountName) {
         return uri.buildUpon()
                 .appendQueryParameter(android.provider.CalendarContract.CALLER_IS_SYNCADAPTER,"true")
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, account)
-                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, accountType).build();
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_NAME, accountName)
+                .appendQueryParameter(CalendarContract.Calendars.ACCOUNT_TYPE, Utils.APP_PACKAGE)
+                .build();
     }
 
-    public static void delete_event(SQLiteDatabase db,
-                                    String id) {
+      public static void delete_event(SQLiteDatabase db,
+                                    String id, Context context) {
         db.execSQL("DELETE FROM EVENTS WHERE EID LIKE '" + id + "';");
+        ContentResolver cr = context.getContentResolver();
     }
 
     public static void update_event(SQLiteDatabase db, String id, Event event) {
