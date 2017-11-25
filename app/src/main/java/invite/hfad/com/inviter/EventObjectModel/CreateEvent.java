@@ -259,7 +259,7 @@ public class CreateEvent extends AppCompatActivity {
 
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        UserDatabaseHelper.update_event(db, event.getEventId(), event);
+        UserDatabaseHelper.update_event(db, event.getEventId(), event, getApplicationContext());
         db.close();
 
         finish();
