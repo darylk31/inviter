@@ -226,14 +226,13 @@ public class SettingFragment extends PreferenceFragment {
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 db.delete("EVENTS", null, null);
                 db.delete("FRIENDS", null, null);
+                db.delete("CALENDAR", null, null);
                 db.close();
-                UserDatabaseHelper.deleteLocalCalendar(getActivity().getApplicationContext(), user.getDisplayname());
+                UserDatabaseHelper.remove_local_calendar(getActivity().getApplicationContext(), user.getDisplayname());
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 return false;
             }
         });
-        
     }
-
 }

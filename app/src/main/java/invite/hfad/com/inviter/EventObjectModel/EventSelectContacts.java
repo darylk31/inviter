@@ -1,6 +1,7 @@
 package invite.hfad.com.inviter.EventObjectModel;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
@@ -80,11 +81,11 @@ public class EventSelectContacts extends AppCompatActivity {
         }
         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
         db = databaseHelper.getWritableDatabase();
-        UserDatabaseHelper.insert_event(db, event,getApplicationContext());
-        UserDatabaseHelper.insert_event_calendar(event, getApplicationContext(),mDisplayName);
-        Toast.makeText(getApplicationContext(), "Successfully added Event", Toast.LENGTH_LONG).show();
+        UserDatabaseHelper.insert_event(db, event, getApplicationContext(), mDisplayName);
+        //UserDatabaseHelper.insert_event_calendar(db, event, getApplicationContext(),mDisplayName);
+        Toast.makeText(getApplicationContext(), "Successfully added event.", Toast.LENGTH_LONG).show();
+        db.close();
 
-        
         Intent intent = new Intent(this, UserAreaActivity.class);
         startActivity(intent);
         finish();

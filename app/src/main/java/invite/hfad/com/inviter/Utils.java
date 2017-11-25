@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -83,6 +84,16 @@ public class Utils {
     public static String convertDateToText(Date date){
         String ret = "";
         return ret;
+    }
+
+    public static Date convertStringtoDate(String string){
+        Date date = new Date();
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(string);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
 }

@@ -144,7 +144,7 @@ public class EventViewPager extends AppCompatActivity {
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
                         Cursor cursor = db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
                         if (cursor != null) {
-                            UserDatabaseHelper.update_event(db, id, event);
+                            UserDatabaseHelper.update_event(db, id, event, getApplicationContext());
                             db.close();
                         }
                     }
