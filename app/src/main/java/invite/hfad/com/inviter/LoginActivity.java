@@ -50,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
         setContentView(R.layout.activity_login);
+        EditText username = findViewById(R.id.etUsername);
+        EditText password = findViewById(R.id.etPassword);
     }
 
     private void updateUser(){
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("userID", userId);
         editor.putInt("friendNotifications", 0);
         editor.putInt("eventNotifications", 0);
+        UserDatabaseHelper.createLocalCalendar(getApplicationContext(), userId);
         mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -145,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (dataSnapshot.exists()) {
                                                 System.out.println("Login accessed children.");
                                                 Event event = dataSnapshot.getValue(Event.class);
-                                                databaseHelper.insert_event(db, event,getApplicationContext());
+                                                databaseHelper.insert_event(db, event, getApplicationContext(), auth.getCurrentUser().getDisplayName() );
                                                 eventCount[0]++;
                                                 System.out.println("Login Count Event:" + eventCount[0] + "Children:" + childrenCount[0]);
                                             }
@@ -179,9 +182,6 @@ public class LoginActivity extends AppCompatActivity {
                         public void onCancelled(DatabaseError databaseError) {
                         }
                     });
-
-                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_TOKEN).child(deviceToken).setValue(deviceToken);
                 }
             }
 

@@ -3,6 +3,7 @@ package invite.hfad.com.inviter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -45,7 +47,7 @@ public class SettingFragment extends PreferenceFragment {
     SharedPreferences.Editor editor;
     Preference SignOut;
 
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         mDatabase = Utils.getDatabase().getReference();
@@ -62,7 +64,7 @@ public class SettingFragment extends PreferenceFragment {
         settingOnClick();
     }
 
-    private void getViews(){
+    private void getViews() {
         Username = (Preference) findPreference("pref_key_username");
         Email = (Preference) findPreference("pref_key_email");
         Phone_Number = (SwitchPreference) findPreference("pref_key_phonenumber_toggle");
@@ -72,7 +74,8 @@ public class SettingFragment extends PreferenceFragment {
         Notification_Preference = (SwitchPreference) findPreference("pref_key_notification_toggle");
         SignOut = findPreference("pref_key_Logout");
     }
-    private void setUpSettings(){
+
+    private void setUpSettings() {
         Username.setSummary(user.getUsername());
         Email.setSummary(user.getEmail());
         Display_Name.setSummary(user.getDisplayname());
@@ -81,11 +84,11 @@ public class SettingFragment extends PreferenceFragment {
         First_Name.setText(user.getFirstname());
         Last_Name.setSummary(user.getLastname());
         Last_Name.setText(user.getLastname());
-        Phone_Number.setChecked(sharedPref.getBoolean("phoneNumberOnline",false));
+        Phone_Number.setChecked(sharedPref.getBoolean("phoneNumberOnline", false));
         mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child("Device_Token").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
+                if (dataSnapshot.exists())
                     Notification_Preference.setChecked(true);
             }
 
@@ -95,7 +98,7 @@ public class SettingFragment extends PreferenceFragment {
         });
     }
 
-    private void settingOnClick(){
+    private void settingOnClick() {
         First_Name.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
@@ -105,7 +108,7 @@ public class SettingFragment extends PreferenceFragment {
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_FIRSTNAME).setValue(o.toString());
                 Gson gson = new Gson();
                 String json = gson.toJson(user);
-                editor.putString("userObject",json);
+                editor.putString("userObject", json);
                 editor.commit();
                 return false;
             }
@@ -119,7 +122,7 @@ public class SettingFragment extends PreferenceFragment {
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_LASTNAME).setValue(o.toString());
                 Gson gson = new Gson();
                 String json = gson.toJson(user);
-                editor.putString("userObject",json);
+                editor.putString("userObject", json);
                 editor.commit();
                 return false;
             }
@@ -133,7 +136,7 @@ public class SettingFragment extends PreferenceFragment {
                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_DISPLAYNAME).setValue(o.toString());
                 Gson gson = new Gson();
                 String json = gson.toJson(user);
-                editor.putString("userObject",json);
+                editor.putString("userObject", json);
                 editor.commit();
                 return false;
             }
@@ -142,6 +145,9 @@ public class SettingFragment extends PreferenceFragment {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+                if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Ask for permission
+                }
                 String mPhoneNumber = tMgr.getLine1Number();
                 if(!(Boolean) o){
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(Utils.APP_PACKAGE, MODE_PRIVATE).edit();
@@ -220,13 +226,13 @@ public class SettingFragment extends PreferenceFragment {
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
                 db.delete("EVENTS", null, null);
                 db.delete("FRIENDS", null, null);
+                db.delete("CALENDAR", null, null);
                 db.close();
+                UserDatabaseHelper.remove_local_calendar(getActivity().getApplicationContext(), user.getDisplayname());
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 return false;
             }
         });
-        
     }
-
 }

@@ -50,10 +50,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             try {
                 Date date = format.parse(event_times[position]);
                 String output_time = new SimpleDateFormat("KK:mm a", Locale.ENGLISH).format(date);
-                event_time.setText(output_time);
-            } catch (ParseException e) {
-                event_time.setText("All Day");
-            }
+                if (output_time.equals("00:00 AM")) {
+                    event_time.setText("All Day");
+                } else {
+                    event_time.setText(output_time);
+                }
+            } catch (ParseException e) {}
 
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override

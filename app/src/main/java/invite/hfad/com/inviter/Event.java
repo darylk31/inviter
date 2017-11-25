@@ -161,10 +161,6 @@ public class Event implements Parcelable{
         return last_modified;
     }
 
-    public void setLast_modified(String last_modified) {
-        this.last_modified = last_modified;
-    }
-
     public String getPhotoUrl() {
         return photoUrl;
     }

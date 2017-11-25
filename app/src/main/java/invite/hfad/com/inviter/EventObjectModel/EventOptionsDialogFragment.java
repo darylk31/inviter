@@ -115,7 +115,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
                                 mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.USER_EVENTS).child(event_id).removeValue();
                                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
                                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                                UserDatabaseHelper.delete_event(db, event_id);
+                                UserDatabaseHelper.delete_event(db, event_id, getActivity().getApplicationContext());
                                 db.close();
                                 Toast.makeText(getActivity().getApplicationContext(),"Event Left",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
@@ -147,7 +147,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
                                 Toast.makeText(getActivity().getApplicationContext(),"Successfully deleted event",Toast.LENGTH_SHORT).show();
                                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getActivity().getApplicationContext());
                                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                                UserDatabaseHelper.delete_event(db, event_id);
+                                UserDatabaseHelper.delete_event(db, event_id, getActivity().getApplicationContext());
                                 db.close();
                                 Intent intent = new Intent(rootView.getContext(),UserAreaActivity.class);
                                 startActivity(intent);

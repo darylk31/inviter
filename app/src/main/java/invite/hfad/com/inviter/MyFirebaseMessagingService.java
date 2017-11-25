@@ -43,7 +43,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             case "PersonalChat":
                 title = map.get("title").toString();
                 body = map.get("body").toString();
-                chatEventID = map.get("PersonalChatID .").toString();
+                chatEventID = map.get("PersonalChatID").toString();
                 break;
             case "EventRequest":
                 SharedPreferences eventPref = getSharedPreferences(Utils.APP_PACKAGE, 0);

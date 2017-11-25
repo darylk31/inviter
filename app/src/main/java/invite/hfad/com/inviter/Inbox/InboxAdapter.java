@@ -175,7 +175,8 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         //Writes to SQL
                         SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                         SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                        UserDatabaseHelper.insert_event(db, eventlist.get(pos),context);
+                        UserDatabaseHelper.insert_event(db, eventlist.get(pos),context, auth.getCurrentUser().getDisplayName());
+                        db.close();
 
                         
                         Toast.makeText(context, eventlist.get(pos).getEvent_name() + " is added!", Toast.LENGTH_SHORT).show();
@@ -194,7 +195,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
                         try{
                             SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(context);
                             SQLiteDatabase db = databaseHelper.getWritableDatabase();
-                            UserDatabaseHelper.delete_event(db, eventlist.get(pos).getEventId());
+                            UserDatabaseHelper.delete_event(db, eventlist.get(pos).getEventId(), context);
                         }
                         catch(Exception e){}
                     }
