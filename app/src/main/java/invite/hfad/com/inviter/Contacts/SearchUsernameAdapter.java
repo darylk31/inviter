@@ -23,6 +23,7 @@ import invite.hfad.com.inviter.DialogBox.ProfileDialogBox;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
+import invite.hfad.com.inviter.UserHelperFunction;
 import invite.hfad.com.inviter.Utils;
 
 /**
@@ -82,7 +83,7 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
                 //add the ourselves to the user set to false
                 addSearchContactButton.setText("Added");
                 addSearchContactButton.setEnabled(false);
-                addFirebaseUser(usernameList.get(i));
+                UserHelperFunction.addUsername(usernameList.get(i).getUsername());
 
                 SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(mContext);
                 SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -116,22 +117,6 @@ public class SearchUsernameAdapter extends RecyclerView.Adapter<SearchUsernameAd
             }
         });
     }
-
-    private void addFirebaseUser(final User addUsername){
-      mDatabase.child(Utils.USER).child(addUsername.getUsername()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){
-                    mDatabase.child(Utils.USER).child(auth.getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(addUsername.getUsername()).setValue(false);
-                    mDatabase.child(Utils.USER).child(addUsername.getUsername()).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(auth.getCurrentUser().getDisplayName()).setValue(auth.getCurrentUser().getDisplayName());
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-        }
 
 
 }

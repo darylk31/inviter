@@ -85,7 +85,7 @@ public class EventViewPager extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 pageNumber = position;
-                System.out.println("position changed to:" + position);
+                System.out.println("EVENT VIEWPAGER: position changed to:" + position);
             }
 
             @Override

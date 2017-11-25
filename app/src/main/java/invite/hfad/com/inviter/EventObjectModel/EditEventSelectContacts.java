@@ -71,8 +71,21 @@ public class EditEventSelectContacts extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
                 }
             });
-
         }
+
+        mDatabase.child(Utils.EVENT_DATABASE).child(event_id).child(Utils.EVENT_ATTENDEE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+                    if(ds.getValue().equals("false")){
+                        mDatabase.child(Utils.USER).child(ds.getKey()).child(Utils.INBOX).child(Utils.EVENT_REQUEST).child(event_id).setValue(auth.getCurrentUser().getDisplayName());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         finish();
     }
 
@@ -89,12 +102,10 @@ public class EditEventSelectContacts extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     attendee_list.add(snapshot.getKey());
                 }
-
                 if (attendee_count[0] == attendee_list.size()){
                     remove_pending(attendee_list);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -28,6 +30,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -41,8 +45,10 @@ import java.util.List;
 import java.util.Locale;
 
 import invite.hfad.com.inviter.Event;
+import invite.hfad.com.inviter.FriendlyMessage;
 import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.UserAreaActivity;
+import invite.hfad.com.inviter.UserDatabaseHelper;
 import invite.hfad.com.inviter.Utils;
 
 public class CreateEvent extends AppCompatActivity {
@@ -63,16 +69,39 @@ public class CreateEvent extends AppCompatActivity {
     private int LOCATION_PERMISSION = 11;
     private TextView tvLocation;
 
+    private Event event;
+    private Intent intent;
+    private Bundle extra;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         getSupportActionBar().hide();
         getViews();
+        Intent intent = getIntent();
+        Bundle extra = intent.getExtras();
+        if(extra != null){
+            event = extra.getParcelable("event");
+            if(event != null){
+                setUpFields();
+            }
+        }
         onStartDateSelect();
         onStartTimeClick();
         onButtonClick();
         titleDisplayListener();
+    }
+
+
+    private void setUpFields(){
+        if(event.getEvent_name() != null)
+            titleDisplay.setText(event.getEvent_name());
+        if(event.getDescription() != null)
+            descriptionDisplay.setText(event.getDescription());
+        if(event.getLocation() != null)
+            tvLocation.setText(event.getLocation());
+        //Figure out time
     }
 
     private void titleDisplayListener() {
@@ -187,13 +216,53 @@ public class CreateEvent extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),location, Utils.getCurrentDate());
-                Intent intent = new Intent(CreateEvent.this, EventSelectContacts.class);
-                intent.putExtra("myEvent", (Parcelable) event);
-                startActivity(intent);
+                //If its an edit event
+                Intent intent = getIntent();
+                Bundle extra = intent.getExtras();
+                if(extra != null) {
+                    editEvent();
+                } else {
+                    Event event = new Event(date, endDateData, title, description, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), location, Utils.getCurrentDate());
+                    intent = new Intent(CreateEvent.this, EventSelectContacts.class);
+                    intent.putExtra("myEvent", (Parcelable) event);
+                    startActivity(intent);
+                }
 
             }
         });
+    }
+
+    private void editEvent(){
+        DatabaseReference mDatabase = Utils.getDatabase().getReference();
+        event.setEvent_name(titleDisplay.getText().toString().trim());
+        event.setDescription(descriptionDisplay.getText().toString().trim());
+        event.setStartDate(startDateData + " " + startTimeData);
+        if(event.getStartDate() != null)
+            mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_STARTDATE).setValue(event.getStartDate());
+
+        if(event.getEvent_name() != null)
+            mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_TITLE).setValue(event.getEvent_name());
+
+        if(event.getDescription() != null)
+            mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_DESCRIPTION).setValue(event.getDescription());
+
+        if(event.getLocation() != null)
+            mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LOCATION).setValue(event.getLocation());
+
+        if(event.getLast_modified() != null)
+            mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.EVENT_LAST_MODIFIED).setValue(Utils.getCurrentDate());
+
+        String friendlyMessageId = mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.CHAT).push().getKey();
+        FriendlyMessage friendlyMessage = new FriendlyMessage(friendlyMessageId,"Event updated",
+                Utils.APP, event.getPhotoUrl(),Utils.getCurrentDate(), null,Utils.APP);
+        mDatabase.child(Utils.EVENT_DATABASE).child(event.getEventId()).child(Utils.CHAT).child(friendlyMessageId).setValue(friendlyMessage);
+
+        SQLiteOpenHelper databaseHelper = new UserDatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        UserDatabaseHelper.update_event(db, event.getEventId(), event);
+        db.close();
+
+        finish();
     }
 
     private static final int SPEECH_REQUEST_CODE = 0;
@@ -252,7 +321,6 @@ public class CreateEvent extends AppCompatActivity {
                 e.printStackTrace();
             }
         }}
-
     }
 
     @Override

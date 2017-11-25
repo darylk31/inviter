@@ -157,6 +157,10 @@ public class UserAreaActivity extends AppCompatActivity {
                         intent = new Intent(UserAreaActivity.this, ContactsActivity.class);
                         startActivity(intent);
                         return true;
+                    case R.id.nav_promotions:
+                        intent = new Intent(UserAreaActivity.this,PromotionActivity.class);
+                        startActivity(intent);
+                        return true;
                     case R.id.nav_settings:
                         intent = new Intent(UserAreaActivity.this, SettingActivity.class);
                         startActivity(intent);

@@ -26,6 +26,7 @@ import invite.hfad.com.inviter.R;
 import invite.hfad.com.inviter.User;
 import invite.hfad.com.inviter.UserDatabaseHelper;
 import invite.hfad.com.inviter.UserEvents;
+import invite.hfad.com.inviter.UserHelperFunction;
 import invite.hfad.com.inviter.Utils;
 
 /**
@@ -100,6 +101,19 @@ public class ProfileDialogBox extends Dialog {
     }
 
     private void checkForContacts(){
+
+        if(UserHelperFunction.isContact(username)){
+            message.setVisibility(View.VISIBLE);
+            remove_friend.setVisibility(View.VISIBLE);
+            add_friend.setVisibility(View.GONE);
+        } else {
+            message.setVisibility(View.GONE);
+            remove_friend.setVisibility(View.GONE);
+            add_friend.setVisibility(View.VISIBLE);
+            add_friend.setText("Pending Friend Request");
+            add_friend.setEnabled(false);
+        }
+        /*
         mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -126,6 +140,7 @@ public class ProfileDialogBox extends Dialog {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        */
     }
 
     private void buttonClick(){
@@ -189,8 +204,7 @@ public class ProfileDialogBox extends Dialog {
         add_friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(username).setValue(false);
-                mDatabase.child(Utils.USER).child(username).child(Utils.INBOX).child(Utils.USER_ADD_REQUEST).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).setValue(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                UserHelperFunction.addUsername(username);
                 add_friend.setText("Pending Friend Request");
                 add_friend.setEnabled(false);
             }
@@ -198,25 +212,7 @@ public class ProfileDialogBox extends Dialog {
         remove_friend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.CONTACTS).child(username).removeValue();
-                mDatabase.child(Utils.USER).child(username).child(Utils.CONTACTS).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).removeValue();
-                //Find personal chat id and remove it
-                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.PERSONAL_CHATS).child(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            String personalchat_key = (String) dataSnapshot.getValue();
-                            mDatabase.child(Utils.CHAT_DATABASE).child(personalchat_key).removeValue();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-                //Remove chat off both users
-                mDatabase.child(Utils.USER).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).child(Utils.PERSONAL_CHATS).child(username).removeValue();
-                mDatabase.child(Utils.USER).child(username).child(Utils.PERSONAL_CHATS).child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()).removeValue();
+                UserHelperFunction.removeUsername(username);
                 remove_friend.setEnabled(false);
                 UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(context);
                 UserDatabaseHelper.delete_friend(userDatabaseHelper.getWritableDatabase(),username);

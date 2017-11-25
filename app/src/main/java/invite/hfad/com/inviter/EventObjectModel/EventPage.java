@@ -124,7 +124,7 @@ public class EventPage extends Activity {
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         // New child entires
         mFirebaseDatabaseReference = Utils.getDatabase().getReference();
-        System.out.println(id);
+        System.out.println("EVENT PAGE: " + id);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(
                 FriendlyMessage.class,
                 R.layout.item_message,

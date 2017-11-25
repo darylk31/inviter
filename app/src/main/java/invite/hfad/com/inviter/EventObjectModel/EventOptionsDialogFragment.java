@@ -83,7 +83,7 @@ public class EventOptionsDialogFragment extends DialogFragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
                             Event event = dataSnapshot.getValue(Event.class);
-                            Intent intent = new Intent(rootView.getContext(),EditEvent.class);
+                            Intent intent = new Intent(rootView.getContext(),CreateEvent.class);
                             intent.putExtra("event",event);
                             startActivity(intent);
                         }

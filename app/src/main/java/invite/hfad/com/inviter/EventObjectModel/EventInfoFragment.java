@@ -71,6 +71,8 @@ public class EventInfoFragment extends Fragment {
     private TextView event_description;
     private boolean isAttending = true;
 
+    private Event event;
+    private String event_day;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +94,7 @@ public class EventInfoFragment extends Fragment {
         SQLiteDatabase event_db = eventDatabaseHelper.getReadableDatabase();
         Cursor cursor = event_db.rawQuery("SELECT * FROM EVENTS WHERE EID LIKE '" + id + "';", null);
         // attending event, therefore showing from SQL database.
+
         if (cursor.moveToLast()){
             showEventInfo(cursor);
             event_db.close();
@@ -109,9 +112,9 @@ public class EventInfoFragment extends Fragment {
                                 .child(Utils.USER_EVENT_REQUEST).child(id).removeValue();
                     }
                     else {
-                        Event event = dataSnapshot.getValue(Event.class);
+                        event = dataSnapshot.getValue(Event.class);
                         event_name.setText(event.getEvent_name());
-                        String event_day = event.getStartDate();
+                        event_day = event.getStartDate();
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
                             String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);
@@ -294,15 +297,25 @@ public class EventInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isAttending) {
-                    startActivity(new Intent(getActivity(), EditEventSelectContacts.class)
-                            .putExtra("event_id", id)
-                            .putExtra("event_name", event_string)
-                    );
+                    try {
+                        if (new SimpleDateFormat("yyyy-MM-dd").parse(event_day).before(Utils.yesterday())) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Can't invite anyone, event has passed.", Toast.LENGTH_LONG).show();
+                            return;
+                        } else{
+                            startActivity(new Intent(getActivity(), EditEventSelectContacts.class)
+                                    .putExtra("event_id", id)
+                                    .putExtra("event_name", event_string)
+                            );
+                        }
+                    }catch (Exception e) {
+
+                    }
+
+                    }
+                    else{
+                        Toast.makeText(getActivity().getApplicationContext(), "Must be attendee to invite more people.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(), "Must be attendee to invite more people.", Toast.LENGTH_SHORT).show();
-                }
-            }
         });
     }
 
@@ -338,7 +351,7 @@ public class EventInfoFragment extends Fragment {
         event_name.setText(event_string);
         event_date = view.findViewById(R.id.tv_eventpagedate);
         event_time = view.findViewById(R.id.tv_eventpagetime);
-        String event_day = cursor.getString(2);
+        event_day = cursor.getString(2);
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(event_day);
             String output_day = new SimpleDateFormat("dd", Locale.ENGLISH).format(date);

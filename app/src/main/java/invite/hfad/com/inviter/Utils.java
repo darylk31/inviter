@@ -33,11 +33,14 @@ public class Utils {
 
     //USER TABLE STUFF
     public static final String USER_PHOTO_URL = "photoUrl";
-    public static final String USER_USERNAME = "username";
     public static final String USER_EVENTS = "Events";
     public static final String USER_ADD_REQUEST = "Add_Request";
     public static final String USER_EVENT_REQUEST = "Event_Request";
     public static final String USER_TOKEN = "Device_Token";
+    public static final String USER_DISPLAYNAME = "displayname";
+    public static final String USER_FIRSTNAME = "firstname";
+    public static final String USER_LASTNAME = "lastname";
+    public static final String USER_PHONENUMBER = "phonenumber";
 
     public static final String FRIENDLY_MSG_LENGTH = "friendly_msg_length";
     public static final String INVITEDID = "Invited_Id";
@@ -50,19 +53,18 @@ public class Utils {
     public static final String EVENT_LAST_MODIFIED = "last_modified";
     public static final String EVENT_READ_MESSAGES = "read_messages";
     public static final String EVENT_CREATOR = "creator";
-    public static final String EVENT_ID = "eventID";
-    public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
-
-    public static final String USER_DISPLAYNAME = "displayname";
-    public static final String USER_FIRSTNAME = "firstname";
-    public static final String USER_LASTNAME = "lastname";
-    public static final String USER_PHONENUMBER = "phonenumber";
-
     public static final int TYPE_EVENT = 0;
     public static final int TYPE_CHAT = 1;
+
+    public static final String DATABASE_PHONE_NUMBER = "Phone_Number";
+
     public static final String PERSONAL_CHATS = "Personal_Chat";
     public static final String CHAT_DATABASE = "Personal_Chat";
     public static final String CHAT_MEMBERS = "Members";
+
+
+    public static final String PROMOTION_DATABASE = "Promotion";
+    public static final String REGION_DATABASE = "Region";
 
     private static FirebaseDatabase mDatabase;
 
@@ -79,6 +81,19 @@ public class Utils {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return df.format(cal.getTime());
     }
+
+    public static Date yesterday() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return cal.getTime();
+    }
+
+    public static Date today() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE,0);
+        return cal.getTime();
+    }
+
 
     public static String convertDateToText(Date date){
         String ret = "";
