@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class PromotionActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseReference;
 
     private FusedLocationProviderClient mFusedLocationClient;
-
+    private Toolbar myToolbar;
     String cityName = "";
     String stateName = "";
     String countryName = "";
@@ -48,6 +49,10 @@ public class PromotionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promotion);
         mDatabaseReference = Utils.getDatabase().getReference();
+        //Set up custom toolbar
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
         promotionRecycler = findViewById(R.id.promotion_recycler);
         noPromotionText = findViewById(R.id.tvNoPromotion);
         promotionRecycler.setHasFixedSize(true);
@@ -55,6 +60,7 @@ public class PromotionActivity extends AppCompatActivity {
         promotionRecycler.setLayoutManager(linearLayoutManager);
         //Check for last known location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -78,13 +84,15 @@ public class PromotionActivity extends AppCompatActivity {
                                 cityName = addressList.get(0).getLocality().trim();
                                 stateName = addressList.get(0).getAdminArea().trim();
                                 countryName = addressList.get(0).getCountryName().trim();
+                                System.out.println("Promotion Activity: " + cityName + " " + stateName + " " + countryName);
                                 getCityRegion();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                         else{
-                            System.out.println("PROMOTION ACTIVITY GETLAST LOCATION FAILED");
+                            noPromotionText.setText("Location not detected");
+                            System.out.println("PROMOTION ACTIVITY GET LAST LOCATION FAILED");
                         }
                     }
                 });
@@ -98,12 +106,12 @@ public class PromotionActivity extends AppCompatActivity {
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     if(ds.getKey().equalsIgnoreCase(cityName)){
                         String region = (String) ds.getValue();
+                        myToolbar.setTitle(region);
                         checkForPromotionText(region);
                         downloadPromotions(region);
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -117,73 +125,88 @@ public class PromotionActivity extends AppCompatActivity {
                 PromotionViewHolder.class,
                 mDatabaseReference.child(Utils.PROMOTION_DATABASE).child(countryName).child(stateName).child(region).limitToLast(50)) {
             @Override
-            protected void populateViewHolder(PromotionViewHolder viewHolder, Promotion promotion, int position) {
+            protected void populateViewHolder(final PromotionViewHolder viewHolder, Promotion promotion, int position) {
             View cardView = viewHolder.cardView;
-            System.out.println("Promotion activity detected promotion: " + promotion.getPromotionName());
-            if(promotion.getpromotionEndDate() != null){
+            System.out.println("Promotion activity detected promotion: " + promotion.getName());
+            if(promotion.getEndDate() != null){
                 try {
-                    if(new SimpleDateFormat("yyyy-MM-dd").parse(promotion.getpromotionEndDate()).before(Utils.yesterday())){
+                    if(new SimpleDateFormat("yyyy-MM-dd").parse(promotion.getEndDate()).before(Utils.yesterday())){
                         return;
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
-            if(promotion.getPromotionName() != null) {
-                viewHolder.setPromotionName(promotion.getPromotionName());
+            viewHolder.setId(promotion.getId());
+            if(promotion.getName() != null) {
+                viewHolder.setName(promotion.getName());
             }
-            if(promotion.getPromotionDetails() != null){
-                viewHolder.setPromotionDescription(promotion.getPromotionDetails());
+            if(promotion.getDescription() != null){
+                viewHolder.setDescription(promotion.getDescription());
             }
-            if(promotion.getPromotionRequirement() != null){
-                viewHolder.setPromotionRequirement(promotion.getPromotionRequirement());
+            if(promotion.getRequirementNumber() != null){
+                viewHolder.setRequirementNumber(promotion.getRequirementNumber());
             }
-            if(promotion.getpromotionStartDate() != null) {
-                viewHolder.setPromotionStartDate(promotion.getpromotionStartDate());
-                System.out.println(promotion.getpromotionStartDate());
+            if(promotion.getStartDate() != null) {
+                viewHolder.setStartDate(promotion.getStartDate());
+                System.out.println(promotion.getStartDate());
             }
-            if(promotion.getpromotionEndDate() != null) {
-                viewHolder.setPromotionEndDate(promotion.getpromotionEndDate());
-                System.out.println(promotion.getpromotionEndDate());
+            if(promotion.getEndDate() != null) {
+                viewHolder.setEndDate(promotion.getEndDate());
+                System.out.println(promotion.getEndDate());
             }
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(),"Open up more details page on promotion",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Open up more details page on promotion." + viewHolder.getId(),Toast.LENGTH_LONG).show();
                 }
             });
             }
         };
         promotionRecycler.setAdapter(promotionRecyclerAdapter);
     }
+
     public static class PromotionViewHolder extends RecyclerView.ViewHolder{
         View cardView;
-        TextView promotionName;
-        TextView promotionDescription;
-        TextView promotionStartDate;
-        TextView promotionEndDate;
-        TextView promotionRequirement;
+        TextView Name;
+        TextView StartDate;
+        TextView EndDate;
+        TextView RequirementNumber;
+        TextView Code;
+        TextView WebsiteUrl;
+        TextView LogoUrl;
+        TextView Description;
+        TextView promotionViews;
+        TextView promotionUsed;
+        String Id;
 
         public PromotionViewHolder(View itemView) {
             super(itemView);
             cardView = itemView;
-            promotionName = cardView.findViewById(R.id.card_title);
-            promotionDescription = cardView.findViewById(R.id.card_text);
-            promotionStartDate = cardView.findViewById(R.id.promotion_card_start_date);
-            promotionEndDate = cardView.findViewById(R.id.promotion_card_end_date);
+            Name = cardView.findViewById(R.id.card_title);
+            Description = cardView.findViewById(R.id.card_text);
+            StartDate = cardView.findViewById(R.id.promotion_card_start_date);
+            EndDate = cardView.findViewById(R.id.promotion_card_end_date);
         }
-        public void setPromotionName(String name){
-            promotionName.setText(name);
+        public void setName(String name){
+            Name.setText(name);
         }
-        public void setPromotionDescription (String description) { promotionDescription.setText(description);}
-        public void setPromotionEndDate(String promotionEndDate) {
-            this.promotionEndDate.setText(promotionEndDate);
+        public void setDescription (String description) { Description.setText(description);}
+        public void setEndDate(String EndDate) {
+            this.EndDate.setText(EndDate);
         }
-        public void setPromotionStartDate(String startDate){
-            this.promotionStartDate.setText(startDate);
+        public void setStartDate(String startDate){
+            this.StartDate.setText(startDate);
         }
-        public void setPromotionRequirement(String requirement) {
-            this.promotionRequirement.setText("Required people: " + requirement);
+        public void setRequirementNumber(String requirement) {
+            this.RequirementNumber.setText("Required people: " + requirement);
+        }
+
+        public void setId(String Id) {
+            this.Id = Id;
+        }
+        public String getId(){
+            return Id;
         }
     }
 

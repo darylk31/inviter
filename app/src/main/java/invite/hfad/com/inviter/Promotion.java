@@ -7,120 +7,142 @@ import java.util.List;
  */
 
 public class Promotion {
-    private String promotionId;
-    private String promotionName;
-    private String promotionStartDate;
-    private String promotionEndDate;
-    private String promotionCode;
-    private String promotionWebsite;
-    private String promotionLogo;
-    private List promotionImages;
-    private String promotionDetails;
-    private String promotionRequirement;
+    private String Id;
+    private String Name;
+    private String StartDate;
+    private String EndDate;
+    private String Code;
+    private String WebsiteUrl;
+    private String LogoUrl;
+    private List ImageList;
+    private String Description;
+    private String RequirementNumber;
+    private int promotionViews;
+    private int promotionUsed;
 
 
     public Promotion(){};
 
-    public Promotion(String promotionId,
-                     String promotionName,
-                     String promotionStartDate,
-                     String promotionEndDate,
-                     String promotionCode,
-                     String promotionWebsite,
-                     String promotionLogo,
-                     List promotionImages,
-                     String promotionDetails,
-                     String promotionRequirement){
-        this.promotionId = promotionId;
-        this.promotionName = promotionName;
-        this.promotionStartDate = promotionStartDate;
-        this.promotionEndDate = promotionEndDate;
-        this.promotionCode = promotionCode;
-        this.promotionWebsite = promotionWebsite;
-        this.promotionLogo = promotionLogo;
-        this.promotionImages = promotionImages;
-        this.promotionDetails = promotionDetails;
-        this.promotionRequirement = promotionRequirement;
+    public Promotion(String Id,
+                     String Name,
+                     String StartDate,
+                     String EndDate,
+                     String Code,
+                     String WebsiteUrl,
+                     String LogoUrl,
+                     List ImageList,
+                     String Description,
+                     String RequirementNumber,
+                     int promotionViews,
+                     int promotionUsed){
+        this.Id = Id;
+        this.Name = Name;
+        this.StartDate = StartDate;
+        this.EndDate = EndDate;
+        this.Code = Code;
+        this.WebsiteUrl = WebsiteUrl;
+        this.LogoUrl = LogoUrl;
+        this.ImageList = ImageList;
+        this.Description = Description;
+        this.RequirementNumber = RequirementNumber;
+        this.promotionViews = promotionViews;
+        this.promotionUsed = promotionUsed;
     }
 
 
-    public String getPromotionId() {
-        return promotionId;
+    public String getId() {
+        return Id;
     }
 
-    public void setPromotionId(String promotionId) {
-        this.promotionId = promotionId;
+    public void setId(String Id) {
+        this.Id = Id;
     }
 
-    public String getPromotionName() {
-        return promotionName;
+    public String getName() {
+        return Name;
     }
 
-    public void setPromotionName(String promotionName) {
-        this.promotionName = promotionName;
+    public void setName(String Name) {
+        this.Name = Name;
     }
 
-    public String getpromotionStartDate() {
-        return promotionStartDate;
+    public String getStartDate() {
+        return StartDate;
     }
 
-    public void setpromotionStartDate(String promotionStartDate) {
-        this.promotionStartDate = promotionStartDate;
+    public void setStartDate(String StartDate) {
+        this.StartDate = StartDate;
     }
 
-    public String getpromotionEndDate() {
-        return promotionEndDate;
+    public String getEndDate() {
+        return EndDate;
     }
 
-    public void setpromotionEndDate(String promotionEndDate) {
-        this.promotionEndDate = promotionEndDate;
+    public void setEndDate(String EndDate) {
+        this.EndDate = EndDate;
     }
 
-    public String getPromotionCode() {
-        return promotionCode;
+    public String getCode() {
+        return Code;
     }
 
-    public void setPromotionCode(String promotionCode) {
-        this.promotionCode = promotionCode;
+    public void setCode(String Code) {
+        this.Code = Code;
     }
 
-    public String getPromotionWebsite() {
-        return promotionWebsite;
+    public String getWebsiteUrl() {
+        return WebsiteUrl;
     }
 
-    public void setPromotionWebsite(String promotionWebsite) {
-        this.promotionWebsite = promotionWebsite;
+    public void setWebsiteUrl(String WebsiteUrl) {
+        this.WebsiteUrl = WebsiteUrl;
     }
 
-    public String getPromotionLogo() {
-        return promotionLogo;
+    public String getLogoUrl() {
+        return LogoUrl;
     }
 
-    public void setPromotionLogo(String promotionLogo) {
-        this.promotionLogo = promotionLogo;
+    public void setLogoUrl(String LogoUrl) {
+        this.LogoUrl = LogoUrl;
     }
 
-    public List getPromotionImages() {
-        return promotionImages;
+    public List getImageList() {
+        return ImageList;
     }
 
-    public void setPromotionImages(List promotionImages) {
-        this.promotionImages = promotionImages;
+    public void setImageList(List ImageList) {
+        this.ImageList = ImageList;
     }
 
-    public String getPromotionDetails() {
-        return promotionDetails;
+    public String getDescription() {
+        return Description;
     }
 
-    public void setPromotionDetails(String promotionDetails) {
-        this.promotionDetails = promotionDetails;
+    public void setDescription(String Description) {
+        this.Description = Description;
     }
 
-    public String getPromotionRequirement() {
-        return promotionRequirement;
+    public String getRequirementNumber() {
+        return RequirementNumber;
     }
 
-    public void setPromotionRequirement(String promotionRequirement) {
-        this.promotionRequirement = promotionRequirement;
+    public void setRequirementNumber(String RequirementNumber) {
+        this.RequirementNumber = RequirementNumber;
+    }
+
+    public int getPromotionViews() {
+        return promotionViews;
+    }
+
+    public void setPromotionViews(int promotionViews) {
+        this.promotionViews = promotionViews;
+    }
+
+    public int getPromotionUsed() {
+        return promotionUsed;
+    }
+
+    public void setPromotionUsed(int promotionUsed) {
+        this.promotionUsed = promotionUsed;
     }
 }

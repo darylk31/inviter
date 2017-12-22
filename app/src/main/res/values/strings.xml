@@ -71,5 +71,6 @@
     <string name="Add_friend_text">Add Friend</string>
     <string name="unfriend_text">Remove Friend</string>
     <string name="no_promotion_message">There doesn\'t seem to be any promotions right now. Please check again later!</string>
+    <string name="action_search">Search</string>
 
 </resources>

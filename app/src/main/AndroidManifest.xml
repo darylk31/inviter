@@ -118,7 +118,8 @@
 
         <activity android:name=".ChatActivity">
         </activity>
-        <activity android:name=".PromotionActivity">
+        <activity android:name=".PromotionActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
